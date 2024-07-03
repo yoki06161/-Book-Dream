@@ -1,2 +1,2 @@
-# -Book-Dream
+# Book-Dream
 서적 쇼핑몰 [북드림] 팀 프로젝트 레포지토리
