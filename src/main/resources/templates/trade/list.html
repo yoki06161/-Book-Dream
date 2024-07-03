@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" layout:decorate="~{trade/layout}">
+<head>
+    <title>Trades List</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Trades List</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>가격</th>
+                    <th>내용</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="trade : ${trades}">
+                    <td th:text="${trade.title}"></td>
+                    <td th:text="${trade.price}"></td>
+                    <td th:text="${trade.explain}"></td>
+                    <td>
+                        <a th:href="@{/trade/detail/{idx}(idx=${trade.idx})}" class="btn btn-info">View</a>
+                        <a th:href="@{/trade/edit/{idx}(idx=${trade.idx})}" class="btn btn-secondary">Edit</a>
+                        <a th:href="@{/trade/delete/{idx}(idx=${trade.idx})}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/trade/create}" class="btn btn-primary">Create New Trade</a>
+    </div>
+</body>
+</html>

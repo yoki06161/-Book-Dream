@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" layout:decorate="~{/layout}">
+<head>
+    <title>Create Trade</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Create Trade</h1>
+        <form th:action="@{/trade/create}" th:object="${trade}" method="post">
+            <div class="mb-3">
+                <label for="title" class="form-label">제목:</label>
+                <input type="text" id="title" class="form-control" th:field="*{title}" />
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">가격:</label>
+                <input type="text" id="price" class="form-control" th:field="*{price}" />
+            </div>
+            <div class="mb-3">
+                <label for="explain" class="form-label">내용:</label>
+                <textarea id="explain" class="form-control" th:field="*{explain}"></textarea>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
