@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.bookdream.sbb.user.UserCreateForm;
+
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -25,7 +27,7 @@ public class AdminController {
 	}
 	
 	@PostMapping("/signup")
-	public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult)
+	public String signup(@Valid AdminCreateForm userCreateForm, BindingResult bindingResult)
 		if(bindingResult.hasErrors()) {
 			return "signup/form";
 		}

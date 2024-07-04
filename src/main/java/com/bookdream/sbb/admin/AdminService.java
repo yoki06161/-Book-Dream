@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
-	private final UserRepository userRepository;
+	private final AdminRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	
 	public Admin create(Map<String, String> map) {

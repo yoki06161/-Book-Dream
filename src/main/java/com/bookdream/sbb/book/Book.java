@@ -1,9 +1,15 @@
 package com.bookdream.sbb.book;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.boot.context.properties.bind.Name;
 
+import com.bookdream.sbb.admin.Admin;
+import com.bookdream.sbb.admin.Review;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +38,7 @@ public class Book {
 	private LocalDateTime createDate;
 	
 	@OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
-	private List<>
+	private List<Review> reviewList;
 	
 	@ManyToOne
 	private Admin author;
