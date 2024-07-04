@@ -8,10 +8,12 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import groovyjarjarantlr4.v4.parse.GrammarTreeVisitor.mode_return;
 import lombok.RequiredArgsConstructor;
 
 
@@ -33,10 +35,11 @@ public class Prod_controller {
 		return "prod/prod_list";
 	}
 	
+	// @PathVariable는 url패턴에서 추출한 값쓸때 쓰는것?
 	// 제품 상세보기
-	@GetMapping("/prod/book")
-	public String prod_book() {
-		
+	@GetMapping("/prod/book/{book_title}")
+	public String prod_book(Model model, @PathVariable("book_title") String title) {
+		System.out.println("상세페이지에 출력될 타이틀" + title);
 		return "prod/prod_book";
 	}
 	
