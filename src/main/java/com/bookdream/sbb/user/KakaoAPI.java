@@ -8,14 +8,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class KakaoAPI {
-	
+
 	public String getAccessToken(String code) {
 		String accessToken = "";
 		String refreshToken = "";
@@ -30,12 +28,13 @@ public class KakaoAPI {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
 			StringBuilder sb = new StringBuilder();
 			sb.append("grant_type=authorization_code");
-			sb.append("&client_id=1ac732e4b1bfd4794c630b9304d50f5a");
+			sb.append("&client_id=ef527d1b46d3f1de9d79f6f24008de64");
 			sb.append("&redirect_uri=http://localhost:8080/login");
 			sb.append("&code="+code);
 			
 			bw.write(sb.toString());
 			bw.flush();
+			
 			int responseCode = conn.getResponseCode();
 			System.out.println("response code = " + responseCode);
 			
@@ -43,10 +42,10 @@ public class KakaoAPI {
 			
 			String line = "";
 			String result = "";
-			while((line = br.readLine()) != null) {
+			while((line = br.readLine())!=null) {
 				result += line;
 			}
-			System.out.println("response body = " + result);
+			System.out.println("response body="+result);
 			
 			JsonParser parser = new JsonParser();
 			JsonElement element = parser.parse(result);
@@ -56,25 +55,23 @@ public class KakaoAPI {
 			
 			br.close();
 			bw.close();
-			
-		}catch(Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return accessToken;
 	}
-	
 
+	
 	public HashMap<String, Object> getUserInfo(String accessToken) {
 		HashMap<String, Object> userInfo = new HashMap<String, Object>();
 		String reqUrl = "https://kapi.kakao.com/v2/user/me";
 		try {
 			URL url = new URL(reqUrl);
-			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Authorization", "Bearer " + accessToken);
 			int responseCode = conn.getResponseCode();
-			System.out.println("responseCode = " + responseCode);
+			System.out.println("responseCode =" + responseCode);
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			
@@ -84,10 +81,10 @@ public class KakaoAPI {
 			while((line = br.readLine()) != null) {
 				result += line;
 			}
-			System.out.println("response body = " + result);
+			System.out.println("response body ="+result);
 			
 			JsonParser parser = new JsonParser();
-			JsonElement element = parser.parse(result);
+			JsonElement element =  parser.parse(result);
 			
 			JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
 			JsonObject kakaoAccount = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
@@ -98,17 +95,38 @@ public class KakaoAPI {
 			userInfo.put("nickname", nickname);
 			userInfo.put("email", email);
 			
-		} catch(Exception e) {
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return userInfo;
 	}
 
 
-	public void kakaoLogout(String attribute) {
-		// TODO Auto-generated method stub
-		
+	public void kakaoLogout(String accessToken) {
+		String reqURL = "http://kapi.kakao.com/v1/user/logout";
+		try {
+			URL url = new URL(reqURL);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+			int responseCode = conn.getResponseCode();
+			System.out.println("responseCode = " + responseCode);
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			
+			String result = "";
+			String line = "";
+			
+			while((line = br.readLine()) != null) {
+				result+=line;
+			}
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
 	
 	
 
