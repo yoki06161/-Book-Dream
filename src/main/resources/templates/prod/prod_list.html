@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>상품페이지</title>
+</head>
+<body>
+<!--b_list는 여기서 새로 만든 리스트. Prod_books의 리스트를 참조하겠단뜻-->
+<!--each는 반복-->
+<div th:each = "b_list : ${Prod_Books}">
+<!--
+<a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+-->
+<!--|prod/다음부턴 controller에서 map으로 잡아줘야한다.-->
+<a th:href="@{|prod/book|}">
+	<span th:text = "${b_list.book_title}"></span><br>
+	<img th:src = "${b_list.book_img}" />
+</a>
+<hr>
+</div>
+</body>
+</html>
