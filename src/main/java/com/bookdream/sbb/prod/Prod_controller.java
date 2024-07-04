@@ -24,12 +24,21 @@ public class Prod_controller {
 
 	private final Prod_crawling crawling;
 	
+	// 리스트
 	// prod로 들어오는 주소 여기로
 	@GetMapping("/prod")
-	public String products(Model model) throws IOException {
+	public String prod_list(Model model) throws IOException {
 		List<Prod_Books> book_list = Prod_crawling.getc_Datas();
 		model.addAttribute("Prod_Books", book_list);
-		return "prod/Prod";
+		return "prod/prod_list";
 	}
+	
+	// 제품 상세보기
+	@GetMapping("/prod/book")
+	public String prod_book() {
+		
+		return "prod/prod_book";
+	}
+	
 	
 }
