@@ -11,17 +11,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Admin {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	@Column(unique = true)
-	private String adminname;
-	
-	private String password;
-	
-	@Column(unique = true)
-	private String email;
-	
+   
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
+   
+   @Column(unique = true)
+   private String adminname;
+   
+   private String password;
+   
+   @Column(unique = true)
+   private String email;
+   
 }

@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Review {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String id;
-	
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private String id;
+   
 }
