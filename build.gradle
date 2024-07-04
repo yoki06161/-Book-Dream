@@ -35,7 +35,6 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' // Thymeleaf Spring Security 6 확장을 추가합니다.
     testImplementation 'org.springframework.boot:spring-boot-starter-test' // Spring Boot 테스트 스타터를 테스트 의존성으로 추가합니다.
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // JUnit 플랫폼 런처를 테스트 런타임 의존성으로 추가합니다.
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     implementation 'org.jsoup:jsoup:1.15.3' // 정적 크롤링할때 필요함
     implementation 'org.seleniumhq.selenium:selenium-java:4.1.2' // 동적 크롤링
     implementation 'com.google.code.gson:gson' // gson 카카오 로그인 사용
