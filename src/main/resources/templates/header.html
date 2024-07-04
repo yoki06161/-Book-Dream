@@ -18,7 +18,7 @@
 
             	</li>
             	<li class="nav-item">
-            		<a class="nav-link" th:href="@{|/event|}">커뮤니티</a>
+            		<a class="nav-link" th:href="@{|/free|}">커뮤니티</a>
             	</li>
             	<li class="nav-item">
             		<a class="nav-link" th:href="@{|/trade/chat|}">채팅(아이콘)</a>
@@ -29,10 +29,10 @@
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/login|}">로그인</a>
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/mypage|}">마이페이지</a>
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/logout|}">로그아웃</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/signup|}">회원가입</a>
+                                        <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/logout|}">로그아웃</a>
                 </li>
             </ul>
         </div>
