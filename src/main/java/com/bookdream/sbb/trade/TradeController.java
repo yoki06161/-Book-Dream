@@ -3,6 +3,7 @@ package com.bookdream.sbb.trade;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/trade")
@@ -19,9 +21,10 @@ public class TradeController {
     private TradeService tradeService;
 
     @GetMapping("/list")
-    public String listTrades(Model model) {
-        List<Trade> trades = tradeService.getAllTrades();
-        model.addAttribute("trades", trades);
+    public String list(Model model,@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
+        Page<Trade> paging = tradeService.getList(page, kw);
+        model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
         return "trade/list";
     }
 

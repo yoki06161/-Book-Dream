@@ -20,7 +20,7 @@ public class Trade {
     private String title;
     private int price;
     private String writer;
-    private String explain;
+    private String intro;
     private LocalDateTime postdate;
     private String id;
 
