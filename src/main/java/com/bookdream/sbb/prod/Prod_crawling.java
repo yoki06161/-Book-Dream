@@ -39,10 +39,10 @@ public class Prod_crawling {
             Element img = books_img.get(i);
 
             Prod_Books books = Prod_Books.builder()
-                    .book_title(title.text())
-                    .book_img(img.attr("src"))
-                    // 여기에 책의 가격 정보나 추가적인 정보를 가져와서 설정할 수 있음
-                    .build();
+	            .book_title(title.text())
+	            .book_img(img.attr("src"))
+	            // 여기에 책의 가격 정보나 추가적인 정보를 가져와서 설정할 수 있음
+	            .build();
 	    
     	 book_list.add(books);
     	 // books에는 Prod_Books(book_title=제목, book_img=https://생략, book_price=0)식으로 저장됨

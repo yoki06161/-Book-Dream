@@ -29,7 +29,7 @@ public class Prod_controller {
 	public String products(Model model) throws IOException {
 		List<Prod_Books> book_list = Prod_crawling.getc_Datas();
 		model.addAttribute("Prod_Books", book_list);
-		return "Prod";
+		return "prod/Prod";
 	}
 	
 }
