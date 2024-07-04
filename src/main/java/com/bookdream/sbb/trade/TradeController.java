@@ -29,7 +29,7 @@ public class TradeController {
     }
 
     @GetMapping("/detail/{idx}")
-    public String detailTrade(@PathVariable int idx, Model model) {
+    public String detailTrade(@PathVariable("idx") int idx, Model model) {
         Trade trade = tradeService.getTradeById(idx);
         model.addAttribute("trade", trade);
         return "trade/detail";
