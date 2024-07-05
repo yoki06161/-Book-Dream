@@ -14,7 +14,7 @@ import lombok.Setter;
 public class Basket {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)    // auto_increment
-	private int idx;
+	private Long idx;
 	
 	@Column(length = 20)
 	private String id;
