@@ -15,6 +15,9 @@
 	<img th:src = "${b_list.book_img}" /><br>
 	<span th:text = "${b_list.book_price}"></span><br>
 	<span th:text = "${b_list.book_writer}"></span><br>
+	<span th:text = "${b_list.book_id}"></span><br>
+	
+	<a th:href="@{|prod/idd?t_id=${b_list.book_id}|}">책아이디값</a>
 </a>
 <hr>
 </div>
