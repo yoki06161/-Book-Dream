@@ -16,7 +16,7 @@ import lombok.Getter;
 @Service
 @Getter
 // 이거 클래스 명이 자바 클래스랑 같지 않아서 실행 안됐었음
-public class Prod_crawling {
+public class Prod_Crawling {
 
 	private static String url = "https://www.aladin.co.kr/home/welcome.aspx";
 
@@ -32,17 +32,14 @@ public class Prod_crawling {
 	    // div째로 출력되는거
 		System.out.println("div째로 출력되는 img" + books_img);
 	    
-		// book_txt길이만큼 실행후 
-		for (int i = 0; i < books_txt.size(); i++) {
-			// i길이에 맞춰 element에 저장
-            Element title = books_txt.get(i);
-            Element img = books_img.get(i);
-
-            Prod_Books books = Prod_Books.builder()
-	            .book_title(title.text())
-	            .book_img(img.attr("src"))
-	            // 여기에 책의 가격 정보나 추가적인 정보를 가져와서 설정할 수 있음
-	            .build();
+	    // 가져온 요소 넣기
+	    for(Element title : books_txt) {
+	    	
+	    	Prod_Books books = Prod_Books.builder()
+    			.book_title(title.select("a").text())
+    			.book_img(books_img.attr("src"))
+    			// 객체 생성 완료란뜻
+    			.build();
 	    
     	 book_list.add(books);
     	 // books에는 Prod_Books(book_title=제목, book_img=https://생략, book_price=0)식으로 저장됨

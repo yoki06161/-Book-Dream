@@ -1,6 +1,7 @@
 package com.bookdream.sbb.admin;
 
 import java.util.Optional;
+import com.bookdream.sbb.user.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -9,12 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AdminService {
+public class OrderService {
 	private final UserRepository userRepository;
 }
 
-public interface UserRepository extends JpaRepository<SiteUser, Long> {
-    Optional<SiteUser> findByEmail(String email);
-    boolean existsByEmail(String email);
-    boolean existsByUsername(String username);
-}
