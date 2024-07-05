@@ -34,9 +34,6 @@ public class Prod_Crawling {
 	    // span[class='']:nth-child(1) 이름이 지정되지 않은 클래스에서 1번째 아이
 	    Elements books_price = doc.select("#Myform > div > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > ul > li > span[class='']:nth-child(1)");
 	    Elements books_writer = doc.select("#Myform > div > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > ul > li:nth-child(3)");
-	    // 푸시 테스트용
-	    int a = 0;
-	    
 	    
 	    // div째로 출력되는거
 //		System.out.println("div째로 출력되는 라이터" + books_price.text());
