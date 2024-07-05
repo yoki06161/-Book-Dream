@@ -1,5 +1,5 @@
 <nav th:fragment="headerfragment" class="navbar navbar-expand-lg navbar-light border-bottom">
-    <div class="container-fluid  mx-auto">
+    <div class="container-fluid mx-auto">
         <a class="navbar-brand" href="@{|/main|}">Book Dream(로고자리)</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -7,32 +7,31 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            	<li class="nav-item">
-            		<a class="nav-link" th:href="@{|/event|}">이벤트</a>
-            	</li>
-            	<li class="nav-item">
-            		<a class="nav-link" th:href="@{|/prod|}">상품(서적)</a>
-            	</li>
-            	<li class="nav-item">
-            		<a class="nav-link" th:href="@{|/trade|}">중고거래</a>
-
-            	</li>
-            	<li class="nav-item">
-            		<a class="nav-link" th:href="@{|/free|}">커뮤니티</a>
-            	</li>
-            	<li class="nav-item">
-            		<a class="nav-link" th:href="@{|/trade/chat|}">채팅(아이콘)</a>
-            	</li>
-            	<li class="nav-item">
-            		<a class="nav-link" th:href="@{|/basket|}">장바구니(아이콘)</a>
-            	</li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{|/event|}">이벤트</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{|/prod|}">상품(서적)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{|/trade|}">중고거래</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{|/free|}">커뮤니티</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{|/trade/chat|}">채팅(아이콘)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{|/basket|}">장바구니(아이콘)</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/login|}">로그인</a>
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/mypage|}">마이페이지</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/signup|}">회원가입</a>
-                                        <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/logout|}">로그아웃</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/logout|}">로그아웃</a>
                 </li>
             </ul>
         </div>
