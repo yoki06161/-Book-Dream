@@ -66,19 +66,32 @@ public class Prod_Crawling {
 //    	 System.out.println(books.getBook_writer());
 //    	 System.out.println("책 아이디 " + books.getBook_id());
 	    }
-		System.out.println(book_list);
+//		System.out.println(book_list);
 	    return book_list;
 	}
 	
-	// 상세페이지 크롤링
-	public static Object getdetail(String c_id) {
-		// 선택한 url
-		String url = "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=";
-		String id = c_id;
-		
-		System.out.println("출력될 아이디 값" + url + id);
-		
-		
-		return null;
-	}
+	// 상세페이지 크롤링 ******실패
+//	public static Object getdetail(String c_id) throws IOException {
+//		// 선택한 url
+//		String url = "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=";
+//		String id = c_id;
+//		url +=  id;
+//		
+//		System.out.println("출력될 아이디 값" + url);
+//		
+//		List<Prod_Books> detail_list = new ArrayList<>();
+//		
+//		Document doc = Jsoup.connect(url).get();
+//		
+//		Elements book_detail = doc.select("#Ere_prod_allwrap > div.Ere_prod_topwrap > div.Ere_prod_titlewrap > div.left > div > ul > li.Ere_sub2_title");
+//		// 사이트에서 js로 설정을 해서 책소개는 못갖고 옴. 대신 저자는 가능
+//		System.out.println("책 상세정보" + book_detail);
+//		System.out.println("책 상세정보 텍스트 만 " + book_detail.text());
+//		
+//		
+//		return detail_list;
+//	}
+	
+	
+	
 }

@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class Prod_Controller {
 
-	private final Prod_Crawling crawling;
+//	private final Prod_Crawling crawling;
 	
 	// 리스트
 	// prod로 들어오는 주소 여기로
@@ -36,12 +36,11 @@ public class Prod_Controller {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
 		model.addAttribute("C_Books", book_list);
 		
-		System.out.println("리스트 값" + book_list);
 		// 테스트용
 //		Prod_Crawling.getdetail("d");
 		
-		System.out.println("모델값");
-		System.out.println(model);
+//		System.out.println("모델값");
+//		System.out.println(model);
 		return "prod/prod_list";
 	}
 	
@@ -79,13 +78,16 @@ public class Prod_Controller {
 			return "prod/session_test";
 		}
 		
-	// 아이디 연결 테스트
-		@GetMapping("/prod/idd")
-		public String b_id_go(@RequestParam("t_id") String id) {
-			return "prod/id_test";
-		// 출력된 아이디 https://www.aladin.co.kr/shop/wproduct.aspx?temId=341211658
-		// 실제인 아이디 https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=341211658
-		}
+	// 아이디 연결 테스트 ***********실패
+//		@GetMapping("/prod/idd")
+//		public String b_id_go(@RequestParam("t_id") String id) throws IOException {
+//			System.out.println("아이디는 " + id);
+//			Prod_Crawling.getdetail(id);
+//			
+//			return "prod/id_test";
+//		// 출력된 아이디 https://www.aladin.co.kr/shop/wproduct.aspx?temId=341211658
+//		// 실제인 아이디 https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=341211658
+//		}
 		
 	
 }
