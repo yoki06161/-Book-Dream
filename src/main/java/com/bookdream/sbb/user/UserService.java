@@ -3,12 +3,12 @@ package com.bookdream.sbb.user;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bookdream.sbb.DataNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    
     public SiteUser create(Map<String, String> map) {
         // 중복 이메일 검사
         if (userRepository.existsByEmail(map.get("email"))) {
@@ -63,5 +63,20 @@ public class UserService {
         }else {
             throw new DataNotFoundException("siteuser not found!!");
         }
+    }
+    
+    public boolean checkPassword(String email, String password) {
+        Optional<SiteUser> optionalUser = userRepository.findByEmail(email);
+
+        // 사용자가 존재하지 않는 경우
+        if (!optionalUser.isPresent()) {
+            return false; // 해당 이메일을 가진 사용자가 없음
+        }
+
+        // 데이터베이스에서 조회한 사용자 객체
+        SiteUser user = optionalUser.get();
+
+        // 입력받은 비밀번호와 데이터베이스의 비밀번호 비교
+        return user.getPassword().equals(password);
     }
 }
