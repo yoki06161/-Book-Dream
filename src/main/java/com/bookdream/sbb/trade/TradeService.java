@@ -1,5 +1,9 @@
 package com.bookdream.sbb.trade;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -15,13 +19,13 @@ public class TradeService {
     @Autowired
     private TradeRepository tradeRepository;
 
-    public TradeService(TradeRepository tradeRepository) {
-        this.tradeRepository = tradeRepository;
-    }
-
     public Page<Trade> getList(int page, String kw) {
         Pageable pageable = PageRequest.of(page, 10);
-        return tradeRepository.findAllByOrderByPostdateDesc(pageable);
+        if (!kw.isEmpty()) {
+            return tradeRepository.findAllByKeyword(kw, pageable);
+        } else {
+            return tradeRepository.findAllByOrderByPostdateDesc(pageable);
+        }
     }
 
     public Trade getTradeById(int idx) {
@@ -29,14 +33,14 @@ public class TradeService {
         return trade.orElse(null);
     }
 
-    public void createTrade(Trade trade) {
+    public void createTrade(Trade trade) throws IOException {
         if (trade.getPostdate() == null) {
             trade.setPostdate(LocalDateTime.now());
         }
         tradeRepository.save(trade);
     }
 
-    public Trade updateTrade(int idx, Trade updatedTrade) {
+    public Trade updateTrade(int idx, Trade updatedTrade) throws IOException {
         Optional<Trade> optionalTrade = tradeRepository.findById(idx);
         if (optionalTrade.isPresent()) {
             Trade trade = optionalTrade.get();
@@ -52,5 +56,9 @@ public class TradeService {
 
     public void deleteTrade(int idx) {
         tradeRepository.deleteById(idx);
+    }
+    
+    public Trade getTradeByTitle(String title) {
+        return tradeRepository.findByTitle(title);
     }
 }

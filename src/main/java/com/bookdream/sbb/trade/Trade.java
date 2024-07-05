@@ -23,5 +23,5 @@ public class Trade {
     private String intro;
     private LocalDateTime postdate;
     private String id;
-
+    private String image;
 }

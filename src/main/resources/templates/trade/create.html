@@ -1,16 +1,15 @@
+<!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <head>
     <script type="text/javascript">
-        function fillFields(title) {
-            // AJAX 요청을 사용하여 서버에서 도서 정보를 가져옵니다.
+        function fillFields() {
+            var title = document.getElementById('title').value;
             var xhr = new XMLHttpRequest();
             xhr.open('GET', '/trade/book?title=' + encodeURIComponent(title), true);
 
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
-
-                    // 서버에서 받은 데이터를 입력란에 설정합니다.
                     document.getElementById('writer').value = data.writer;
                     document.getElementById('price').value = data.price;
                     document.getElementById('intro').value = data.intro;
@@ -29,7 +28,8 @@
             <div th:replace="~{form_errors :: formErrorsFragment}"></div>
             <div class="mb-3">
                 <label for="title" class="form-label">제목:</label>
-                <input type="text" id="title" class="form-control" th:field="*{title}" required onkeyup="fillFields(this.value)" />
+                <input type="text" id="title" class="form-control" th:field="*{title}" required />
+                <button type="button" class="btn btn-primary" onclick="fillFields()">찾기</button>
             </div>
             <div class="mb-3">
                 <label for="writer" class="form-label">지은이:</label>
@@ -43,8 +43,12 @@
                 <label for="intro" class="form-label">내용:</label>
                 <textarea id="intro" class="form-control" th:field="*{intro}" required></textarea>
             </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">이미지 업로드:</label>
+                <input th:type="file" th:field="*{image}" accept=".gif, .jpg, .png" onchange="return loadFile(this)" style="display: none;">
+            </div>
             <div>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary">상품 등록</button>
             </div>
         </form>
     </div>

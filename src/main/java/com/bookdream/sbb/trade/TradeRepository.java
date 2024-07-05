@@ -12,5 +12,7 @@ public interface TradeRepository extends JpaRepository<Trade, Integer> {
 	
 	// Postdate를 기준으로 역순 정렬된 모든 트레이드를 페이지로 반환
     Page<Trade> findAllByOrderByPostdateDesc(Pageable pageable);
+    
+    Trade findByTitle(String title);
 	
 }

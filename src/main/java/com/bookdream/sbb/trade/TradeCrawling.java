@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 
 
 @Service
+@Getter
 public class TradeCrawling {
 
     private static String url = "https://www.aladin.co.kr/home/welcome.aspx";
@@ -39,14 +41,14 @@ public class TradeCrawling {
         List<Trade> trades = new ArrayList<>();
         Document doc = Jsoup.connect(url).get();
 
-        Elements books_txt = doc.select("#w_thisMonth > div.swiper-wrapper > div > div.text > div.tit > a");
+        Elements books_title = doc.select("#w_thisMonth > div.swiper-wrapper > div > div.text > div.tit > a");
         Elements books_writer = doc.select("#w_thisMonth > div.swiper-wrapper > div > div.text > div.auth > a");
         Elements books_price = doc.select("#w_thisMonth > div.swiper-wrapper > div > div.text > div.price");
 
         // 데이터 사이즈 비교하여 가장 작은 사이즈에 맞추어 반복
-        int minSize = Math.min(books_txt.size(), Math.min(books_writer.size(), books_price.size()));
+        int minSize = Math.min(books_title.size(), Math.min(books_writer.size(), books_price.size()));
         for (int i = 0; i < minSize; i++) {
-            Element title = books_txt.get(i);
+            Element title = books_title.get(i);
             Element writer = books_writer.get(i);
             Element price = books_price.get(i);
 
