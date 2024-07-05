@@ -9,7 +9,7 @@
 <!--each는 반복-->
 <div th:each = "b_list : ${C_Books}">
 <!--|prod/다음부턴 controller에서 map으로 잡아줘야한다.-->
-<a th:href="@{|prod/book?l_title=${b_list.book_title}&l_img=${b_list.book_img}|}">
+<a th:href="@{|prod/detail?l_title=${b_list.book_title}&l_img=${b_list.book_img}|}">
 	<span th:text = "${b_list.book_title}"></span><br>
 	<img th:src = "${b_list.book_img}" />
 </a>
