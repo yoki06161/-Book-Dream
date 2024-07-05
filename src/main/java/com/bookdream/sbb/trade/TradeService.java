@@ -1,6 +1,6 @@
 package com.bookdream.sbb.trade;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +14,14 @@ public class TradeService {
 
     @Autowired
     private TradeRepository tradeRepository;
-    
+
     public TradeService(TradeRepository tradeRepository) {
         this.tradeRepository = tradeRepository;
     }
 
     public Page<Trade> getList(int page, String kw) {
         Pageable pageable = PageRequest.of(page, 10);
-        return tradeRepository.findAllByKeyword(kw, pageable);
-    }
-
-    public List<Trade> getAllTrades() {
-        return tradeRepository.findAll();
+        return tradeRepository.findAllByOrderByPostdateDesc(pageable);
     }
 
     public Trade getTradeById(int idx) {
@@ -33,8 +29,11 @@ public class TradeService {
         return trade.orElse(null);
     }
 
-    public Trade createTrade(Trade trade) {
-        return tradeRepository.save(trade);
+    public void createTrade(Trade trade) {
+        if (trade.getPostdate() == null) {
+            trade.setPostdate(LocalDateTime.now());
+        }
+        tradeRepository.save(trade);
     }
 
     public Trade updateTrade(int idx, Trade updatedTrade) {
@@ -45,8 +44,6 @@ public class TradeService {
             trade.setPrice(updatedTrade.getPrice());
             trade.setWriter(updatedTrade.getWriter());
             trade.setIntro(updatedTrade.getIntro());
-            trade.setPostdate(updatedTrade.getPostdate());
-            trade.setId(updatedTrade.getId());
             return tradeRepository.save(trade);
         } else {
             return null;

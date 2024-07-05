@@ -1,7 +1,5 @@
 package com.bookdream.sbb.trade;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -21,7 +19,7 @@ public class TradeController {
     private TradeService tradeService;
 
     @GetMapping("/list")
-    public String list(Model model,@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
         Page<Trade> paging = tradeService.getList(page, kw);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
@@ -48,20 +46,20 @@ public class TradeController {
     }
 
     @GetMapping("/edit/{idx}")
-    public String editTradeForm(@PathVariable int idx, Model model) {
+    public String editTradeForm(@PathVariable("idx") int idx, Model model) {
         Trade trade = tradeService.getTradeById(idx);
         model.addAttribute("trade", trade);
         return "trade/edit";
     }
 
     @PostMapping("/edit/{idx}")
-    public String updateTrade(@PathVariable int idx, @ModelAttribute Trade trade) {
+    public String updateTrade(@PathVariable("idx") int idx, @ModelAttribute Trade trade) {
         tradeService.updateTrade(idx, trade);
         return "redirect:/trade/detail/" + idx;
     }
 
     @GetMapping("/delete/{idx}")
-    public String deleteTrade(@PathVariable int idx) {
+    public String deleteTrade(@PathVariable("idx") int idx) {
         tradeService.deleteTrade(idx);
         return "redirect:/trade/list";
     }
