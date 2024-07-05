@@ -8,9 +8,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 
 @Service
@@ -18,6 +18,8 @@ import lombok.Getter;
 // 이거 클래스 명이 자바 클래스랑 같지 않아서 실행 안됐었음
 public class Prod_Crawling {
 
+	// 빨라지는거라는데 모르겠음
+	@Cacheable("bookList")
 	// 상품 리스트 크롤링
 	public static List<Prod_Books> getc_Datas() throws IOException {
 		// 알라딘 베스트 셀러 링크
@@ -35,7 +37,6 @@ public class Prod_Crawling {
 	    // span[class='']:nth-child(1) 이름이 지정되지 않은 클래스에서 1번째 아이
 	    Elements books_price = doc.select("#Myform > div > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > ul > li > span[class='']:nth-child(1)");
 	    Elements books_writer = doc.select("#Myform > div > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > ul > li:nth-child(3)");
-	    Elements books_id = doc.select("#Myform > div.ss_book_box");
 	    
 	    // div째로 출력되는거
 	    // 어째서인지 여기서 books_price.attr("itemid")은 값이 없다.
@@ -47,14 +48,12 @@ public class Prod_Crawling {
             Element img = books_img.get(i);
             Element price = books_price.get(i);
             Element writer = books_writer.get(i);
-            Element id = books_id.get(i);
             
             Prod_Books books = Prod_Books.builder()
 	            .book_title(title.text())
 	            .book_img(img.attr("src"))
 	            .book_price(price.text())
 	            .book_writer(writer.text())
-	            .book_id(id.attr("itemid"))
 	            // 여기에 책의 가격 정보나 추가적인 정보를 가져와서 설정할 수 있음
 	            .build();
 	    
@@ -69,29 +68,5 @@ public class Prod_Crawling {
 //		System.out.println(book_list);
 	    return book_list;
 	}
-	
-	// 상세페이지 크롤링 ******실패
-//	public static Object getdetail(String c_id) throws IOException {
-//		// 선택한 url
-//		String url = "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=";
-//		String id = c_id;
-//		url +=  id;
-//		
-//		System.out.println("출력될 아이디 값" + url);
-//		
-//		List<Prod_Books> detail_list = new ArrayList<>();
-//		
-//		Document doc = Jsoup.connect(url).get();
-//		
-//		Elements book_detail = doc.select("#Ere_prod_allwrap > div.Ere_prod_topwrap > div.Ere_prod_titlewrap > div.left > div > ul > li.Ere_sub2_title");
-//		// 사이트에서 js로 설정을 해서 책소개는 못갖고 옴. 대신 저자는 가능
-//		System.out.println("책 상세정보" + book_detail);
-//		System.out.println("책 상세정보 텍스트 만 " + book_detail.text());
-//		
-//		
-//		return detail_list;
-//	}
-	
-	
 	
 }

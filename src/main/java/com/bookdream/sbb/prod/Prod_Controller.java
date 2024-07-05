@@ -44,18 +44,6 @@ public class Prod_Controller {
 		return "prod/prod_list";
 	}
 	
-	// @PathVariable는 url패턴에서 추출한 값쓸때 쓰는것? @PathVariable("book_title")식으로 쓰임
-	// 제품 상세보기
-//	@GetMapping("/prod/detail")
-//	public String prod_book(Model model, @RequestParam("l_title") String title, @RequestParam("l_img") String img) {
-////		System.out.println("상세페이지에 출력될 타이틀" + title);
-////		System.out.println("상세페이지에 출력될 이미지" + img);
-//		model.addAttribute("C_title", title);
-//		model.addAttribute("C_img", img);
-//		System.out.println("모델값은 " + model);
-//		return "prod/prod_detail";
-//	}
-	
 	// 제품 상세보기
 	@GetMapping("/prod/detail")
 	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img, @RequestParam("l_price") String price, HttpSession session) {
@@ -77,17 +65,5 @@ public class Prod_Controller {
 //			session.setAttribute("s_img", img);
 			return "prod/session_test";
 		}
-		
-	// 아이디 연결 테스트 ***********실패
-//		@GetMapping("/prod/idd")
-//		public String b_id_go(@RequestParam("t_id") String id) throws IOException {
-//			System.out.println("아이디는 " + id);
-//			Prod_Crawling.getdetail(id);
-//			
-//			return "prod/id_test";
-//		// 출력된 아이디 https://www.aladin.co.kr/shop/wproduct.aspx?temId=341211658
-//		// 실제인 아이디 https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=341211658
-//		}
-		
 	
 }

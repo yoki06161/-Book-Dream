@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>레이아웃</title>
-</head>
-<body>
-책 제목 : <br>
-<span th:text="${session.s_title}"></span><br>
-<img th:src="${session.s_img}" /><br>
-<span th:text="${session.s_price}"></span><br>
-<a th:href="@{/session}">섹션테스트 이동</a>
-<a href="#">바로구매</a>
-</body>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+	<title>레이아웃</title>
+	<body>
+		책 제목 : <br>
+		<span th:text="${session.s_title}"></span><br>
+		<img th:src="${session.s_img}" /><br>
+		<span th:text="${session.s_price}"></span><br>
+		<a th:href="@{/session}">섹션테스트 이동</a><br>
+		
+		<a href="#">장바구니</a>
+		<a href="#">바로구매</a>
+	</body>
+</div>
 </html>
