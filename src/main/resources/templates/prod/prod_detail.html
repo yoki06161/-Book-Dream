@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>레이아웃</title>
+</head>
+<body>
+책 제목 : <br>
+<span th:text="${session.s_title}"></span><br>
+<img th:src="${session.s_img}" />
+<a th:href="@{/session}">섹션테스트 이동</a>
+<a href="#">바로구매</a>
+</body>
+</html>

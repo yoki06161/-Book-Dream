@@ -26,3 +26,4 @@ public class AdminController {
       return "/login";
    }
 }
+
