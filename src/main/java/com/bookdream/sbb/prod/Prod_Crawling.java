@@ -16,7 +16,7 @@ import lombok.Getter;
 @Service
 @Getter
 // 이거 클래스 명이 자바 클래스랑 같지 않아서 실행 안됐었음
-public class Prod_crawling {
+public class Prod_Crawling {
 
 	private static String url = "https://www.aladin.co.kr/home/welcome.aspx";
 
