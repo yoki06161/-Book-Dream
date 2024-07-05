@@ -32,6 +32,7 @@ public class TradeController {
         model.addAttribute("trade", trade);
         return "trade/detail";
     }
+    
 
     @GetMapping("/create")
     public String createTradeForm(Model model) {

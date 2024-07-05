@@ -4,7 +4,7 @@
         function fillFields(title) {
             // AJAX 요청을 사용하여 서버에서 도서 정보를 가져옵니다.
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/api/trade/book?title=' + encodeURIComponent(title), true);
+            xhr.open('GET', '/trade/book?title=' + encodeURIComponent(title), true);
 
             xhr.onload = function () {
                 if (xhr.status === 200) {
