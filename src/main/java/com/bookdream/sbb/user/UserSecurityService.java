@@ -23,10 +23,10 @@ public class UserSecurityService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<SiteUser> _siteUser = userRepository.findByEmail(email);
-        if (_siteUser.isEmpty()) {
+        if (_siteUser.isEmpty()) {	
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다");
         }
-
+        
         SiteUser siteUser = _siteUser.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
         if ("admin".equals(email)) {

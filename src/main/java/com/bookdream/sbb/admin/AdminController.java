@@ -23,6 +23,6 @@ public class AdminController {
    
    @GetMapping("/login")
    public String signup() {
-      return "login/form";
+      return "/login";
    }
 }
