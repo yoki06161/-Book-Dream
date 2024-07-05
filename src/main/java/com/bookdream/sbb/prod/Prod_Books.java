@@ -11,5 +11,6 @@ import lombok.ToString;
 public class Prod_Books {
 	private String book_title;
 	private String book_img;
-	private int book_price;
+	private String book_price;
+	private String book_writer;
 }
