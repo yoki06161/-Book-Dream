@@ -65,3 +65,4 @@ public class TradeController {
         return "redirect:/trade/list";
     }
 }
+
