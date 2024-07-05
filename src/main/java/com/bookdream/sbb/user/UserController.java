@@ -31,35 +31,39 @@ public class UserController {
 	
 	@PostMapping("/signup")
 	public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
-			return "user/signupform";
-		}
-		
-		if(!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())){
-			bindingResult.rejectValue("password2", "passwordIncorrect", "패스워드가 다릅니다.");
-			return "user/signupform";
-		}
-		
-		Map<String, String> map = new HashMap<>();
-		map.put("username", userCreateForm.getUsername());
-		map.put("password", userCreateForm.getPassword1());
-		map.put("email", userCreateForm.getEmail());
-		
-		try {
-			userService.create(map);	
-		} catch (DataIntegrityViolationException e) {
-			e.printStackTrace();
-			bindingResult.reject("signupFailed", "이미 등록된 사용자 입니다.");
-			return "user/signupform";
-		}catch (Exception e) {
-			e.printStackTrace();
-			bindingResult.reject("signupFailed", e.getMessage());
-			return "user/signupform";
-		}
-		
-		
-		return "redirect:/";
-		
+	    if (bindingResult.hasErrors()) {
+	        return "user/signupform";
+	    }
+
+	    if (!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())) {
+	        bindingResult.rejectValue("password2", "passwordIncorrect", "패스워드가 다릅니다.");
+	        return "user/signupform";
+	    }
+
+	    Map<String, String> map = new HashMap<>();
+	    map.put("username", userCreateForm.getUsername());
+	    map.put("password", userCreateForm.getPassword1());
+	    map.put("email", userCreateForm.getEmail());
+
+	    try {
+	        userService.create(map);
+	    } catch (DataIntegrityViolationException e) {
+	        e.printStackTrace();
+	        if (e.getMessage().contains("이미 등록된 이메일입니다.")) {
+	            bindingResult.rejectValue("email", "duplicateEmail", "이미 등록된 이메일입니다.");
+	        } else if (e.getMessage().contains("이미 등록된 사용자 이름입니다.")) {
+	            bindingResult.rejectValue("username", "duplicateUsername", "이미 등록된 사용자 이름입니다.");
+	        } else {
+	            bindingResult.reject("signupFailed", e.getMessage());
+	        }
+	        return "user/signupform";
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        bindingResult.reject("signupFailed", e.getMessage());
+	        return "user/signupform";
+	    }
+
+	    return "redirect:/";
 	}
 	
 	@GetMapping("/login")
