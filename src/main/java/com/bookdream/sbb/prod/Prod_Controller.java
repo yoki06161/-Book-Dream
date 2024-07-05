@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import groovyjarjarantlr4.v4.parse.GrammarTreeVisitor.mode_return;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 
@@ -41,15 +42,35 @@ public class Prod_Controller {
 	
 	// @PathVariable는 url패턴에서 추출한 값쓸때 쓰는것? @PathVariable("book_title")식으로 쓰임
 	// 제품 상세보기
-	@GetMapping("/prod/book")
-	public String prod_book(Model model, @RequestParam("l_title") String title, @RequestParam("l_img") String img) {
-//		System.out.println("상세페이지에 출력될 타이틀" + title);
-//		System.out.println("상세페이지에 출력될 이미지" + img);
-		model.addAttribute("C_title", title);
-		model.addAttribute("C_img", img);
-		System.out.println("모델값은 " + model);
-		return "prod/prod_book";
+//	@GetMapping("/prod/detail")
+//	public String prod_book(Model model, @RequestParam("l_title") String title, @RequestParam("l_img") String img) {
+////		System.out.println("상세페이지에 출력될 타이틀" + title);
+////		System.out.println("상세페이지에 출력될 이미지" + img);
+//		model.addAttribute("C_title", title);
+//		model.addAttribute("C_img", img);
+//		System.out.println("모델값은 " + model);
+//		return "prod/prod_detail";
+//	}
+	
+	// 제품 상세보기
+	@GetMapping("/prod/detail")
+	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img, HttpSession session) {
+		System.out.println("상세페이지에 출력될 타이틀 " + title);
+		System.out.println("상세페이지에 출력될 이미지 " + img);
+		session.setAttribute("s_title", title);
+		session.setAttribute("s_img", img);
+		return "prod/prod_detail";
 	}
+	
+	// 제품 상세보기
+		@GetMapping("/session")
+		public String session_t() {
+//			System.out.println("상세페이지에 출력될 타이틀 " + title);
+//			System.out.println("상세페이지에 출력될 이미지 " + img);
+//			session.setAttribute("s_title", title);
+//			session.setAttribute("s_img", img);
+			return "prod/session_test";
+		}
 	
 	
 }

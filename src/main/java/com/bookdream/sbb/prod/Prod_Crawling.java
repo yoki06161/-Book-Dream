@@ -20,24 +20,28 @@ public class Prod_Crawling {
 
 	private static String url = "https://www.aladin.co.kr/home/welcome.aspx";
 
-	// 스프링시작할떄 실행되는 메소드지정
+	// 크롤링
 	public static List<Prod_Books> getc_Datas() throws IOException {
 		List<Prod_Books> book_list = new ArrayList<>();
 		// jsoup로 url에 연결
 	    Document doc = Jsoup.connect(url).get();
 	    
 	    // 쿼리 선택하는거
+	    // Element는 태그를 뜻하는데 Elements는 모든 태그, Element는 첫번째 태그만을 인식한다. 즉 Elements는 리스트.
+	    // 그러니까 밑의 Elements는 모든 #w_this.month>...>div.tit>a를 가져온단 뜻.
 	    Elements books_txt = doc.select("#w_thisMonth > div.swiper-wrapper > div > div.text > div.tit > a");
 	    Elements books_img = doc.select("#w_thisMonth > div.swiper-wrapper > div > div.cover > a > img");
-	    // div째로 출력되는거
-		System.out.println("div째로 출력되는 img" + books_img);
 	    
-		// book_txt길이만큼 실행후 
+	    // div째로 출력되는거
+//		System.out.println("div째로 출력되는 img" + books_img);
+	    
 		for (int i = 0; i < books_txt.size(); i++) {
-			// i길이에 맞춰 element에 저장
+			// book_txt길이만큼 실행후 그길이 만큼 Element에 저장
+			// Element는 하나의 태그니까 title하나에 하나의 title을 넣고 for로 반복해서 넣겠단뜻
             Element title = books_txt.get(i);
             Element img = books_img.get(i);
 
+            
             Prod_Books books = Prod_Books.builder()
 	            .book_title(title.text())
 	            .book_img(img.attr("src"))
@@ -46,14 +50,11 @@ public class Prod_Crawling {
 	    
     	 book_list.add(books);
     	 // books에는 Prod_Books(book_title=제목, book_img=https://생략, book_price=0)식으로 저장됨
-    	 System.out.println(books.getBook_title());
-    	 System.out.println(books.getBook_img());
+//    	 System.out.println(books.getBook_title());
+//    	 System.out.println(books.getBook_img());
 //    	 System.out.println(books.getBook_price());
 	    }
-	    
 	    return book_list;
-//	    // 텍스트 제목만 쭉 가로로 나열된다.
-//	    System.out.println(books_txt.text());
 	}
 	
 }
