@@ -19,22 +19,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/answer")
+@RequestMapping("/review")
 @RequiredArgsConstructor
 public class ReviewController {
-	
-	private final ReviewService reviewService;
-	private final AdminService adminService;
-	
-	@PreAuthorize("isAuthenticated()")
-	@PostMapping("/create/{id}")
-	public String create(Model model, @PathVariable("id") Integer id, @Valid ReviewForm reviewForm, BindingResult bindingResult, Principal principal) {
-		Admin admin = adminService.getAdmin();
-		SiteUser siteUser = userService.getUser(principal.getName());
-		if(bindingResult.hasErrors()) {
-			
-		}
-	
+	private final AdminService userService;
 	
 	@GetMapping("/admin")
 	public String sinup() {
