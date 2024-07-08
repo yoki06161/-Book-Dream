@@ -1,9 +1,5 @@
 package com.bookdream.sbb.trade;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -12,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TradeService {
@@ -33,14 +30,22 @@ public class TradeService {
         return trade.orElse(null);
     }
 
-    public void createTrade(Trade trade) throws IOException {
+    @Transactional
+    public void createTrade(Trade trade) {
         if (trade.getPostdate() == null) {
             trade.setPostdate(LocalDateTime.now());
         }
-        tradeRepository.save(trade);
+        try {
+            tradeRepository.save(trade);
+            System.out.println("Trade saved successfully: " + trade);
+        } catch (Exception e) {
+            System.out.println("Error while saving trade: " + e.getMessage());
+            throw e;
+        }
     }
 
-    public Trade updateTrade(int idx, Trade updatedTrade) throws IOException {
+    @Transactional
+    public Trade updateTrade(int idx, Trade updatedTrade) {
         Optional<Trade> optionalTrade = tradeRepository.findById(idx);
         if (optionalTrade.isPresent()) {
             Trade trade = optionalTrade.get();
@@ -48,14 +53,27 @@ public class TradeService {
             trade.setPrice(updatedTrade.getPrice());
             trade.setWriter(updatedTrade.getWriter());
             trade.setIntro(updatedTrade.getIntro());
-            return tradeRepository.save(trade);
+            trade.setImage(updatedTrade.getImage());
+            try {
+                return tradeRepository.save(trade);
+            } catch (Exception e) {
+                System.out.println("Error while updating trade: " + e.getMessage());
+                throw e;
+            }
         } else {
             return null;
         }
     }
 
+    @Transactional
     public void deleteTrade(int idx) {
-        tradeRepository.deleteById(idx);
+        try {
+            tradeRepository.deleteById(idx);
+            System.out.println("Trade deleted successfully: " + idx);
+        } catch (Exception e) {
+            System.out.println("Error while deleting trade: " + e.getMessage());
+            throw e;
+        }
     }
     
     public Trade getTradeByTitle(String title) {

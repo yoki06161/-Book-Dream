@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -16,10 +17,16 @@ public class Trade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
-    
+
+    @NotNull
     private String title;
+
+    @NotNull
     private int price;
+
+    @NotNull
     private String writer;
+
     private String intro;
     private LocalDateTime postdate;
     private String id;
