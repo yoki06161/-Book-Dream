@@ -1,5 +1,6 @@
 package com.bookdream.sbb.user;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class UserService {
         this.userRepository.save(user);
         return user;
     }
-
+    
     public SiteUser getUser(String email) {
         Optional<SiteUser> siteUser = this.userRepository.findByEmail(email);
         if (siteUser.isPresent()) {
@@ -66,17 +67,32 @@ public class UserService {
     }
     
     public boolean checkPassword(String email, String password) {
-        Optional<SiteUser> optionalUser = userRepository.findByEmail(email);
+        Optional<SiteUser> siteUser = userRepository.findByEmail(email);
 
         // 사용자가 존재하지 않는 경우
-        if (!optionalUser.isPresent()) {
+        if (!siteUser.isPresent()) {
             return false; // 해당 이메일을 가진 사용자가 없음
         }
 
         // 데이터베이스에서 조회한 사용자 객체
-        SiteUser user = optionalUser.get();
+        SiteUser user = siteUser.get();
 
         // 입력받은 비밀번호와 데이터베이스의 비밀번호 비교
         return user.getPassword().equals(password);
     }
+    
+ // 사용자 업데이트 메서드
+    @Transactional
+    public void modify(String currentUserEmail, Map<String, String> modifyMap, SiteUser user) {
+        Optional<SiteUser> siteUser = userRepository.findByEmail(currentUserEmail);
+        if (!siteUser.isPresent()) {
+            throw new DataNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        String newPassword = modifyMap.get("password");
+        user.setPassword(passwordEncoder.encode(newPassword));
+        this.userRepository.save(user);
+        
+    }
+
 }

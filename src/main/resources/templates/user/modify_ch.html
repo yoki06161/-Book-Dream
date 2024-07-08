@@ -5,9 +5,9 @@
         <nav th:replace="~{user/mynav :: headerfragment}"></nav>
     </div>
     <div class="main-content" style="width:700px;padding-left:50px">
-        <form action="/user/update" method="post">
+        <form action="/user/modify_ch" method="post">
             <!-- 세션에서 가져온 현재 이메일 값을 hidden input으로 전달 -->
-            <input type="hidden" name="currentUserEmail" th:value="${currentUserEmail}" />
+            <input type="text" name="currentUserEmail" th:value="${currentUser.email}" />
 
             <label for="currentPassword">현재 비밀번호:</label>
             <input type="password" id="currentPassword" name="currentPassword" required />
