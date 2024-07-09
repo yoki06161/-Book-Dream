@@ -35,16 +35,6 @@ public class PayController {
 		return "pay/order";
 	}
 	
-	@GetMapping("/login")
-	public String loginform() {
-		return "pay/loginform";
-	}
-	
-	@GetMapping("/signup")
-	public String signupform() {
-		return "pay/signupform";
-	}
-	
 	@GetMapping("/pay/success")
 	public String paySuccess() {
 		return "pay/pay_success";
