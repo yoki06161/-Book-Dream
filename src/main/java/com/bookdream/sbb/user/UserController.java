@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -106,15 +108,43 @@ public class UserController {
         return "redirect:/";
     }
 
-
-
-
-    
-    
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/userdel")
-    public String userdel() {
+    public String userdel(UserDelForm userDelForm) {
         return "user/userdel";
     }
+    
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/userdel")
+    public String userdel(@Valid UserDelForm userDelForm, BindingResult bindingResult, Principal principal, Model model, HttpSession session) {
+        SiteUser user = this.userService.getUser(principal.getName());
+        
+        if (bindingResult.hasErrors()) {
+            return "user/userdel";
+        }
+
+        if (!this.userService.isSamePassword(user, userDelForm.getCurrentPassword())) {
+            bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
+            return "user/userdel";
+        }
+        
+        try {
+            userService.deleteUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            bindingResult.reject("deleteUserFailed", e.getMessage());
+            return "user/userdel";
+        }
+        
+     // 로그아웃 처리
+        session.invalidate(); // 세션 무효화
+        SecurityContextHolder.clearContext(); // Spring Security 세션 초기화
+        return "redirect:/";
+    }
+
+    
+    
+    
     @GetMapping("/buy")
     public String buy() {
         return "user/buy";

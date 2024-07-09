@@ -14,6 +14,6 @@ public class UserModifyForm {
     @NotEmpty(message = "새 비밀번호 확인은 필수항목입니다.")
     private String newPassword2;
     
-    @NotEmpty(message = "이전 비밀번호는 필수항목입니다.")
+    @NotEmpty(message = "현재 비밀번호는 필수항목입니다.")
     private String beforePassword;
 }

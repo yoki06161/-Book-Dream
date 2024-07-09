@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,15 +43,7 @@ public class UserService {
         }
     }
 
-    @Transactional
-    public SiteUser createKakaoUser(String email, String nickname) {
-        SiteUser user = new SiteUser();
-        user.setEmail(email);
-        user.setUsername(nickname);
-        user.setPassword(""); // 카카오 로그인 사용자는 비밀번호가 없을 수 있음
-        System.out.println("Saving new user: " + user);
-        return userRepository.save(user);
-    }
+
 
     public SiteUser getUserByEmail(String email) {
     	Optional<SiteUser> siteUser = this.userRepository.findByEmail(email);
@@ -76,8 +69,7 @@ public class UserService {
         return user.getPassword().equals(password);
     }
     
- // 사용자 업데이트 메서드
-    
+    // 사용자 업데이트 메서드
     public void modifyPassword(SiteUser user, String password) {
     	user.setPassword(passwordEncoder.encode(password));
         this.userRepository.save(user);
@@ -86,5 +78,11 @@ public class UserService {
     public boolean isSamePassword(SiteUser user, String password){
         return passwordEncoder.matches(password, user.getPassword());
     }
+    
+    // 사용자 삭제 메서드
+    public void deleteUser(SiteUser user) {
+        this.userRepository.delete(user);
+    }
 
+    
 }
