@@ -21,6 +21,7 @@ public class Prod_Crawling2 {
 	// 빨라지는거라는데 모르겠음
 	@Cacheable("bookList")
 	// 상품 리스트 크롤링
+	// !!!!!!!!!!셀레니움 적용 이전 인식이 안되는 버전
 	public static List<Prod_Books> getc_Datas() throws IOException {
 		// 알라딘 베스트 셀러 링크
 		String url = "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=342594262";
@@ -34,6 +35,7 @@ public class Prod_Crawling2 {
 	    // 그러니까 밑의 Elements는 모든 #w_this.month>...>div.tit>a를 가져온단 뜻.
 	    Elements books_txt = doc.select("#Ere_prod_allwrap > div.Ere_prod_middlewrap > div:nth-child(17) > div.Ere_prod_mconts_R");
 	    Elements books_txt2 = doc.select("#Ere_prod_allwrap > div.Ere_prod_middlewrap > div:nth-child(17)");
+	    // class="pContent" id="K312932961_AuthorInfo"
 	    
 	    // div째로 출력되는거
 	    // 어째서인지 여기서 books_price.attr("itemid")은 값이 없다.

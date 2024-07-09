@@ -1,6 +1,7 @@
 package com.bookdream.sbb.prod;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -18,12 +19,12 @@ import lombok.Getter;
 @Service
 @Getter
 // 이거 클래스 명이 자바 클래스랑 같지 않아서 실행 안됐었음
-public class Prod_Crawling3 {
+public class Prod_Crawling4 {
 
 	// 빨라지는거라는데 모르겠음
 	@Cacheable("bookList")
 	// 상품 리스트 크롤링
-	// !!!!!!!!!!!!!!!!사이트 들어가서 책소개까지 수동으로 스크롤 하면 된다.
+	// !!!!!!!!!!!!!!!자동 스크롤 버전 근데 css를 못찾음
 	public static void getc_Datas() {
 		System.setProperty("webdriver.chrome.driver", "C:/kdigital/test_Craw/chromedriver-win64/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
@@ -35,6 +36,12 @@ public class Prod_Crawling3 {
             String url = "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=342594262";
             driver.get(url);
 
+            // 자바스크립트 실행을 위한 인터페이스 설정
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+
+            // 웹 페이지 끝까지 스크롤 다운
+            js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+            
             // 명시적 대기 설정 (최대 10초 기다림)
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             WebElement authorInfoElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#Ere_prod_allwrap > div.Ere_prod_middlewrap > div:nth-child(17) > div.Ere_prod_mconts_R")));
