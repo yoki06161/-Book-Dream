@@ -20,24 +20,18 @@ public class PayController {
 	
 	@GetMapping("")
 	public String order() {
-		// 로그인했다면 주문 페이지로 이동
-		String view = "";
-		// 현재 인증된 사용자의 이메일 가져오기
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		System.out.println(email);
+//		// 현재 인증된 사용자의 이메일 가져오기
+//		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+//		System.out.println(email);
+//		
+//		// 로그인하지 않았다면 로그인화면으로 이동
+//		if(email == "anonymousUser") {
+//			view = "pay/loginform";
+//		} else {
+//			// 로그인했다면 주문 페이지로 이동
+//			view = "pay/order";
+//		}
 		
-		// 로그인하지 않았다면 로그인화면으로 이동
-		if(email == "anonymousUser") {
-			view = "pay/loginform";
-		} else {
-			view = "pay/order";
-		}
-		
-		return view;
-	}
-	
-	@GetMapping("/")
-	public String orderNotLogin() {
 		return "pay/order";
 	}
 	
