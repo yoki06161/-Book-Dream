@@ -19,12 +19,12 @@ import lombok.Getter;
 @Service
 @Getter
 // 이거 클래스 명이 자바 클래스랑 같지 않아서 실행 안됐었음
-public class Prod_Crawling4 {
+public class Prod_Crawling6 {
 
 	// 빨라지는거라는데 모르겠음
 	@Cacheable("bookList")
 	// 상품 리스트 크롤링
-	// !!!!!!!!!!!!!!!자동 스크롤 버전 근데 화면을 못숨김
+	// !!!!!!!!!!!!!!!자동 스크롤 버전 근데 css를 못찾음
 	public static void getc_Datas() {
 		System.setProperty("webdriver.chrome.driver", "C:/kdigital/test_Craw/chromedriver-win64/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
