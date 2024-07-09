@@ -1,6 +1,5 @@
 package com.bookdream.sbb.user;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,11 +24,6 @@ public class UserService {
             throw new DataIntegrityViolationException("이미 등록된 이메일입니다.");
         }
 
-        // 중복 사용자 이름 검사
-        if (userRepository.existsByUsername(map.get("username"))) {
-            throw new DataIntegrityViolationException("이미 등록된 사용자 이름입니다.");
-        }
-
         SiteUser user = new SiteUser();
         user.setUsername(map.get("username"));
         user.setEmail(map.get("email"));
@@ -37,6 +31,7 @@ public class UserService {
         this.userRepository.save(user);
         return user;
     }
+
     
     public SiteUser getUser(String email) {
         Optional<SiteUser> siteUser = this.userRepository.findByEmail(email);
@@ -82,17 +77,14 @@ public class UserService {
     }
     
  // 사용자 업데이트 메서드
-    @Transactional
-    public void modify(String currentUserEmail, Map<String, String> modifyMap, SiteUser user) {
-        Optional<SiteUser> siteUser = userRepository.findByEmail(currentUserEmail);
-        if (!siteUser.isPresent()) {
-            throw new DataNotFoundException("사용자를 찾을 수 없습니다.");
-        }
-
-        String newPassword = modifyMap.get("password");
-        user.setPassword(passwordEncoder.encode(newPassword));
+    
+    public void modifyPassword(SiteUser user, String password) {
+    	user.setPassword(passwordEncoder.encode(password));
         this.userRepository.save(user);
-        
+    }
+
+    public boolean isSamePassword(SiteUser user, String password){
+        return passwordEncoder.matches(password, user.getPassword());
     }
 
 }
