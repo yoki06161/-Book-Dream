@@ -1,32 +1,153 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
 	<title>레이아웃</title>
+	<style>
+		a {
+			text-decoration: none;
+		}
+		
+		.flex_wrap {
+			display: flex;
+			gap: 50px;
+		}
+		
+		.txt_wrap {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
+		
+		.title {
+			font-size: 30px;
+			font-style: bold;
+		}
+		
+		.bcount {
+			height: 46px;
+			width: 66px;
+			border: 1px solid #cdcdcd;
+			outline: none;
+		}
+	
+		/*카운트 옆 화살표 지우기*/	
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+		  -webkit-appearance: none;
+		  margin: 0;
+		}
+		
+		input[type='number'] {
+		  -moz-appearance: textfield;
+		}
+		
+		.c_wrap {
+			display: flex;
+		}
+		
+		.cb_wrap > button {
+			display: block;
+			border: none;
+		}
+		
+		.b_wrap {
+			display: flex;
+			gap: 30px;
+		}
+		
+		.basket {
+			padding: 10px;
+			color: #fff;
+			background: #0d6efd;
+			border-radius: 10px;
+		}
+		
+		.buy {
+			padding: 10px;
+			color: #fff;
+			background: #d63384;
+			border-radius: 10px;
+		}
+		
+	</style>
 	<body>
-		책 제목 : <br>
-		<span th:text="${session.s_title}"></span><br>
-		<img th:src="${session.s_img}" /><br>
-		<span th:text="${session.s_price}"></span><br>
-		<a th:href="@{/session}">섹션테스트 이동</a><br>
-		js로 간단하게 만든 장바구니.
-		<!--session으로 장바구니 여부봐야겠지-->
-		<a href="#" onclick="aa()">장바구니</a><br>
-		<a href="#">바로구매</a><br>
+		<div class="flex_wrap">
+			<img th:src="${session.s_img}" />
+			<div class="txt_wrap">
+				<span th:text="${session.s_title}" class="title"></span>
+				<div class="s_wrap">
+					<span>판매가</span> <span th:text="${session.s_price}"></span>
+				</div>
+				<div class="c_wrap">
+					<!--class로하면 js설정하기 귀찮아서 아이디로함-->
+					<input type="number" min="1" max="500" class="bcount" value="1"/>
+					<div class="cb_wrap">
+						<button onclick="add()">증가</button>
+						<button onclick="min()">감소</button>
+					</div>
+					<span>총가격 </span> <span class="result"></span><span>원</span>
+				</div>
+				<div class="b_wrap">
+					<!--session으로 장바구니 여부봐야겠지-->
+					<a href="#" onclick="aa()" class="basket">장바구니</a>
+					<a href="#" class="buy">바로구매</a>
+				</div>
+			</div>
+		</div>
 		<hr>
-		<br>
+		<!--
+		<a th:href="@{/session}">섹션테스트 이동</a><br>
+		-->
 		<h3>책소개</h3><br>
 		<span th:text="${C_detail}"></span>
 	</body>
 	
-		<script>
-			let click = false;
-			function aa() {
-				if(!click){
-					alert('장바구니에 추가되었습니다.');
-					click = true;
-				}else {
-					alert('이미 장바구니에 있습니다.');
-				}
-			}
-		</script>
+	<script th:inline="javascript">
+		// session.s_price를 js 변수로 변환. /*는 주석이 아니라 /*.[[로 th템플릿 속성이랜다.
+	    var price = /*[[${session.s_price}]]*/ '0'; // 초기값 '0' 설정
+	    
+	    // ,제거 후 실수로 변환. ,가 찾을 문자. g는 전역 검색을 뜻. 모든 ','을 ''로 바꾸겠단 뜻
+	    price = parseFloat(price.replace(/,/g, ''));
+	    
+	    let click = false;
+	    let input = document.querySelector('.bcount');
+	    let result = document.querySelector('.result');
+	    let count = 1;
+
+	    function aa() {
+	        if (!click) {
+	            alert('장바구니에 추가되었습니다.');
+	            click = true;
+	        } else {
+	            alert('이미 장바구니에 있습니다.');
+	        }
+	    }
+
+	    function add() {
+	        if (count < 500) {
+	            count = count + 1;
+	            input.value = count;
+	            updateResult();
+	        }
+	    }
+
+	    function min() {
+	        if (count > 1) {
+	            count = count - 1;
+	            input.value = count;
+	            updateResult();
+	        }
+	    }
+
+	    function updateResult() {
+	        let total = count * price;
+			// textContent는 텍스트 속성을 뜻함.
+	        result.textContent = total.toLocaleString();
+	    }
+
+	    // 페이지 로드 시 초기 결과값 설정
+		// 없는게 나은거같다
+	    updateResult();
+	</script>
+
 </div>
 </html>

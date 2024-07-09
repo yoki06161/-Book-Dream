@@ -48,6 +48,7 @@ public class Prod_Crawling2 {
             // 페이지 실행시 로딩 최대 5초 기다리게
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
             // 내용 넣기
+            // Element랑 같은건데 조건문이 가능한듯. 이건 wait.until이라고 조건 맞췄고. until은 기다리는거. ExpectedCondition은 조건을 나타내는 인터페이스. visibilityOfElementLocated는 요소가 화면에 보일때까지 기다리는거.
             // div:nth-child(17)때문에 17번째에 없는건 그냥 오류뜨는데 그렇다고 17을 없애면 다른 div들 이름이 겹쳐서 첫번째꺼가 출력된다...
             WebElement book_detail = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#Ere_prod_allwrap > div.Ere_prod_middlewrap > div:nth-child(17) > div.Ere_prod_mconts_R")));
 

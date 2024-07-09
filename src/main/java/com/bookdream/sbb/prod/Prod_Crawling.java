@@ -38,6 +38,7 @@ public class Prod_Crawling {
 	    Elements books_price = doc.select("#Myform > div > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > ul > li > span[class='']:nth-child(1)");
 	    Elements books_writer = doc.select("#Myform > div > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > ul > li:nth-child(3)");
 	    Elements books_id = doc.select("#Myform > div.ss_book_box");
+	    Elements books_sub = doc.select("#Myform > div > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > ul > li:nth-child(2) > span.ss_f_g2");
 	    
 	    // div째로 출력되는거
 	    // 어째서인지 여기서 books_price.attr("itemid")은 값이 없다.
@@ -50,6 +51,8 @@ public class Prod_Crawling {
             Element price = books_price.get(i);
             Element writer = books_writer.get(i);
             Element id = books_id.get(i);
+//            Element sub = books_sub.get(i);
+//            System.out.println(i + "번째 소제목 " + sub);
             
             Prod_Books books = Prod_Books.builder()
 	            .book_title(title.text())

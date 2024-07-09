@@ -36,8 +36,8 @@ public class Prod_Controller {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
 		model.addAttribute("C_Books", book_list);
 		
-		System.out.println("모델값");
-		System.out.println(model);
+//		System.out.println("모델값");
+//		System.out.println(model);
 		return "prod/prod_list";
 	}
 	
