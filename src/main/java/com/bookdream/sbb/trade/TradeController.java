@@ -1,11 +1,16 @@
 package com.bookdream.sbb.trade;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +31,9 @@ public class TradeController {
 
     @Autowired
     private ChatService chatService;
-    
+
+    private final String uploadDir = "C:/Users/TJ/git/Book-Dream/src/main/resources/templates/trade/images/";
+
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
         Page<Trade> paging = tradeService.getList(page, kw);
@@ -41,7 +48,7 @@ public class TradeController {
         model.addAttribute("trade", trade);
         return "trade/detail";
     }
-    
+
     @GetMapping("/create")
     public String createTradeForm(Model model, HttpSession session) {
         String username = (String) session.getAttribute("username");
@@ -58,7 +65,7 @@ public class TradeController {
 
             if (!imageFile.isEmpty()) {
                 String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-                String filePath = "C:/uploads/" + fileName;
+                String filePath = uploadDir + fileName;
                 File destFile = new File(filePath);
                 destFile.getParentFile().mkdirs();
                 imageFile.transferTo(destFile);
@@ -87,20 +94,18 @@ public class TradeController {
         try {
             if (!imageFile.isEmpty()) {
                 String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-                String filePath = "C:/uploads/" + fileName; // 파일이 저장될 경로 설정
+                String filePath = uploadDir + fileName;
                 File destFile = new File(filePath);
-                // 경로가 존재하지 않으면 디렉토리를 생성
                 destFile.getParentFile().mkdirs();
                 imageFile.transferTo(destFile);
-                updatedTrade.setImage(fileName); // 업데이트된 Trade 엔티티에 이미지 파일명 저장
+                updatedTrade.setImage(fileName);
             }
             tradeService.updateTrade(idx, updatedTrade);
             redirectAttributes.addFlashAttribute("successMsg", "상품 수정 성공!!");
             return "redirect:/trade/detail/" + idx;
         } catch (Exception e) {
-            // 예외 로그 출력
             System.out.println("Exception occurred while updating trade: " + e.getMessage());
-            e.printStackTrace(); // 콘솔에 예외 출력
+            e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMsg", "상품 수정 실패: " + e.getMessage());
             return "redirect:/trade/edit/" + idx;
         }
@@ -112,16 +117,16 @@ public class TradeController {
         redirectAttributes.addFlashAttribute("successMsg", "상품 삭제 성공!!");
         return "redirect:/trade/list";
     }
-    
+
     @GetMapping("/book")
     @ResponseBody
-    public ResponseEntity<Trade> getBookInfo(@RequestParam("title") String title) {
+    public ResponseEntity<Trade> getBookInfo(@RequestParam(name = "title") String title) {
         Trade trade = tradeService.getTradeByTitle(title);
 
         if (trade != null) {
-            return new ResponseEntity<>(trade, HttpStatus.OK);
+            return ResponseEntity.ok(trade);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 }
