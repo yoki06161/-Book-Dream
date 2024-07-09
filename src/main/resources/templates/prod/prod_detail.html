@@ -7,17 +7,25 @@
 		<img th:src="${session.s_img}" /><br>
 		<span th:text="${session.s_price}"></span><br>
 		<a th:href="@{/session}">섹션테스트 이동</a><br>
-		
-		<a href="#" onclick="aa()">장바구니</a>
+		js로 간단하게 만든 장바구니.
+		<!--session으로 장바구니 여부봐야겠지-->
+		<a href="#" onclick="aa()">장바구니</a><br>
 		<a href="#">바로구매</a><br>
 		<hr>
 		<br>
 		<h3>책소개</h3><br>
 		<span th:text="${C_detail}"></span>
 	</body>
+	
 		<script>
+			let click = false;
 			function aa() {
-				alert('장바구니에 추가되었습니다.');
+				if(!click){
+					alert('장바구니에 추가되었습니다.');
+					click = true;
+				}else {
+					alert('이미 장바구니에 있습니다.');
+				}
 			}
 		</script>
 </div>

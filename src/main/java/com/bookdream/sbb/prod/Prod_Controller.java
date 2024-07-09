@@ -45,7 +45,7 @@ public class Prod_Controller {
 	@GetMapping("/prod/detail")
 	public String prod_book(Model model,@RequestParam("l_title") String title, @RequestParam("l_img") String img, @RequestParam("l_price") String price, @RequestParam("l_id") String id, HttpSession session) throws IOException {
 		// 여기서 Model model = null;로 하면 모델값 널이라고 오류뜬다. 위의 ()안에서 설정해야함.
-		String book_details = Prod_Crawling6.getc_Datas(id);
+		String book_details = Prod_Crawling2.getc_Datas(id);
 		model.addAttribute("C_detail", book_details);
 //		System.out.println("모델출력이 안된다고?");
 //		System.out.println("테스트용 모델값" + model);
