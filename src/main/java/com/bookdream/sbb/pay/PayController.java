@@ -45,4 +45,9 @@ public class PayController {
 	public String loginform() {
 		return "pay/loginform";
 	}
+	
+	@GetMapping("/pay/success")
+	public String paySuccess() {
+		return "pay/pay_success";
+	}
 }
