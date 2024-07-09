@@ -25,7 +25,7 @@ public class Trade {
     private int price;
 
     @NotNull
-    private String writer;
+    private String info;
 
     private String intro;
     private LocalDateTime postdate;

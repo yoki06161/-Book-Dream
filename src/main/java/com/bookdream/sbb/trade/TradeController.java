@@ -1,26 +1,22 @@
 package com.bookdream.sbb.trade;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.bookdream.sbb.trade.chat.ChatService;
-
 import jakarta.servlet.http.HttpSession;
+
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/trade")
@@ -30,9 +26,9 @@ public class TradeController {
     private TradeService tradeService;
 
     @Autowired
-    private ChatService chatService;
+    private TradeCrawling tradeCrawling;
 
-    private final String uploadDir = "C:/Users/TJ/git/Book-Dream/src/main/resources/templates/trade/images/";
+    private final String uploadDir = "C:/Users/TJ/git/Book-Dream/src/main/resources/static/image/";
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
@@ -58,19 +54,24 @@ public class TradeController {
     }
 
     @PostMapping("/create")
-    public String createTrade(@ModelAttribute Trade trade, @RequestParam("imageFile") MultipartFile imageFile, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String createTrade(@ModelAttribute Trade trade, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
             String username = (String) session.getAttribute("username");
             trade.setId(username);
 
-            if (!imageFile.isEmpty()) {
-                String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+            if (trade.getImage() != null && !trade.getImage().isEmpty()) {
+                String imageUrl = trade.getImage();
+                String fileName = UUID.randomUUID().toString() + ".jpg";
                 String filePath = uploadDir + fileName;
-                File destFile = new File(filePath);
-                destFile.getParentFile().mkdirs();
-                imageFile.transferTo(destFile);
-                trade.setImage(fileName);
+
+                // 이미지 다운로드 및 저장
+                try (InputStream in = new URL(imageUrl).openStream()) {
+                    Files.copy(in, Paths.get(filePath));
+                }
+
+                trade.setImage(fileName); // 로컬 파일 이름으로 설정
             }
+
             tradeService.createTrade(trade);
             redirectAttributes.addFlashAttribute("successMsg", "상품 등록 성공!!");
             return "redirect:/trade/list";
@@ -90,16 +91,34 @@ public class TradeController {
     }
 
     @PostMapping("/edit/{idx}")
-    public String updateTrade(@PathVariable("idx") int idx, @ModelAttribute Trade updatedTrade, @RequestParam("imageFile") MultipartFile imageFile, RedirectAttributes redirectAttributes) {
+    public String updateTrade(@PathVariable("idx") int idx, @ModelAttribute Trade updatedTrade, RedirectAttributes redirectAttributes) {
         try {
-            if (!imageFile.isEmpty()) {
-                String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+            Trade existingTrade = tradeService.getTradeById(idx);
+
+            // 크롤링된 이미지 URL을 로컬에 저장
+            if (updatedTrade.getImage() != null && !updatedTrade.getImage().isEmpty()) {
+                String imageUrl = updatedTrade.getImage();
+                String fileName = UUID.randomUUID().toString() + ".jpg";
                 String filePath = uploadDir + fileName;
-                File destFile = new File(filePath);
-                destFile.getParentFile().mkdirs();
-                imageFile.transferTo(destFile);
-                updatedTrade.setImage(fileName);
+
+                // 기존 이미지 삭제
+                if (existingTrade.getImage() != null && !existingTrade.getImage().isEmpty()) {
+                    File existingFile = new File(uploadDir + existingTrade.getImage());
+                    if (existingFile.exists()) {
+                        existingFile.delete();
+                    }
+                }
+
+                // 이미지 다운로드 및 저장
+                try (InputStream in = new URL(imageUrl).openStream()) {
+                    Files.copy(in, Paths.get(filePath));
+                }
+
+                updatedTrade.setImage(fileName); // 로컬 파일 이름으로 설정
+            } else {
+                updatedTrade.setImage(existingTrade.getImage());
             }
+
             tradeService.updateTrade(idx, updatedTrade);
             redirectAttributes.addFlashAttribute("successMsg", "상품 수정 성공!!");
             return "redirect:/trade/detail/" + idx;
@@ -113,17 +132,31 @@ public class TradeController {
 
     @GetMapping("/delete/{idx}")
     public String deleteTrade(@PathVariable("idx") int idx, RedirectAttributes redirectAttributes) {
-        tradeService.deleteTrade(idx);
-        redirectAttributes.addFlashAttribute("successMsg", "상품 삭제 성공!!");
+        try {
+            Trade trade = tradeService.getTradeById(idx);
+            if (trade.getImage() != null && !trade.getImage().isEmpty()) {
+                File imageFile = new File(uploadDir + trade.getImage());
+                if (imageFile.exists()) {
+                    imageFile.delete();
+                }
+            }
+            tradeService.deleteTrade(idx);
+            redirectAttributes.addFlashAttribute("successMsg", "상품 삭제 성공!!");
+        } catch (Exception e) {
+            System.out.println("Exception occurred while deleting trade: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMsg", "상품 삭제 실패: " + e.getMessage());
+        }
         return "redirect:/trade/list";
     }
 
     @GetMapping("/book")
     @ResponseBody
     public ResponseEntity<Trade> getBookInfo(@RequestParam(name = "title") String title) {
-        Trade trade = tradeService.getTradeByTitle(title);
+        List<Trade> trades = tradeCrawling.searchBooks(title);
 
-        if (trade != null) {
+        if (!trades.isEmpty()) {
+            Trade trade = trades.get(0);
             return ResponseEntity.ok(trade);
         } else {
             return ResponseEntity.notFound().build();

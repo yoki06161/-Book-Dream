@@ -1,25 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
-    <h2 class="border-bottom py-2">거래 상세 정보</h2>
-    <div class="card my-3">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${trade.title}"></h5>
-            <p class="card-text">가격: <span th:text="${trade.price}"></span></p>
-            <p class="card-text">지은이: <span th:text="${trade.writer}"></span></p>
-            <p class="card-text">소개: <span th:text="${trade.intro}"></span></p>
-            <p class="card-text">게시일: <span th:text="${#temporals.format(trade.postdate, 'yyyy-MM-dd HH:mm')}"></span></p>
-            <p class="card-text"><img th:src="@{|/trade/images/${trade.image}|}" alt="Image" /></p>
-            <!-- 수정 링크 -->
-            <a th:href="@{|/trade/edit/${trade.idx}|}" class="btn btn-sm btn-outline-primary">수정</a>
-            <!-- 삭제 링크 -->
-            <a th:href="@{|/trade/delete/${trade.idx}|}" class="delete btn btn-sm btn-outline-secondary" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>
+<head>
+    <title>중고거래 상세보기</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card img {
+            max-width: 100%;
+            height: auto;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content" class="container my-3">
+        <h2 class="border-bottom py-2">거래 상세 정보</h2>
+        <div class="card my-3">
+            <div class="row no-gutters">
+                <div class="col-md-4 text-center my-auto">
+                    <img th:src="@{|/static/image/${trade.image}|}" alt="Image" class="img-fluid" />
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${trade.title}"></h5>
+                        <p class="card-text"><span th:text="${trade.info}"></span></p>
+                        <p class="card-text"><span th:text="${#temporals.format(trade.postdate, 'yyyy-MM-dd HH:mm')}"></span></p>
+                        <p class="card-text">소개: <span th:text="${trade.intro}"></span></p>
+                        <p class="card-text">가격: <span th:text="${trade.price}"></span>원</p>
+                        <a th:href="@{|/trade/edit/${trade.idx}|}" class="btn btn-sm btn-outline-primary">수정</a>
+                        <a th:href="@{|/trade/delete/${trade.idx}|}" class="delete btn btn-sm btn-outline-secondary" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>
+                        
+                        <!-- 채팅
+                        <a th:href="@{|/trade/chat?senderId=${currentUserId}&receiverId=${trade.userId}|}" class="btn btn-sm btn-outline-success">채팅하기</a> -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-<script th:inline="javascript">
-    // 추가적인 JavaScript 코드가 필요하다면 여기에 작성
-</script>
-
+</body>
 </html>

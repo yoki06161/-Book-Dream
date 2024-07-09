@@ -3,41 +3,71 @@
 <head>
     <script type="text/javascript">
         function fillFields() {
-            var title = document.getElementById('title').value;
+            var searchKeyword = document.getElementById('searchKeyword').value;
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/trade/book?title=' + encodeURIComponent(title), true);
+            xhr.open('GET', '/trade/book?title=' + encodeURIComponent(searchKeyword), true);
 
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
-                    document.getElementById('writer').value = data.writer;
-                    document.getElementById('price').value = data.price;
+                    console.log(data); // 디버깅 메시지 추가
+                    document.getElementById('title').value = data.title; // 가져온 제목 설정
+                    document.getElementById('info').value = data.info; // 변경된 필드명
+                    document.getElementById('originalPrice').value = data.price; // 원래 정가를 넣음
                     document.getElementById('intro').value = data.intro;
+                    document.getElementById('hiddenImage').value = data.image; // 숨겨진 필드에 이미지 URL 설정
+                    var imageContainer = document.getElementById('imageContainer');
+                    imageContainer.innerHTML = '<img src="' + data.image + '" alt="Book Image" style="max-width: 200px;" />';
+                    
+                    // 필드 비활성화
+                    document.getElementById('title').disabled = true;
+                    document.getElementById('info').disabled = true;
+                } else {
+                    alert('책 정보를 찾을 수 없습니다.');
                 }
             };
 
             xhr.send();
+        }
+
+        function enableFieldsAndSubmit() {
+            document.getElementById('title').disabled = false;
+            document.getElementById('info').disabled = false;
+            document.getElementById('tradeForm').submit();
         }
     </script>
 </head>
 <body>
     <div layout:fragment="content" class="container mt-4">
         <h1>Create Trade</h1>
-        <form th:action="@{/trade/create}" th:object="${trade}" method="post" enctype="multipart/form-data">
+        <form id="tradeForm" th:action="@{/trade/create}" th:object="${trade}" method="post" enctype="multipart/form-data">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="hidden" id="id" th:field="*{id}" th:value="${username}" />
+            <input type="hidden" id="hiddenImage" th:field="*{image}" /> <!-- 숨겨진 이미지 필드 -->
             <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+            
+            <!-- 책 검색 전용 입력 필드 -->
             <div class="mb-3">
-                <label for="title" class="form-label">제목:</label>
-                <input type="text" id="title" class="form-control" th:field="*{title}" required />
+                <label for="searchKeyword" class="form-label">책 검색:</label>
+                <input type="text" id="searchKeyword" class="form-control" required />
                 <button type="button" class="btn btn-primary" onclick="fillFields()">찾기</button>
             </div>
+            
+            <!-- 비활성화된 제목 필드 -->
             <div class="mb-3">
-                <label for="writer" class="form-label">지은이:</label>
-                <input type="text" id="writer" class="form-control" th:field="*{writer}" required />
+                <label for="title" class="form-label">제목:</label>
+                <input type="text" id="title" class="form-control" th:field="*{title}" required disabled />
             </div>
             <div class="mb-3">
-                <label for="price" class="form-label">가격:</label>
+                <label for="info" class="form-label">책 정보:</label>
+                <input type="text" id="info" class="form-control" th:field="*{info}" disabled />
+            </div>
+            <div class="mb-3">
+                <label for="originalPrice" class="form-label">정가:</label>
+                <input type="text" id="originalPrice" class="form-control" disabled />
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">판매가:</label>
                 <input type="text" id="price" class="form-control" th:field="*{price}" required />
             </div>
             <div class="mb-3">
@@ -45,11 +75,10 @@
                 <textarea id="intro" class="form-control" th:field="*{intro}" required></textarea>
             </div>
             <div class="mb-3">
-                <label for="imageFile" class="form-label">이미지 업로드:</label>
-                <input type="file" id="imageFile" class="form-control" name="imageFile" accept=".gif, .jpg, .png" required />
+                <div id="imageContainer"></div>
             </div>
             <div>
-                <button type="submit" class="btn btn-primary">상품 등록</button>
+                <button type="button" class="btn btn-primary" onclick="enableFieldsAndSubmit()">상품 등록</button>
             </div>
         </form>
     </div>

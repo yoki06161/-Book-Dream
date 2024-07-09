@@ -51,7 +51,7 @@ public class TradeService {
             Trade trade = optionalTrade.get();
             trade.setTitle(updatedTrade.getTitle());
             trade.setPrice(updatedTrade.getPrice());
-            trade.setWriter(updatedTrade.getWriter());
+            trade.setInfo(updatedTrade.getInfo());
             trade.setIntro(updatedTrade.getIntro());
             trade.setImage(updatedTrade.getImage());
             try {

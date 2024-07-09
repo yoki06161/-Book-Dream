@@ -1,79 +1,76 @@
 package com.bookdream.sbb.trade;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
-import lombok.Getter;
-
-
 @Service
-@Getter
 public class TradeCrawling {
 
-    private static String url = "https://www.aladin.co.kr/home/welcome.aspx";
+    private static final String URL = "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&SearchWord=";
 
-    @Autowired
-    private TradeRepository tradeRepository;
-
-    @PostConstruct
-    public void crawlAndSaveBooks() {
+    public List<Trade> searchBooks(String keyword) {
+        List<Trade> trades = new ArrayList<>();
         try {
-            List<Trade> trades = scrapeBooks();
-            tradeRepository.saveAll(trades);
+            String searchUrl = URL + keyword;
+            Document doc = getHtml(searchUrl);
+            Elements books = doc.select("div.ss_book_box");
+
+            for (Element book : books) {
+                String title = book.select("a.bo3").text(); // 책 제목
+                String details = "Unknown"; // 기본값 설정
+                
+                Elements detailElements = book.select("li:contains(지은이)");
+                if (detailElements.size() > 0) {
+                    details = detailElements.get(0).text(); // 저자, 옮긴이, 출판사 정보
+                }
+                
+                String priceText = "0"; // 기본값 설정
+                Elements priceElements = book.select("li span.ss_p2 b span");
+                if (priceElements.size() > 0) {
+                    priceText = priceElements.get(0).text(); // 가격 정보
+                }
+                
+                String imgUrl = book.select("div.flipcover_in img.front_cover").attr("src"); // 이미지 URL
+
+                Trade trade = new Trade();
+                trade.setTitle(title);
+                trade.setInfo(details);
+                trade.setPrice(parsePrice(priceText));
+                trade.setImage(imgUrl);
+                trade.setIntro("");
+                trades.add(trade);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private List<Trade> scrapeBooks() throws IOException {
-        List<Trade> trades = new ArrayList<>();
-        Document doc = Jsoup.connect(url).get();
-
-        Elements books_title = doc.select("#w_thisMonth > div.swiper-wrapper > div > div.text > div.tit > a");
-        Elements books_writer = doc.select("#w_thisMonth > div.swiper-wrapper > div > div.text > div.auth > a");
-        Elements books_price = doc.select("#w_thisMonth > div.swiper-wrapper > div > div.text > div.price");
-
-        // 데이터 사이즈 비교하여 가장 작은 사이즈에 맞추어 반복
-        int minSize = Math.min(books_title.size(), Math.min(books_writer.size(), books_price.size()));
-        for (int i = 0; i < minSize; i++) {
-            Element title = books_title.get(i);
-            Element writer = books_writer.get(i);
-            Element price = books_price.get(i);
-
-            Trade trade = new Trade();
-            trade.setTitle(title.text());
-            trade.setWriter(writer.text());
-            trade.setPrice(parsePrice(price.text()));
-            trade.setIntro(""); // 내용은 초기에 비워둠
-            trade.setPostdate(LocalDateTime.now());
-
-            trades.add(trade);
-        }
-
         return trades;
     }
 
+    private Document getHtml(String url) throws IOException {
+        ExecutorService executor = Executors.newFixedThreadPool(8);
+        try {
+            return executor.submit(() -> Jsoup.connect(url).get()).get();
+        } catch (Exception e) {
+            throw new IOException("Failed to fetch HTML from " + url, e);
+        } finally {
+            executor.shutdown();
+        }
+    }
+
     private int parsePrice(String priceText) {
-        // 숫자 이외의 문자를 제거하고 숫자만 추출하여 가격을 파싱
-        Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(priceText);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group());
-        } else {
-            // 예외 처리 필요
-            return 0; // 기본값 또는 에러 처리
+        try {
+            return Integer.parseInt(priceText.replaceAll("[^0-9]", ""));
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 }
