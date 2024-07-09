@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3" style="display:flex">
+    <div style="width:230px;padding:0 10px">
+        <nav th:replace="~{user/mynav :: headerfragment}"></nav>
+    </div>
+	<nav th:fragment="headerfragment">
+		<h2>결제 수단</h2>
+	</nav>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</div>
+</html>

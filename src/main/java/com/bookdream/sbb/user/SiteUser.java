@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class SiteUser {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3" style="display:flex">
+    <div style="width:230px;padding:0 10px">
+        <nav th:replace="~{user/mynav :: headerfragment}"></nav>
+    </div>
+    <div class="main-content" style="width:700px;padding-left:50px">
+        <form action="/user/modify" method="post">
+			
+		    <!-- 현재 이메일 값을 세션에서 가져와서 input에 설정 -->
+            <label for="currentEmail">현재 이메일 : </label>
+            <!-- <input type="text" id="${currentUserEmail}" name="${currentUserEmail}" th:value="${currentUserEmail}" required /> -->
+            <span th:text="${currentUserEmail}" ></span>
+            <br>
+            <label for="currentUserName">현재 이름 : </label>
+            <!-- <input type="text" id="currentUserName" name="currentUserName" th:value="${currentUserName}" required /> -->
+            <span th:text="${currentUserName}" ></span>
+            <br>
+		    <label for="newPassword">새로운 비밀번호 : </label>
+		    <input type="password" id="newPassword" name="newPassword" required />
+			<br>
+		    <label for="confirmPassword">새로운 비밀번호 확인 : </label>
+		    <input type="password" id="confirmPassword" name="confirmPassword" required />
+			<br>
+		    <button type="submit">비밀번호 변경</button>
+
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</div>
+</html>

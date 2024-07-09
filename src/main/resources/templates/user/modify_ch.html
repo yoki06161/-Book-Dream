@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3" style="display:flex">
+    <div style="width:230px;padding:0 10px">
+        <nav th:replace="~{user/mynav :: headerfragment}"></nav>
+    </div>
+    <div class="main-content" style="width:700px;padding-left:50px">
+        <form action="/user/modify_ch" method="post">
+            <!-- 세션에서 가져온 현재 이메일 값을 hidden input으로 전달 -->
+            <input type="text" name="currentUserEmail" th:value="${currentUser.email}" />
+
+            <label for="currentPassword">현재 비밀번호:</label>
+            <input type="password" id="currentPassword" name="currentPassword" required />
+
+            <button type="submit">확인</button>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</div>
+</html>
