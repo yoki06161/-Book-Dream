@@ -1,7 +1,7 @@
 <html layout:decorate="~{layout}">
 <!-- 스크립트 블록을 정의 -->
 <th:block layout:fragment="script">
-	<script type="text/javascript" th:src="@{/js/basket-order-ui.js}"></script>
+	<script type="text/javascript" th:src="@{/js/basket-ui.js}"></script>
 </th:block>
 <main layout:fragment="content" class="container" id="container">
 <form action="order">
@@ -171,9 +171,9 @@
 		</tr>
 	</table>
 	<div class="card fixed-bottom">
-		<div class="card-body mx-auto" style="width: 1200px !important;">
+		<div class="card-body mx-auto" style="width: 1280px !important;">
 			<div class="contents d-flex justify-content-between">
-				<h4 class="align-left">총 가격: 0</h4>
+				<h4>총 가격: 0</h4>
 				<button type="submit" class="btn btn-primary" id="order" disabled>주문하기</button>
 			</div>
 		</div>
