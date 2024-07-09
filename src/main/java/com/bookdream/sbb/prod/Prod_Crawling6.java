@@ -25,37 +25,46 @@ public class Prod_Crawling6 {
 	@Cacheable("bookList")
 	// 상품 리스트 크롤링
 	// !!!!!!!!!!!!!!!자동 스크롤 버전 근데 css를 못찾음
-	public static void getc_Datas() {
+	public static String getc_Datas() {
 		// 구글 드라이버 등록. 경로는 절대경로로 해서 수정필요.
 		System.setProperty("webdriver.chrome.driver", "C:/Users/TJ/git/Book-Dream/driver/chromedriver.exe");
-        ChromeOptions options = new ChromeOptions();
-        // 이 히드네스 없애니까 됨. 혹은 스크롤내려야 뜨는 구조일지도
-        options.addArguments("--headless=new");
-        WebDriver driver = new ChromeDriver(options);
-
+		
+        ChromeOptions c_option = new ChromeOptions();
+        // 새창을 숨김. 그냥 --headless라쓰면 오류떠서 =new같이 쓴다.
+        c_option.addArguments("--headless=new");
+        WebDriver driver = new ChromeDriver(c_option);
+        String detail_txt = null;
+        
         try {
-            String url = "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=342594262";
+        	// 연결할 url
+            String url = "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=";
+            // !!!!!!!!!!여기에 각 책에 맞는 아이디 넣어야함
+            url += "342594262";
             driver.get(url);
 
-            // 자바스크립트 실행을 위한 인터페이스 설정
+            // 스크롤 내리기용 자바스크립트
             JavascriptExecutor js = (JavascriptExecutor) driver;
-
-            // 웹 페이지 끝까지 스크롤 다운
+            // 웹페이지 1200까지 스크롤 내림. 원본 사이트가 js로 스크롤 내려야 내용이 나오게 돼있어서.
             js.executeScript("window.scrollTo(0, 1200)");
             
-            // 명시적 대기 설정 (최대 5초 기다림)
+            // 페이지 실행시 로딩 최대 5초 기다리게
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-            WebElement authorInfoElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#Ere_prod_allwrap > div.Ere_prod_middlewrap > div:nth-child(17) > div.Ere_prod_mconts_R")));
+            // 내용 넣기
+            WebElement book_detail = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#Ere_prod_allwrap > div.Ere_prod_middlewrap > div:nth-child(17) > div.Ere_prod_mconts_R")));
 
             // 요소를 찾았을 때 작업 수행
-            String authorInfoText = authorInfoElement.getText();
-            System.out.println("헤에에에에에게ㅔ겍: " + authorInfoText);
+            detail_txt = book_detail.getText();
+            
+//            Prod_Books books = Prod_Books.builder().book_detail(detail_txt).build();
+            
+            System.out.println("책소개: " + detail_txt);
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             driver.quit();
         }
+		return detail_txt;
 	}
 	
 }
