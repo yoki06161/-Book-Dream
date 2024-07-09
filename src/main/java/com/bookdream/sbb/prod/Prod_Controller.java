@@ -36,16 +36,16 @@ public class Prod_Controller {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
 		model.addAttribute("C_Books", book_list);
 		
-//		System.out.println("모델값");
-//		System.out.println(model);
+		System.out.println("모델값");
+		System.out.println(model);
 		return "prod/prod_list";
 	}
 	
 	// 제품 상세보기
 	@GetMapping("/prod/detail")
-	public String prod_book(Model model,@RequestParam("l_title") String title, @RequestParam("l_img") String img, @RequestParam("l_price") String price, HttpSession session) throws IOException {
+	public String prod_book(Model model,@RequestParam("l_title") String title, @RequestParam("l_img") String img, @RequestParam("l_price") String price, @RequestParam("l_id") String id, HttpSession session) throws IOException {
 		// 여기서 Model model = null;로 하면 모델값 널이라고 오류뜬다. 위의 ()안에서 설정해야함.
-		String book_details = Prod_Crawling6.getc_Datas();
+		String book_details = Prod_Crawling6.getc_Datas(id);
 		model.addAttribute("C_detail", book_details);
 //		System.out.println("모델출력이 안된다고?");
 //		System.out.println("테스트용 모델값" + model);

@@ -25,7 +25,7 @@ public class Prod_Crawling6 {
 	@Cacheable("bookList")
 	// 상품 리스트 크롤링
 	// !!!!!!!!!!!!!!!자동 스크롤 버전 근데 css를 못찾음
-	public static String getc_Datas() {
+	public static String getc_Datas(String book_id) {
 		// 구글 드라이버 등록. 경로는 절대경로로 해서 수정필요.
 		System.setProperty("webdriver.chrome.driver", "C:/Users/TJ/git/Book-Dream/driver/chromedriver.exe");
 		
@@ -39,7 +39,7 @@ public class Prod_Crawling6 {
         	// 연결할 url
             String url = "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=";
             // !!!!!!!!!!여기에 각 책에 맞는 아이디 넣어야함
-            url += "342594262";
+            url += book_id;
             driver.get(url);
 
             // 스크롤 내리기용 자바스크립트

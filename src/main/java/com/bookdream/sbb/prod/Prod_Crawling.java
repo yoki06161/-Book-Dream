@@ -37,6 +37,7 @@ public class Prod_Crawling {
 	    // span[class='']:nth-child(1) 이름이 지정되지 않은 클래스에서 1번째 아이
 	    Elements books_price = doc.select("#Myform > div > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > ul > li > span[class='']:nth-child(1)");
 	    Elements books_writer = doc.select("#Myform > div > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > ul > li:nth-child(3)");
+	    Elements books_id = doc.select("#Myform > div.ss_book_box");
 	    
 	    // div째로 출력되는거
 	    // 어째서인지 여기서 books_price.attr("itemid")은 값이 없다.
@@ -48,22 +49,24 @@ public class Prod_Crawling {
             Element img = books_img.get(i);
             Element price = books_price.get(i);
             Element writer = books_writer.get(i);
+            Element id = books_id.get(i);
             
             Prod_Books books = Prod_Books.builder()
 	            .book_title(title.text())
 	            .book_img(img.attr("src"))
 	            .book_price(price.text())
 	            .book_writer(writer.text())
+	            .book_id(id.attr("itemid"))
 	            // 여기에 책의 가격 정보나 추가적인 정보를 가져와서 설정할 수 있음
 	            .build();
-	    
+            
     	 book_list.add(books);
     	 // books에는 Prod_Books(book_title=제목, book_img=https://생략, book_price=0)식으로 저장됨
 //    	 System.out.println(books.getBook_title());
 //    	 System.out.println(books.getBook_img());
 //    	 System.out.println(books.getBook_price());
 //    	 System.out.println(books.getBook_writer());
-//    	 System.out.println("책 아이디 " + books.getBook_id());
+//    	 System.out.println("책 아이디" + books_id.get(i).text());
 	    }
 //		System.out.println(book_list);
 	    return book_list;
