@@ -36,9 +36,6 @@ public class Prod_Controller {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
 		model.addAttribute("C_Books", book_list);
 		
-		// 테스트용
-//		Prod_Crawling.getdetail("d");
-		
 //		System.out.println("모델값");
 //		System.out.println(model);
 		return "prod/prod_list";
@@ -48,6 +45,7 @@ public class Prod_Controller {
 	@GetMapping("/prod/detail")
 	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img, @RequestParam("l_price") String price, HttpSession session) throws IOException {
 		Prod_Crawling6.getc_Datas();
+		
 //		System.out.println("상세페이지에 출력될 타이틀 " + title);
 //		System.out.println("상세페이지에 출력될 이미지 " + img);
 //		System.out.println("상세페이지에 출력될 가격 " + price);

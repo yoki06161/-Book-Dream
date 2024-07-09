@@ -26,7 +26,8 @@ public class Prod_Crawling6 {
 	// 상품 리스트 크롤링
 	// !!!!!!!!!!!!!!!자동 스크롤 버전 근데 css를 못찾음
 	public static void getc_Datas() {
-		System.setProperty("webdriver.chrome.driver", "C:/kdigital/test_Craw/chromedriver-win64/chromedriver.exe");
+		// 구글 드라이버 등록. 경로는 절대경로로 해서 수정필요.
+		System.setProperty("webdriver.chrome.driver", "C:/Users/TJ/git/Book-Dream/driver/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         // 이 히드네스 없애니까 됨. 혹은 스크롤내려야 뜨는 구조일지도
         options.addArguments("--headless=new");
