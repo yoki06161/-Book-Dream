@@ -24,7 +24,7 @@ public class Prod_Crawling4 {
 	// 빨라지는거라는데 모르겠음
 	@Cacheable("bookList")
 	// 상품 리스트 크롤링
-	// !!!!!!!!!!!!!!!자동 스크롤 버전 근데 화면을 못숨김
+	// !!!!!!!!!!!!!!!성공!!!!!!! 자동 스크롤 버전 근데 화면을 못숨김
 	public static void getc_Datas() {
 		System.setProperty("webdriver.chrome.driver", "C:/kdigital/test_Craw/chromedriver-win64/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
@@ -43,7 +43,7 @@ public class Prod_Crawling4 {
             js.executeScript("window.scrollTo(0, 1200)");
             
             // 명시적 대기 설정 (최대 10초 기다림)
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1));
             WebElement authorInfoElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#Ere_prod_allwrap > div.Ere_prod_middlewrap > div:nth-child(17) > div.Ere_prod_mconts_R")));
 
             // 요소를 찾았을 때 작업 수행

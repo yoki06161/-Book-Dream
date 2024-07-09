@@ -29,7 +29,7 @@ public class Prod_Crawling6 {
 		System.setProperty("webdriver.chrome.driver", "C:/kdigital/test_Craw/chromedriver-win64/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         // 이 히드네스 없애니까 됨. 혹은 스크롤내려야 뜨는 구조일지도
-//        options.addArguments("--headless");
+        options.addArguments("--headless=new");
         WebDriver driver = new ChromeDriver(options);
 
         try {
@@ -42,13 +42,13 @@ public class Prod_Crawling6 {
             // 웹 페이지 끝까지 스크롤 다운
             js.executeScript("window.scrollTo(0, 1200)");
             
-            // 명시적 대기 설정 (최대 10초 기다림)
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            // 명시적 대기 설정 (최대 5초 기다림)
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
             WebElement authorInfoElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#Ere_prod_allwrap > div.Ere_prod_middlewrap > div:nth-child(17) > div.Ere_prod_mconts_R")));
 
             // 요소를 찾았을 때 작업 수행
             String authorInfoText = authorInfoElement.getText();
-            System.out.println("책소개: " + authorInfoText);
+            System.out.println("헤에에에에에게ㅔ겍: " + authorInfoText);
 
         } catch (Exception e) {
             e.printStackTrace();
