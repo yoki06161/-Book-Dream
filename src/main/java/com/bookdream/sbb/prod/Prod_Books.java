@@ -13,5 +13,7 @@ public class Prod_Books {
 	private String book_img;
 	private String book_price;
 	private String book_writer;
+	private String book_intro;
 	private String book_id;
+	
 }
