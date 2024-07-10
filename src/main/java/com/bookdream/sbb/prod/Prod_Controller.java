@@ -32,10 +32,9 @@ public class Prod_Controller {
 	@GetMapping("/prod")
 	// 컨트롤러에서 뷰로 데이터 전달할때 쓰는게 model
 	public String prod_list(Model model) throws IOException {
-		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
+		List<Prod_Books> book_list = Prod_Crawling3.getc_Datas();
 		model.addAttribute("C_Books", book_list);
-		
 //		System.out.println("모델값");
 //		System.out.println(model);
 		return "prod/prod_list";
@@ -43,21 +42,21 @@ public class Prod_Controller {
 	
 	// 제품 상세보기
 	@GetMapping("/prod/detail")
-	public String prod_book(Model model,@RequestParam("l_title") String title, @RequestParam("l_img") String img, @RequestParam("l_price") String price, @RequestParam("l_id") String id, HttpSession session) throws IOException {
-		// 여기서 Model model = null;로 하면 모델값 널이라고 오류뜬다. 위의 ()안에서 설정해야함.
-		String book_details = Prod_Crawling2.getc_Datas(id);
-		model.addAttribute("C_detail", book_details);
-//		System.out.println("모델출력이 안된다고?");
-//		System.out.println("테스트용 모델값" + model);
-		
+	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img,
+			@RequestParam("l_price") String price, @RequestParam("l_writer") String writer,
+			@RequestParam("l_intro") String intro,
+			HttpSession session) throws IOException {
 //		System.out.println("상세페이지에 출력될 타이틀 " + title);
 //		System.out.println("상세페이지에 출력될 이미지 " + img);
 //		System.out.println("상세페이지에 출력될 가격 " + price);
 		session.setAttribute("s_title", title);
 		session.setAttribute("s_img", img);
 		session.setAttribute("s_price", price);
+		session.setAttribute("s_writer", writer);
+		session.setAttribute("s_intro", intro);
 		return "prod/prod_detail";
 	}
+	
 	
 	// 제품 상세보기
 		@GetMapping("/session")
