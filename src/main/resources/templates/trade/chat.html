@@ -1,92 +1,136 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
-    <h2 class="border-bottom py-2" style="text-align: center;">채팅하기</h2>
-    <div class="card my-3">
-        <div class="card-body">
-            <div class="container-fluid chat_section" id="chat-box" style="overflow: auto; height: 600px; border: 1px solid #ddd; padding: 10px;">
-                <div th:each="chat : ${chatList}">
-                    <div th:if="${chat.senderId == senderId}" class="outgoing_msg">
-                        <div class="sent_msg">
-                            <p th:text="${chat.message}"></p>
-                            <span class="time_date" th:text="${chat.createdAt}"></span>
-                        </div>
+<html layout:decorate="~{layout}">
+<head>
+    <title>채팅</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .chat_section {
+            overflow: auto;
+            height: 600px;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        .outgoing_msg {
+            text-align: right;
+        }
+        .sent_msg, .received_withd_msg {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .sent_msg {
+            background-color: #dcf8c6;
+        }
+        .received_withd_msg {
+            background-color: #f1f0f0;
+        }
+        .time_date {
+            display: block;
+            font-size: 0.8em;
+            color: #999;
+        }
+    </style>
+    
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const chatOutgoingButton = document.getElementById('chat-outgoing-button');
+            const chatOutgoingMsg = document.getElementById('chat-outgoing-msg');
+            const chatBox = document.getElementById('chat-box');
+            const senderId = '[[${senderId}]]';
+            const receiverId = '[[${receiverId}]]';
+
+            function sendMessage() {
+                const message = chatOutgoingMsg.value.trim();
+                if (message) {
+                    fetch('/trade/chat/send', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ senderId: senderId, receiverId: receiverId, message: message })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        chatOutgoingMsg.value = ''; // 입력 필드를 공백으로 설정
+                        chatBox.innerHTML += `
+                            <div class="outgoing_msg">
+                                <div class="sent_msg">
+                                    <p>${data.message}</p>
+                                    <span class="time_date">${new Date(data.createdAt).toLocaleString()}</span>
+                                </div>
+                            </div>
+                        `;
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+            }
+
+            function fetchChatHistory() {
+                fetch(`/trade/chat/history?senderId=${senderId}&receiverId=${receiverId}`, {
+                    method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    chatBox.innerHTML = '';
+                    data.forEach(chat => {
+                        chatBox.innerHTML += `
+                            <div class="${chat.senderId === senderId ? 'outgoing_msg' : 'received_msg'}">
+                                <div class="${chat.senderId === senderId ? 'sent_msg' : 'received_withd_msg'}">
+                                    <p>${chat.message}</p>
+                                    <span class="time_date">${new Date(chat.createdAt).toLocaleString()}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            chatOutgoingButton.addEventListener('click', sendMessage);
+
+            // Enter 키를 눌러도 메시지를 전송할 수 있도록 이벤트 리스너 추가
+            chatOutgoingMsg.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Fetch chat history on page load
+            fetchChatHistory();
+            setInterval(fetchChatHistory, 3000); // 3초마다 채팅 내역 갱신
+        });
+    </script>
+</head>
+<body>
+    <div layout:fragment="content" class="container my-3">
+        <h2 class="border-bottom py-2" style="text-align: center;">채팅하기</h2>
+        <div class="card my-3">
+            <div class="card-body">
+                <div class="container-fluid chat_section" id="chat-box"></div>
+                <div class="type_msg mt-3">
+                    <div class="input_msg_write d-flex">
+                        <input id="chat-outgoing-msg" type="text" class="form-control write_msg" placeholder="메세지를 입력하세요" />
+                        <button id="chat-outgoing-button" class="btn btn-primary ml-2" type="button">전송</button>
                     </div>
-                    <div th:if="${chat.senderId != senderId}" class="received_msg">
-                        <div class="received_withd_msg">
-                            <p th:text="${chat.message}"></p>
-                            <span class="time_date" th:text="${chat.createdAt}"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="type_msg mt-3">
-                <div class="input_msg_write d-flex">
-                    <input id="chat-outgoing-msg" type="text" class="form-control write_msg" placeholder="메세지를 입력하세요" />
-                    <button id="chat-outgoing-button" class="btn btn-primary ml-2" type="button">
-                        <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<script th:inline="javascript">
-    const chatOutgoingButton = document.getElementById('chat-outgoing-button');
-    const chatOutgoingMsg = document.getElementById('chat-outgoing-msg');
-    const chatBox = document.getElementById('chat-box');
-    const senderId = /*[[${senderId}]]*/;
-    const receiverId = /*[[${receiverId}]]*/;
-
-    chatOutgoingButton.addEventListener('click', function () {
-        const message = chatOutgoingMsg.value.trim();
-        if (message) {
-            fetch('/chat/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ senderId: senderId, receiverId: receiverId, message: message })
-            })
-            .then(response => response.json())
-            .then(data => {
-                chatOutgoingMsg.value = '';
-                chatBox.innerHTML += `
-                    <div class="outgoing_msg">
-                        <div class="sent_msg">
-                            <p>${data.message}</p>
-                            <span class="time_date">${data.createdAt}</span>
-                        </div>
-                    </div>
-                `;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    });
-
-    function fetchChatHistory() {
-        fetch(`/chat/history?senderId=${senderId}&receiverId=${receiverId}`)
-            .then(response => response.json())
-            .then(data => {
-                chatBox.innerHTML = '';
-                data.forEach(chat => {
-                    chatBox.innerHTML += `
-                        <div class="${chat.senderId === senderId ? 'outgoing_msg' : 'received_msg'}">
-                            <div class="${chat.senderId === senderId ? 'sent_msg' : 'received_withd_msg'}">
-                                <p>${chat.message}</p>
-                                <span class="time_date">${chat.createdAt}</span>
-                            </div>
-                        </div>
-                    `;
-                });
-                chatBox.scrollTop = chatBox.scrollHeight;
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    // Fetch chat history on page load
-    document.addEventListener('DOMContentLoaded', fetchChatHistory);
-</script>
+</body>
 </html>

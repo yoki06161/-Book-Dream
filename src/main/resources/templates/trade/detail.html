@@ -41,11 +41,14 @@
                         <p class="card-text"><span th:text="${#temporals.format(trade.postdate, 'yyyy-MM-dd HH:mm')}"></span></p>
                         <p class="card-text">소개: <span th:text="${trade.intro}"></span></p>
                         <p class="card-text">가격: <span th:text="${trade.price}"></span>원</p>
+                        <p class="card-text">작성자: <span th:text="${trade.id}"></span></p>
                         <a th:href="@{|/trade/edit/${trade.idx}|}" class="btn btn-sm btn-outline-primary">수정</a>
                         <a th:href="@{|/trade/delete/${trade.idx}|}" class="delete btn btn-sm btn-outline-secondary" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>
-                        
-                        <!-- 채팅
-                        <a th:href="@{|/trade/chat?senderId=${currentUserId}&receiverId=${trade.userId}|}" class="btn btn-sm btn-outline-success">채팅하기</a> -->
+                        <form th:action="@{/trade/chat/create}" method="post" style="display: inline;">
+                            <input type="hidden" name="receiverId" th:value="${trade.id}" />
+                            <input type="hidden" name="tradeIdx" th:value="${trade.idx}" />
+                            <button type="submit" class="btn btn-sm btn-outline-success">채팅하기</button>
+                        </form>
                     </div>
                 </div>
             </div>

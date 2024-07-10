@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+    <title>채팅방 목록</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .chat_room_list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .chat_room_list li {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f1f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content" class="container my-3">
+        <h2 class="border-bottom py-2" style="text-align: center;">채팅방 목록</h2>
+        <ul class="chat_room_list">
+            <li th:each="chatRoom : ${chatRooms}">
+                <a th:href="@{/trade/chat/start(receiverId=${chatRoom.receiverId}, tradeIdx=${chatRoom.tradeIdx})}" 
+                   th:text="${chatRoom.senderId} + ' & ' + ${chatRoom.receiverId} + ' (Trade ID: ' + ${chatRoom.tradeIdx} + ')'"></a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

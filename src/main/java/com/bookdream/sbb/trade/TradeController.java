@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,17 +47,17 @@ public class TradeController {
     }
 
     @GetMapping("/create")
-    public String createTradeForm(Model model, HttpSession session) {
-        String username = (String) session.getAttribute("username");
+    public String createTradeForm(Model model, Principal principal) {
+        String username = principal.getName();
         model.addAttribute("username", username);
         model.addAttribute("trade", new Trade());
         return "trade/create";
     }
 
     @PostMapping("/create")
-    public String createTrade(@ModelAttribute Trade trade, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String createTrade(@ModelAttribute Trade trade, Principal principal, RedirectAttributes redirectAttributes) {
         try {
-            String username = (String) session.getAttribute("username");
+            String username = principal.getName();
             trade.setId(username);
 
             if (trade.getImage() != null && !trade.getImage().isEmpty()) {
