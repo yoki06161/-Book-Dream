@@ -38,6 +38,7 @@ public class Prod_Controller {
 //		System.out.println("모델값");
 //		System.out.println(model);
 		return "prod/prod_list";
+		//푸시되라
 	}
 	
 	// 제품 상세보기
