@@ -33,11 +33,17 @@
                   "
                   th:href="@{|/basket|}"
                 >
+                  <!-- 로그인 시 세션에 저장된 상품 수가 해당 회원의 장바구니 상품 수에 추가 -->
                   <span
                     class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
-                  >
-                    {0}
-                    <span class="visually-hidden">unread messages</span>
+                  id="badge" sec:authorize="isAnonymous()">
+                    0
+                    <span class="visually-hidden">장바구니에 담은 상품 수</span>
+                  </span>
+                  <span
+                    class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
+                  id="badge" sec:authorize="isAuthenticated()"  th:text="${answer.author.username}">
+                    <span class="visually-hidden">장바구니에 담은 상품 수</span>
                   </span>
                 </a>
               </li>
