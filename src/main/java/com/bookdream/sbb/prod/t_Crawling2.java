@@ -19,7 +19,7 @@ import lombok.Getter;
 @Service
 @Getter
 // 이거 클래스 명이 자바 클래스랑 같지 않아서 실행 안됐었음
-public class Prod_Crawling2 {
+public class t_Crawling2 {
 
 	// 빨라지는거라는데 모르겠음
 	@Cacheable("bookList")
