@@ -35,37 +35,28 @@ public class Prod_Controller {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
 		List<Prod_Books> book_list = Prod_Crawling3.getc_Datas();
 		model.addAttribute("C_Books", book_list);
-		System.out.println("모델값");
-		System.out.println(model);
+//		System.out.println("모델값");
+//		System.out.println(model);
 		return "prod/prod_list";
 	}
 	
 	// 제품 상세보기
 	@GetMapping("/prod/detail")
-	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img, @RequestParam("l_price") String price, @RequestParam("l_id") String id, HttpSession session) throws IOException {
-		System.out.println("프로드 북스 테스트 - " + Prod_Books.builder());
-		
-		
+	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img,
+			@RequestParam("l_price") String price, @RequestParam("l_writer") String writer,
+			@RequestParam("l_intro") String intro,
+			HttpSession session) throws IOException {
 //		System.out.println("상세페이지에 출력될 타이틀 " + title);
 //		System.out.println("상세페이지에 출력될 이미지 " + img);
 //		System.out.println("상세페이지에 출력될 가격 " + price);
 		session.setAttribute("s_title", title);
 		session.setAttribute("s_img", img);
 		session.setAttribute("s_price", price);
+		session.setAttribute("s_writer", writer);
+		session.setAttribute("s_intro", intro);
 		return "prod/prod_detail";
 	}
 	
-	// 제품 상세보기
-	@GetMapping("/prod/detail")
-	public String prod_book2( HttpSession session) throws IOException {
-		System.out.println("프로드 북스 테스트 - " + Prod_Books.builder());
-		
-		
-//			System.out.println("상세페이지에 출력될 타이틀 " + title);
-//			System.out.println("상세페이지에 출력될 이미지 " + img);
-//			System.out.println("상세페이지에 출력될 가격 " + price);
-		return "prod/prod_detail";
-		}
 	
 	// 제품 상세보기
 		@GetMapping("/session")

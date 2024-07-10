@@ -41,7 +41,6 @@ public class Prod_Crawling3 {
             String url = "https://product.kyobobook.co.kr/bestseller/online?period=001";
             driver.get(url);
 
-            
 //            // 스크롤 내리기용 자바스크립트
 //            JavascriptExecutor js = (JavascriptExecutor) driver;
 //            // 웹페이지 100까지 스크롤 내림. 원본 사이트가 js로 스크롤 내려야 내용이 나오게 돼있어서.
@@ -70,7 +69,7 @@ public class Prod_Crawling3 {
             	
 //            	System.out.println(i + "타이틀: " + title);
 //            	System.out.println("작가: " + writer);
-            	System.out.println("이미지: " + img);
+//            	System.out.println("이미지: " + img);
 //            	System.out.println();
             	
             	Prod_Books books = Prod_Books.builder()
@@ -80,7 +79,7 @@ public class Prod_Crawling3 {
             			.book_writer(writer)
             			.book_intro(intro)
             			.build();
-            	System.out.println("북스" + books);
+//            	System.out.println("북스" + books);
             	
             	
             	book_list.add(books);
