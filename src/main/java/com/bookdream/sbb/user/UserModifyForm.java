@@ -11,8 +11,9 @@ public class UserModifyForm {
     @NotEmpty(message = "새 비밀번호는 필수항목입니다.")
     private String newPassword1;
     
-    @NotEmpty(message = "비밀번호 확인은 필수항목입니다.")
+    @NotEmpty(message = "새 비밀번호 확인은 필수항목입니다.")
     private String newPassword2;
     
-    // 필요에 따라 추가적인 필드들을 정의할 수 있습니다.
+    @NotEmpty(message = "현재 비밀번호는 필수항목입니다.")
+    private String beforePassword;
 }

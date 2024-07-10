@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3" style="display:flex">
+    <div style="width:230px;padding:0 10px">
+        <nav th:replace="~{user/mynav :: headerfragment}"></nav>
+    </div>
+    <div class="main-content" style="width:700px;padding-left:50px">
+        <form th:action="@{|/user/modifyform|}" method="post" th:object="${userModifyForm}">
+            <div class="mb-3">
+                <label for="beforePassword" class="form-label">현재 비밀번호</label>
+                <input type="password" th:field="*{beforePassword}" class="form-control">
+                <!-- 이전 비밀번호 에러 메시지 -->
+                <small class="text-danger" th:if="${#fields.hasErrors('beforePassword')}" th:errors="*{beforePassword}"></small>
+            </div>
+            <div class="mb-3">
+                <label for="newPassword1" class="form-label">변경할 비밀번호</label>
+                <input type="password" th:field="*{newPassword1}" class="form-control">
+                <!-- 변경할 비밀번호 에러 메시지 -->
+                <small class="text-danger" th:if="${#fields.hasErrors('newPassword1')}" th:errors="*{newPassword1}"></small>
+            </div>
+            <div class="mb-3">
+                <label for="newPassword2" class="form-label">비밀번호 확인</label>
+                <input type="password" th:field="*{newPassword2}" class="form-control">
+                <!-- 비밀번호 확인 에러 메시지 -->
+                <small class="text-danger" th:if="${#fields.hasErrors('newPassword2')}" th:errors="*{newPassword2}"></small>
+            </div>
+            <button type="submit" class="btn btn-primary">변경하기</button>
+        </form>
+    </div>
+</div>
+</html>

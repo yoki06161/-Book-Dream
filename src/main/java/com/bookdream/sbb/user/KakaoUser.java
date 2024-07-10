@@ -11,15 +11,13 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class SiteUser {
+public class KakaoUser {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
-
-    private String password;
 
     @Column(unique = true)
     private String email;

@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class KakaoController {
 
     private final KakaoAPI kakaoApi;
-    private final UserService userService;
+    private final KakaoUserService kakaoUserService;
     private final UserDetailsService userDetailsService;
 
     @RequestMapping(value = "/login")
@@ -33,9 +33,9 @@ public class KakaoController {
             String nickname = (String) userInfo.get("nickname");
 
             // 사용자 정보를 DB에서 확인하거나 새로 생성합니다.
-            SiteUser user = userService.getUserByEmail(email);
+            KakaoUser user = kakaoUserService.getUserByEmail(email);
             if (user == null) {
-                user = userService.createKakaoUser(email, nickname);
+                user = kakaoUserService.createKakaoUser(email, nickname);
             }
 
             // Spring Security 세션에 사용자 정보 저장
