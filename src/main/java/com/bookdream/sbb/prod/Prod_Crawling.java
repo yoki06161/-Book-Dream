@@ -21,7 +21,7 @@ import lombok.Getter;
 @Service
 @Getter
 // 이거 클래스 명이 자바 클래스랑 같지 않아서 실행 안됐었음
-public class Prod_Crawling3 {
+public class Prod_Crawling {
 
 	// 빨라지는거라는데 모르겠음
 	@Cacheable("bookList")
@@ -52,12 +52,13 @@ public class Prod_Crawling3 {
             // Element랑 같은건데 조건문이 가능한듯. 이건 wait.until이라고 조건 맞췄고. until은 기다리는거. ExpectedCondition은 조건을 나타내는 인터페이스. visibilityOfElementLocated는 요소가 화면에 보일때까지 기다리는거.
             // div:nth-child(17)때문에 17번째에 없는건 그냥 오류뜨는데 그렇다고 17을 없애면 다른 div들 이름이 겹쳐서 첫번째꺼가 출력된다...
            
-            List<WebElement> book_title = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol:nth-child(1) > li > div.prod_area.horizontal > div.prod_info_box > div.auto_overflow_wrap.prod_name_group > div > div > a")));
+            List<WebElement> book_title = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_info_box > div.auto_overflow_wrap.prod_name_group > div > div > a")));
             // presenceOfAllElementsLocatedBy는 페이지 내의 모든 요소가 로드될떄까지 기다리는거. 위의 wait길게 해도 이게 아니면 오류뜸.
-            List<WebElement> book_img = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol:nth-child(1) > li > div.prod_area.horizontal > div.prod_thumb_box.size_lg > a > span > img")));
-            List<WebElement> book_price = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol:nth-child(1) > li > div.prod_area.horizontal > div.prod_info_box > div.prod_price > span.price_normal > s")));
-            List<WebElement> book_writer = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol:nth-child(1) > li > div.prod_area.horizontal > div.prod_info_box > span")));
-            List<WebElement> book_intro = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol:nth-child(1) > li > div.prod_area.horizontal > div.prod_info_box > p")));
+            List<WebElement> book_img = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_thumb_box.size_lg > a > span > img")));
+            List<WebElement> book_price = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_info_box > div.prod_price > span.price_normal > s")));
+            List<WebElement> book_writer = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_info_box > span")));
+            List<WebElement> book_intro = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_info_box > p")));
+            
             
             for(int i = 0; i < book_title.size(); i++) {
             	// 리스트로 저장했기에 리스트의 i번째를 텍스트를 title에 저장
