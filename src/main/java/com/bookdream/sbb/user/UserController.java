@@ -72,41 +72,78 @@ public class UserController {
    
     
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/modifyform")
-    public String modifyform(UserModifyForm userModifyForm) {
-        return "user/modifyform";
+    @GetMapping("/modifypwform")
+    public String modifypwform(UserModifyPwForm userModifyForm) {
+        return "user/modifypwform";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modifyform")
-    public String modifyform(@Valid UserModifyForm userModifyForm, BindingResult bindingResult, Principal principal, Model model) {
+    @PostMapping("/modifypwform")
+    public String modifypwform(@Valid UserModifyPwForm userModifyPwForm, BindingResult bindingResult, Principal principal, Model model) {
         SiteUser user = this.userService.getUser(principal.getName());
     	
     	if (bindingResult.hasErrors()) {
-            return "user/modifyform";
+            return "user/modifypwform";
         }
 
-    	if (!this.userService.isSamePassword(user, userModifyForm.getBeforePassword())) {
-            bindingResult.rejectValue("beforePassword", "notBeforePassword", "이전 비밀번호와 일치하지 않습니다. ");
-            return "user/modifyform";
+    	if (!this.userService.isSamePassword(user, userModifyPwForm.getCurrentPassword())) {
+            bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다. ");
+            return "user/modifypwform";
         }
     	
-    	if (!userModifyForm.getNewPassword1().equals(userModifyForm.getNewPassword2())) {
+    	if (!userModifyPwForm.getNewPassword1().equals(userModifyPwForm.getNewPassword2())) {
             bindingResult.rejectValue("newPassword2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
-            return "user/modifyform";
+            return "user/modifypwform";
         }
     	
     	
     	try {
-            userService.modifyPassword(user, userModifyForm.getNewPassword1());
+            userService.modifyPassword(user, userModifyPwForm.getNewPassword1());
         } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("modifyPasswordFailed", e.getMessage());
-            return "user/modifyform";
+            return "user/modifypwform";
         }
 
         return "redirect:/";
     }
+    
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modifynameform")
+    public String modifynameform(UserModifyNameForm userModifyNameForm) {
+    	return "user/modifynameform";
+    }
+    
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modifynameform")
+    public String modifynameform(@Valid UserModifyNameForm userModifyNameForm, BindingResult bindingResult, Principal principal, Model model) {
+        SiteUser user = this.userService.getUser(principal.getName());
+        
+        if (bindingResult.hasErrors()) {
+            return "user/modifynameform";
+        }
+        
+        if (!this.userService.isSamePassword(user, userModifyNameForm.getCurrentPassword())) {
+            bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
+            return "user/modifynameform";
+        }
+        
+        if (userModifyNameForm.getNewName().equals(user.getUsername())) {
+            bindingResult.rejectValue("newName", "sameAsCurrentName", "현재 이름과 같습니다.");
+            return "user/modifynameform";
+        }
+        
+        try {
+            userService.modifyName(user, userModifyNameForm.getNewName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            bindingResult.reject("modifyNameFailed", e.getMessage());
+            return "user/modifynameform";
+        }
+        
+        return "redirect:/";
+    }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/userdel")
@@ -145,13 +182,13 @@ public class UserController {
     
     
     
-    @GetMapping("/buy")
-    public String buy() {
-        return "user/buy";
+    @GetMapping("/userbuy")
+    public String userbuy() {
+        return "user/userbuy";
     }
-    @GetMapping("/pay")
-    public String pay() {
-        return "user/pay";
+    @GetMapping("/userpay")
+    public String userpay() {
+        return "user/userpay";
     }
     
 

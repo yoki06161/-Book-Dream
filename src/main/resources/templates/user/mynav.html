@@ -1,8 +1,9 @@
 <nav th:fragment="headerfragment">
     <div class="list-group">
-        <a id="linkUserUp" class="list-group-item list-group-item-action" th:href="@{|/user/modifyform|}">회원정보 수정</a>
-        <a id="linkUserDel" class="list-group-item list-group-item-action" th:href="@{|/user/userdel|}">회원탈퇴</a>
-        <a id="linkBuy" class="list-group-item list-group-item-action" th:href="@{|/user/buy|}">주문내역</a>
-        <a id="linkPay" class="list-group-item list-group-item-action" th:href="@{|/user/pay|}">결제수단</a>
+        <a id="linkUserUp" class="list-group-item list-group-item-action" th:href="@{|/user/modifynameform|}">사용자 이름 변경</a>
+        <a id="linkUserUp" class="list-group-item list-group-item-action" th:href="@{|/user/modifypwform|}">비밀번호 변경</a>
+        <a id="linkUserDel" class="list-group-item list-group-item-action" th:href="@{|/user/userdel|}">회원 탈퇴</a>
+        <a id="linkBuy" class="list-group-item list-group-item-action" th:href="@{|/user/userbuy|}">주문내역</a>
+        <a id="linkPay" class="list-group-item list-group-item-action" th:href="@{|/user/userpay|}">결제수단</a>
     </div>
 </nav>

@@ -74,6 +74,11 @@ public class UserService {
     	user.setPassword(passwordEncoder.encode(password));
         this.userRepository.save(user);
     }
+    
+    public void modifyName(SiteUser user, String name) {
+    	user.setUsername(name);
+        this.userRepository.save(user);
+    }
 
     public boolean isSamePassword(SiteUser user, String password){
         return passwordEncoder.matches(password, user.getPassword());
