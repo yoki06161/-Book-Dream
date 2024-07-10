@@ -1,5 +1,7 @@
 package com.bookdream.sbb.user;
 
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,4 +15,7 @@ public class UserModifyNameForm {
     
     @NotEmpty(message = "이름은 필수항목입니다.")
     private String newName;
+    
+    // 이름 변경 제한 날짜
+    private LocalDateTime nameChangeLimit;
 }

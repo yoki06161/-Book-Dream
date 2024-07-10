@@ -1,5 +1,6 @@
 package com.bookdream.sbb.user;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -76,9 +77,11 @@ public class UserService {
     }
     
     public void modifyName(SiteUser user, String name) {
-    	user.setUsername(name);
+        user.setUsername(name);
+        user.setLastNameChangeDate(LocalDateTime.now()); // 이름 변경 일시 설정
         this.userRepository.save(user);
     }
+
 
     public boolean isSamePassword(SiteUser user, String password){
         return passwordEncoder.matches(password, user.getPassword());
@@ -88,6 +91,7 @@ public class UserService {
     public void deleteUser(SiteUser user) {
         this.userRepository.delete(user);
     }
+    
 
     
 }

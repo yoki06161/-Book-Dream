@@ -1,6 +1,7 @@
 package com.bookdream.sbb.user;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -128,6 +129,13 @@ public class UserController {
             return "user/modifynameform";
         }
         
+        if (user.getLastNameChangeDate() != null) {
+        	if (LocalDateTime.now().isBefore(user.getLastNameChangeDate().plusDays(14))) {
+        		bindingResult.rejectValue("nameChangeLimit","beforeNameChangeLimit", "이름을 변경한 지 14일이 지나지 않았습니다.");
+        		return "user/modifynameform";
+        	}
+        }
+        
         if (userModifyNameForm.getNewName().equals(user.getUsername())) {
             bindingResult.rejectValue("newName", "sameAsCurrentName", "현재 이름과 같습니다.");
             return "user/modifynameform";
@@ -143,6 +151,9 @@ public class UserController {
         
         return "redirect:/";
     }
+
+    
+
 
 
     @PreAuthorize("isAuthenticated()")
