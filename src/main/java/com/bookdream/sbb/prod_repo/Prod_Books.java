@@ -38,7 +38,4 @@ public class Prod_Books {
 	// 책 정보(저자)
 	@Column(length=50)
 	private String book_writer;
-	
-	@Column(length=6000)
-	private String book_intro;
 }
