@@ -38,13 +38,13 @@ public class Prod_Controller {
 	public String prod_list(Model model) throws IOException {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
 		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
-		// 크롤링된 데이터를 데이터베이스에 저장합니다.
-      prodService.saveBooks(book_list);
+//		// 크롤링된 데이터를 데이터베이스에 저장합니다.
+//      prodService.saveBooks(book_list);
 
-      // 데이터베이스에서 저장된 데이터를 가져와서 모델에 추가합니다.(위 코드랑 같이 쓸 경우 최초 1회만 작동)
-      model.addAttribute("C_Books", prodService.getAllBooks());
+//      // 데이터베이스에서 저장된 데이터를 가져와서 모델에 추가합니다.(위 코드랑 같이 쓸 경우 최초 1회만 작동)
+//      model.addAttribute("C_Books", prodService.getAllBooks());
       // 크롤링된 데이터 그대로 출력 
-//		model.addAttribute("C_Books", book_list);
+		model.addAttribute("C_Books", book_list);
 //		System.out.println("모델값");
 //		System.out.println(model);
 		return "prod/prod_list";
