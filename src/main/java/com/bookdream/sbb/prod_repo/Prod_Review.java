@@ -1,12 +1,16 @@
 package com.bookdream.sbb.prod_repo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +34,8 @@ public class Prod_Review {
 	
 	private LocalDateTime timeIs;
 	
-	
+	// mappedBy값은 @ManyToOne에서 설정한 private Prod_Review review값.
+	@OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) 
+    private List<Prod_RAnswer> a_List; 
 	
 }
