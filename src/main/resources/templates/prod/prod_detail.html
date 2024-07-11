@@ -71,11 +71,11 @@
 	</style>
 	<body>
 		<div class="flex_wrap">
-			<img th:src="${session.s_img}" />
+			<img th:src="${book.book_img}" />
 			<div class="txt_wrap">
-				<span th:text="${session.s_title}" class="title"></span>
+				<span th:text="${book.book_title}" class="title"></span>
 				<div class="s_wrap">
-					<span>판매가</span> <span th:text="${session.s_price}"></span>
+					<span>판매가</span> <span th:text="${book.book_price}"></span>
 				</div>
 				<div class="c_wrap">
 					<!--class로하면 js설정하기 귀찮아서 아이디로함-->

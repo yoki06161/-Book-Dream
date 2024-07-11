@@ -42,29 +42,42 @@ public class Prod_Controller {
 //      prodService.saveBooks(book_list);
 
 //      // 데이터베이스에서 저장된 데이터를 가져와서 모델에 추가합니다.(위 코드랑 같이 쓸 경우 최초 1회만 작동)
-//      model.addAttribute("C_Books", prodService.getAllBooks());
+      model.addAttribute("C_Books", prodService.getAllBooks());
       // 크롤링된 데이터 그대로 출력 
-		model.addAttribute("C_Books", book_list);
+//		model.addAttribute("C_Books", book_list);
 //		System.out.println("모델값");
 //		System.out.println(model);
 		return "prod/prod_list";
 		//푸시되라
 	}
+//	
+//	// 제품 상세보기
+//	@GetMapping("/prod/detail")
+//	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img,
+//			@RequestParam("l_price") String price, @RequestParam("l_writer") String writer,
+//			@RequestParam("l_intro") String intro,
+//			HttpSession session) throws IOException {
+////		System.out.println("상세페이지에 출력될 타이틀 " + title);
+////		System.out.println("상세페이지에 출력될 이미지 " + img);
+////		System.out.println("상세페이지에 출력될 가격 " + price);
+//		
+////		session.setAttribute("s_title", title);
+////		session.setAttribute("s_img", img);
+////		session.setAttribute("s_price", price);
+////		session.setAttribute("s_writer", writer);
+////		session.setAttribute("s_intro", intro);
+//		return "prod/prod_detail";
+//	}
 	
 	// 제품 상세보기
-	@GetMapping("/prod/detail")
-	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img,
-			@RequestParam("l_price") String price, @RequestParam("l_writer") String writer,
-			@RequestParam("l_intro") String intro,
-			HttpSession session) throws IOException {
+	@GetMapping("/prod/detail/{book_id}")
+	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) throws IOException {
 //		System.out.println("상세페이지에 출력될 타이틀 " + title);
 //		System.out.println("상세페이지에 출력될 이미지 " + img);
 //		System.out.println("상세페이지에 출력될 가격 " + price);
-		session.setAttribute("s_title", title);
-		session.setAttribute("s_img", img);
-		session.setAttribute("s_price", price);
-		session.setAttribute("s_writer", writer);
-		session.setAttribute("s_intro", intro);
+		Prod_Books book = prodService.getProdBooks(book_id);
+		model.addAttribute("book",book);
+		
 		return "prod/prod_detail";
 	}
 	
