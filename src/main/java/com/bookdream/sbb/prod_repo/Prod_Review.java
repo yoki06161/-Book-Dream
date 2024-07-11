@@ -36,6 +36,13 @@ public class Prod_Review {
 	
 	// mappedBy값은 @ManyToOne에서 설정한 private Prod_Review review값.
 	@OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) 
-    private List<Prod_RAnswer> a_List; 
+    private List<Prod_RAnswer> a_List;
+
+	public List<Prod_Review> findAll() {
+		return null;
+	}
+
+    // 메소드 만드는거 맞나?
+
 	
 }

@@ -27,11 +27,12 @@ import com.bookdream.sbb.prod_repo.*;
 public class Prod_Controller {
 
 //	private final Prod_Crawling crawling;
+	private final Prod_Review p_review;
 	
 	// 리스트
 	// prod로 들어오는 주소 여기로
 	@GetMapping("/prod")
-	// 컨트롤러에서 뷰로 데이터 전달할때 쓰는게 model
+	// 자바에서 html로 데이터 전달할때 쓰는게 model
 	public String prod_list(Model model) throws IOException {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
 		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
@@ -51,23 +52,22 @@ public class Prod_Controller {
 //		System.out.println("상세페이지에 출력될 타이틀 " + title);
 //		System.out.println("상세페이지에 출력될 이미지 " + img);
 //		System.out.println("상세페이지에 출력될 가격 " + price);
-		session.setAttribute("s_title", title);
-		session.setAttribute("s_img", img);
-		session.setAttribute("s_price", price);
-		session.setAttribute("s_writer", writer);
-		session.setAttribute("s_intro", intro);
+		
+//		session.setAttribute("s_title", title);
+//		session.setAttribute("s_img", img);
+//		session.setAttribute("s_price", price);
+//		session.setAttribute("s_writer", writer);
+//		session.setAttribute("s_intro", intro);
 		return "prod/prod_detail";
 	}
 	
 	
-	// 제품 상세보기
-		@GetMapping("/session")
-		public String session_t() {
-//			System.out.println("상세페이지에 출력될 타이틀 " + title);
-//			System.out.println("상세페이지에 출력될 이미지 " + img);
-//			session.setAttribute("s_title", title);
-//			session.setAttribute("s_img", img);
-			return "prod/session_test";
+	// db리스트 테스트
+		@GetMapping("prod/list_test")
+		public String list_t(Model model) {
+			List<Prod_Review> p_list = this.p_review.findAll();
+			model.addAttribute("p_list", p_list);
+			return "prod/list_test";
 		}
 	
 }

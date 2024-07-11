@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>테스트</title>
+</head>
+<body>
+<h1>리스트테스트ㅡㅡ <br></h1>
+<a th:href="@{||}">메인으로</a>
+
+<tr th:each="quest : ${p_list}">
+    <td th:text="${quest.subject}"></td>
+    <td th:text="${quest.time_is}"></td>
+</tr>
+</body>
+</html>
