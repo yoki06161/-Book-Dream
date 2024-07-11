@@ -71,6 +71,7 @@
 	</style>
 	<body>
 		<div class="flex_wrap">
+			<input type="hidden" class="book_id" th:value="${book.book_id}">
 			<img th:src="${book.book_img}" />
 			<div class="txt_wrap">
 				<span th:text="${book.book_title}" class="title"></span>
@@ -102,10 +103,10 @@
 		<textarea></textarea>
 		
 	</body>
-	
+	<script th:inline="javascript" type="text/javascript"  th:src="@{/js/common-ui.js}"></script>
 	<script th:inline="javascript">
-		// session.s_price를 js 변수로 변환. /*는 주석이 아니라 /*.[[로 th템플릿 속성이랜다.
-	    var price = /*[[${session.s_price}]]*/ '0'; // 초기값 '0' 설정
+		// book.book_price를 js 변수로 변환. /*는 주석이 아니라 /*.[[로 th템플릿 속성이랜다.
+	    var price = /*[[${book.book_price}]]*/ '0'; // 초기값 '0' 설정
 	    
 	    // ,제거 후 실수로 변환. ,가 찾을 문자. g는 전역 검색을 뜻. 모든 ','을 ''로 바꾸겠단 뜻
 	    price = parseFloat(price.replace(/,/g, ''));
@@ -115,14 +116,6 @@
 	    let result = document.querySelector('.result');
 	    let count = 1;
 
-	    function aa() {
-	        if (!click) {
-	            alert('장바구니에 추가되었습니다.');
-	            click = true;
-	        } else {
-	            alert('이미 장바구니에 있습니다.');
-	        }
-	    }
 
 	    function add() {
 	        if (count < 500) {
