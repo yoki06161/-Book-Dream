@@ -27,6 +27,7 @@ import com.bookdream.sbb.prod_repo.*;
 @Controller
 public class Prod_Controller {
 
+	// @Autowired 이미 생성된 빈을 가져온단 뜻
 	@Autowired
 	private final Prod_Service prodService;
 //	private final Prod_Crawling crawling;
@@ -71,7 +72,8 @@ public class Prod_Controller {
 //	}
 	
 	
-	// 제품 상세보기
+	// 제품 상세보기. 소미씨가 해주신거.
+	// @PathVariable은 url에 있는 변수 인식하는거.
 	@GetMapping("/prod/detail/{book_id}")
 	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) throws IOException{
 		Prod_Books book = prodService.getProdBooks(book_id);
