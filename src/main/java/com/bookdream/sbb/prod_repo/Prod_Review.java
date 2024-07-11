@@ -32,17 +32,12 @@ public class Prod_Review {
 	@Column(columnDefinition = "TEXT")
 	private String test;
 	
+	// 여기서 선언한 timeIs란 변수가 html에서 쓰인다. sql에는 time_is라 저장됐는데. 다른거인가?
 	private LocalDateTime timeIs;
 	
 	// mappedBy값은 @ManyToOne에서 설정한 private Prod_Review review값.
 	@OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) 
     private List<Prod_RAnswer> a_List;
-
-	public List<Prod_Review> findAll() {
-		return null;
-	}
-
-    // 메소드 만드는거 맞나?
 
 	
 }

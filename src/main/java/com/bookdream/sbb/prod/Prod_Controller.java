@@ -31,7 +31,7 @@ public class Prod_Controller {
 	@Autowired
 	private final Prod_Service prodService;
 //	private final Prod_Crawling crawling;
-//	private final Prod_Review p_review;
+	private final review_repository re_repo;
 	
 	// 리스트
 	// prod로 들어오는 주소 여기로
@@ -83,11 +83,11 @@ public class Prod_Controller {
 	}
 	
 	// db리스트 테스트
-//		@GetMapping("prod/list_test")
-//		public String list_t(Model model) {
-//			List<Prod_Review> p_list = this.p_review.findAll();
-//			model.addAttribute("p_list", p_list);
-//			return "prod/list_test";
-//		}
+		@GetMapping("prod/list_test")
+		public String list_t(Model model) {
+			List<Prod_Review> p_list = this.re_repo.findAll();
+			model.addAttribute("p_list", p_list);
+			return "prod/list_test";
+		}
 	
 }
