@@ -1,6 +1,10 @@
 package com.bookdream.sbb;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +21,10 @@ class BookDreamApplicationTests {
 	
 	@Test
 	void testJpa() {
-		Prod_Review q1 = new Prod_Review();
-        q1.setSubject("sbb가 무엇인가요?");
-        q1.setTest("sbb에 대해서 알고 싶습니다.");
-        q1.setTimeIs(LocalDateTime.now());
-        this.re_repo.save(q1);  // 첫번째 질문 저장
+		List<Prod_Review> plist = this.re_repo.findBySubjectLike("sbb%");
+		Prod_Review r = plist.get(0);
+		assertEquals("sbb가 무엇인가요?", r.getSubject());
 
-        Prod_Review q2 = new Prod_Review();
-        q2.setSubject("sbb라나ㅏㅏㄴ?");
-        q2.setTest("id는 자동생성일까? ");
-        q2.setTimeIs(LocalDateTime.now());
-        this.re_repo.save(q2);  // 첫번째 질문 저장
 	}
 
 }
