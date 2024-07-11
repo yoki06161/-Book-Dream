@@ -30,7 +30,7 @@ public class Prod_Controller {
 	@Autowired
 	private final Prod_Service prodService;
 //	private final Prod_Crawling crawling;
-	private final Prod_Review p_review;
+//	private final Prod_Review p_review;
 	
 	// 리스트
 	// prod로 들어오는 주소 여기로
@@ -71,12 +71,21 @@ public class Prod_Controller {
 //	}
 	
 	
+	// 제품 상세보기
+	@GetMapping("/prod/detail/{book_id}")
+	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) throws IOException{
+		Prod_Books book = prodService.getProdBooks(book_id);
+		model.addAttribute("book", book);
+		
+		return "prod/prod_detail";
+	}
+	
 	// db리스트 테스트
-		@GetMapping("prod/list_test")
-		public String list_t(Model model) {
-			List<Prod_Review> p_list = this.p_review.findAll();
-			model.addAttribute("p_list", p_list);
-			return "prod/list_test";
-		}
+//		@GetMapping("prod/list_test")
+//		public String list_t(Model model) {
+//			List<Prod_Review> p_list = this.p_review.findAll();
+//			model.addAttribute("p_list", p_list);
+//			return "prod/list_test";
+//		}
 	
 }
