@@ -19,4 +19,12 @@ public class Chat {
     private String receiverId;
     private String message;
     private LocalDateTime createdAt;
+
+    public enum MessageType {
+        CHAT,
+        JOIN,
+        LEAVE
+    }
+    
+    private MessageType type;
 }

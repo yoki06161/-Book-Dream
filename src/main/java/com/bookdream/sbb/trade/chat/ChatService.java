@@ -2,7 +2,6 @@ package com.bookdream.sbb.trade.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,8 +13,8 @@ public class ChatService {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
-    public List<Chat> getChatHistory(String senderId, String receiverId) {
-        return chatRepository.findBySenderIdAndReceiverIdOrReceiverIdAndSenderId(senderId, receiverId, receiverId, senderId);
+    public List<Chat> getChatHistory(String userId, String otherUserId) {
+        return chatRepository.findBySenderIdAndReceiverIdOrReceiverIdAndSenderId(userId, otherUserId, otherUserId, userId);
     }
 
     public Chat saveChat(Chat chat) {

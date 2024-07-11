@@ -2,6 +2,9 @@ package com.bookdream.sbb.trade.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,19 +25,8 @@ public class ChatController {
         if (principal == null) {
             return ResponseEntity.status(403).build();
         }
-        return ResponseEntity.ok(chatService.getChatHistory(senderId, receiverId));
-    }
-
-    @PostMapping("/send")
-    @ResponseBody
-    public ResponseEntity<Chat> sendChat(@RequestBody Chat chat, Principal principal) {
-        if (principal == null) {
-            return ResponseEntity.status(403).build();
-        }
-        chat.setCreatedAt(LocalDateTime.now());
-        Chat savedChat = chatService.saveChat(chat);
-        // 추가적으로 상대방에게 알림을 보내는 로직을 여기에 추가할 수 있습니다.
-        return ResponseEntity.ok(savedChat);
+        List<Chat> chatHistory = chatService.getChatHistory(senderId, receiverId);
+        return ResponseEntity.ok(chatHistory);
     }
 
     @GetMapping("/start")
@@ -74,6 +66,7 @@ public class ChatController {
     }
     
     @PostMapping("/leave")
+    @ResponseBody
     public ResponseEntity<String> leaveChatRoom(@RequestParam("receiverId") String receiverId, @RequestParam("tradeIdx") int tradeIdx, Principal principal) {
         if (principal == null) {
             return ResponseEntity.status(403).build();
@@ -82,5 +75,20 @@ public class ChatController {
         String senderId = principal.getName();
         chatService.deleteChatRoom(senderId, receiverId, tradeIdx);
         return ResponseEntity.ok("채팅방을 나갔습니다.");
+    }
+
+    @MessageMapping("/chat.sendMessage")
+    @SendTo("/topic/public")
+    public Chat sendMessage(Chat chatMessage) {
+        chatMessage.setCreatedAt(LocalDateTime.now());
+        chatService.saveChat(chatMessage);
+        return chatMessage;
+    }
+
+    @MessageMapping("/chat.addUser")
+    @SendTo("/topic/public")
+    public Chat addUser(Chat chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+        headerAccessor.getSessionAttributes().put("username", chatMessage.getSenderId());
+        return chatMessage;
     }
 }

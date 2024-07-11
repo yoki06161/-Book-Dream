@@ -27,6 +27,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // Spring Boot Thymeleaf 스타터를 추가합니다.
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect' // Thymeleaf Layout Dialect를 추가합니다.
     implementation 'org.springframework.boot:spring-boot-starter-web' // Spring Boot 웹 스타터를 추가합니다.
+    implementation 'org.springframework.boot:spring-boot-starter-websocket' // Spring Boot WebSocket 스타터 추가
     compileOnly 'org.projectlombok:lombok' // 컴파일 시에만 사용할 Lombok 라이브러리를 추가합니다.
     annotationProcessor 'org.projectlombok:lombok' // Lombok의 애노테이션 프로세서를 추가합니다.
     implementation 'com.mysql:mysql-connector-j:8.0.33' // MySQL 데이터베이스와 연결
