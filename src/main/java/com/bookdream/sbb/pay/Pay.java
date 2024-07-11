@@ -1,4 +1,4 @@
-package com.bookdream.sbb.basket;
+package com.bookdream.sbb.pay;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,16 +11,34 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Basket {
+public class Pay {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)    // auto_increment
-	private Long idx;
+	private Long order_id;
 	
 	@Column(length = 20)
-	private String id;
+	private String name;
+	
+	@Column(length = 11)
+	private int phone;
+	
+	@Column(length = 8)
+	private String pw;
+	
+	@Column(length = 5)
+	private int postcode;
+	
+	@Column(length = 20)
+	private String address;
+	
+	@Column(length = 20)
+	private String detailAddress;
+	
+	@Column(length = 20)
+	private String request;
 	
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private String created_at;
+	private String orderdate;
 	
 	@Column
 	private int book_id;

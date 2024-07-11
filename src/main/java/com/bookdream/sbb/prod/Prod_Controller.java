@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import groovyjarjarantlr4.v4.parse.GrammarTreeVisitor.mode_return;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +27,8 @@ import com.bookdream.sbb.prod_repo.*;
 @Controller
 public class Prod_Controller {
 
+	@Autowired
+	private final Prod_Service prodService;
 //	private final Prod_Crawling crawling;
 	private final Prod_Review p_review;
 	
@@ -36,30 +39,36 @@ public class Prod_Controller {
 	public String prod_list(Model model) throws IOException {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
 		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
-		model.addAttribute("C_Books", book_list);
+//		// 크롤링된 데이터를 데이터베이스에 저장합니다.
+//      prodService.saveBooks(book_list);
+
+//      // 데이터베이스에서 저장된 데이터를 가져와서 모델에 추가합니다.(위 코드랑 같이 쓸 경우 최초 1회만 작동)
+      model.addAttribute("C_Books", prodService.getAllBooks());
+      // 크롤링된 데이터 그대로 출력 
+//		model.addAttribute("C_Books", book_list);
 //		System.out.println("모델값");
 //		System.out.println(model);
 		return "prod/prod_list";
 		//푸시되라
 	}
-	
-	// 제품 상세보기
-	@GetMapping("/prod/detail")
-	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img,
-			@RequestParam("l_price") String price, @RequestParam("l_writer") String writer,
-			@RequestParam("l_intro") String intro,
-			HttpSession session) throws IOException {
-//		System.out.println("상세페이지에 출력될 타이틀 " + title);
-//		System.out.println("상세페이지에 출력될 이미지 " + img);
-//		System.out.println("상세페이지에 출력될 가격 " + price);
-		
-//		session.setAttribute("s_title", title);
-//		session.setAttribute("s_img", img);
-//		session.setAttribute("s_price", price);
-//		session.setAttribute("s_writer", writer);
-//		session.setAttribute("s_intro", intro);
-		return "prod/prod_detail";
-	}
+//	
+//	// 제품 상세보기
+//	@GetMapping("/prod/detail")
+//	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img,
+//			@RequestParam("l_price") String price, @RequestParam("l_writer") String writer,
+//			@RequestParam("l_intro") String intro,
+//			HttpSession session) throws IOException {
+////		System.out.println("상세페이지에 출력될 타이틀 " + title);
+////		System.out.println("상세페이지에 출력될 이미지 " + img);
+////		System.out.println("상세페이지에 출력될 가격 " + price);
+//		
+////		session.setAttribute("s_title", title);
+////		session.setAttribute("s_img", img);
+////		session.setAttribute("s_price", price);
+////		session.setAttribute("s_writer", writer);
+////		session.setAttribute("s_intro", intro);
+//		return "prod/prod_detail";
+//	}
 	
 	
 	// db리스트 테스트
