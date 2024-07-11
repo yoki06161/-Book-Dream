@@ -1,6 +1,7 @@
 package com.bookdream.sbb;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,9 +22,11 @@ class BookDreamApplicationTests {
 	
 	@Test
 	void testJpa() {
-		List<Prod_Review> plist = this.re_repo.findBySubjectLike("sbb%");
-		Prod_Review r = plist.get(0);
-		assertEquals("sbb가 무엇인가요?", r.getSubject());
+		Optional<Prod_Review> op = this.re_repo.findById(1);
+		assertTrue(op.isPresent());
+		Prod_Review p = op.get();
+		p.setSubject("제목 수정 테스트");
+		this.re_repo.save(p);
 
 	}
 
