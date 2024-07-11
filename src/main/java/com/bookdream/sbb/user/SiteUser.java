@@ -32,6 +32,8 @@ public class SiteUser {
         this.role = "User";
     }
     
+    private LocalDateTime createDate;
+    
     @Column(name = "last_name_change_date")
     private LocalDateTime lastNameChangeDate;
 }

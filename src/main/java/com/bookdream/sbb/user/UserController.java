@@ -4,34 +4,50 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private UserService userService;
 
-    @GetMapping("/signup")
+    @Autowired
+    private KakaoUserService kakaoUserService;
+    
+    @GetMapping("/user/signup")
     public String signupForm(UserCreateForm userCreateForm) {
         return "user/signupform";
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/user/signup")
     public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "user/signupform";
@@ -66,20 +82,118 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/user/login")
     public String loginForm() {
         return "user/loginform";
+    }
+    
+    @GetMapping("/auth/kakao/callback")
+    public @ResponseBody String kakaoCallback(@RequestParam("code") String code) { // Data를 리턴해주는 컨트롤러 함수
+    	
+		RestTemplate rt = new RestTemplate();
+		
+		// HttpHeader 오브젝트 생성
+    	HttpHeaders headers = new HttpHeaders();
+    	headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		
+    	// HttpBody 오브젝트 생성
+    	MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    	params.add("grant_type", "authorization_code");
+    	params.add("client_id", "3192757b80d5d97c7263b2166d1afd23");
+    	params.add("redirect_uri", "http://localhost:8080/auth/kakao/callback");
+    	params.add("code", code);
+    	
+    	// HttpHeader와 HttpBody를 하나의 오브젝트에 담기
+    	HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+    	
+    	// Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음
+    	ResponseEntity<String> response = rt.exchange(
+    			"https://kauth.kakao.com/oauth/token",
+    			HttpMethod.POST,
+    			kakaoTokenRequest,
+    			String.class
+    		);
+    	
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	OAuthToken oauthToken = null;
+    	try {
+    		oauthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("카카오 엑세스 토큰: " + oauthToken.getAccess_token());
+		
+    	//==================================================//
+    	
+    	RestTemplate rt2 = new RestTemplate();
+		
+		// HttpHeader 오브젝트 생성
+    	HttpHeaders headers2 = new HttpHeaders();
+    	headers2.add("Authorization","Bearer "+oauthToken.getAccess_token());
+    	headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		
+    	// HttpHeader와 HttpBody를 하나의 오브젝트에 담기
+    	HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest2 = new HttpEntity<>(headers2);
+    	
+    	// Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음
+    	ResponseEntity<String> response2 = rt2.exchange(
+    			"https://kapi.kakao.com/v2/user/me",
+    			HttpMethod.POST,
+    			kakaoProfileRequest2,
+    			String.class
+    		);
+    	System.out.println(response2.getBody());
+    	
+    	//==================================================//
+    	
+    	ObjectMapper objectMapper2 = new ObjectMapper();
+    	KakaoProfile kakaoProfile = null;
+    	try {
+    		kakaoProfile = objectMapper2.readValue(response2.getBody(), KakaoProfile.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("카카오 아이디(번호) : " + kakaoProfile.getId());
+    	System.out.println("카카오 아이디(번호) : " + kakaoProfile.getKakao_account().getEmail());
+    	System.out.println("블로그 서버 유저네임 : " + kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
+    	System.out.println("블로그 서버 이메일 : " + kakaoProfile.getKakao_account().getEmail());
+    	UUID garbagePassword = UUID.randomUUID();
+    	System.out.println("블로그 서버 패스워드 : " + garbagePassword);
+    	
+    	KakaoUser kakaoUser = KakaoUser.builder()
+    			.username(kakaoProfile.getKakao_account().getEmail() +"_"+ kakaoProfile.getId())
+    			.password(garbagePassword.toString())
+    			.email(kakaoProfile.getKakao_account().getEmail())
+    			.build();
+    	
+    	// 가입자 혹은 비가입자 체크 해서 처리
+    	KakaoUser originUser = kakaoUserService.findKakaoUser(kakaoUser.getEmail());
+    	
+    	if(originUser == null) {
+    		kakaoUserService.createKakaoUser(kakaoUser);
+    	}
+    	
+    	// 로그인 처리
+    	
+    	
+    	return "회원가입 완료";
     }
    
     
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/modifypwform")
+    @GetMapping("/user/modifypwform")
     public String modifypwform(UserModifyPwForm userModifyForm) {
         return "user/modifypwform";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modifypwform")
+    @PostMapping("/user/modifypwform")
     public String modifypwform(@Valid UserModifyPwForm userModifyPwForm, BindingResult bindingResult, Principal principal, Model model) {
         SiteUser user = this.userService.getUser(principal.getName());
     	
@@ -97,7 +211,6 @@ public class UserController {
             return "user/modifypwform";
         }
     	
-    	
     	try {
             userService.modifyPassword(user, userModifyPwForm.getNewPassword1());
         } catch (Exception e) {
@@ -110,13 +223,13 @@ public class UserController {
     }
     
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/modifynameform")
+    @GetMapping("/user/modifynameform")
     public String modifynameform(UserModifyNameForm userModifyNameForm) {
     	return "user/modifynameform";
     }
     
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modifynameform")
+    @PostMapping("/user/modifynameform")
     public String modifynameform(@Valid UserModifyNameForm userModifyNameForm, BindingResult bindingResult, Principal principal, Model model) {
         SiteUser user = this.userService.getUser(principal.getName());
         
@@ -140,7 +253,7 @@ public class UserController {
             bindingResult.rejectValue("newName", "sameAsCurrentName", "현재 이름과 같습니다.");
             return "user/modifynameform";
         }
-        
+        	
         try {
             userService.modifyName(user, userModifyNameForm.getNewName());
         } catch (Exception e) {
@@ -157,13 +270,13 @@ public class UserController {
 
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/userdel")
+    @GetMapping("/user/userdel")
     public String userdel(UserDelForm userDelForm) {
         return "user/userdel";
     }
     
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/userdel")
+    @PostMapping("/user/userdel")
     public String userdel(@Valid UserDelForm userDelForm, BindingResult bindingResult, Principal principal, Model model, HttpSession session) {
         SiteUser user = this.userService.getUser(principal.getName());
         
@@ -193,11 +306,11 @@ public class UserController {
     
     
     
-    @GetMapping("/userbuy")
+    @GetMapping("/user/userbuy")
     public String userbuy() {
         return "user/userbuy";
     }
-    @GetMapping("/userpay")
+    @GetMapping("/user/userpay")
     public String userpay() {
         return "user/userpay";
     }

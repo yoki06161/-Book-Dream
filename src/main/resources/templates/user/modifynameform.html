@@ -19,11 +19,11 @@
 		    <div class="mb-3">
 		        <label for="newName" class="form-label">변경할 이름</label>
 		        <input type="text" th:field="*{newName}" class="form-control">
-		        <!-- 이름 에러 메시지 -->
+			    <!-- 오류 메시지 표시 -->
 			    <small class="text-danger" th:izf="${#fields.hasErrors('nameChangeLimit')}" th:errors="*{nameChangeLimit}"></small>
+		        <!-- 이름 에러 메시지 -->
 		        <small class="text-danger" th:if="${#fields.hasErrors('newName')}" th:errors="*{newName}"></small>
 		    </div>
-		    <!-- 오류 메시지 표시 -->
 		    <button type="submit" class="btn btn-primary">변경하기</button>
 		</form>
     </div>
