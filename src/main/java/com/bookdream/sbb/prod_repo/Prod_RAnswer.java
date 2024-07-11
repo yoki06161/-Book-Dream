@@ -26,7 +26,7 @@ public class Prod_RAnswer {
 	
 	private LocalDateTime a_time;
 	
-	// 댓글이랑 연결
+	// 댓글이랑 연결. 댓글이 부모, 답변이 자식. 매니가 답변, 원이 댓글
 	@ManyToOne
 	private Prod_Review review;
 	
