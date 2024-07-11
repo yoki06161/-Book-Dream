@@ -1,36 +1,50 @@
-// DOMContentLoaded 이벤트 리스너를 사용하여 문서가 완전히 로드된 후 실행
-document.addEventListener('DOMContentLoaded', function() {
+function init() {
+   // sessionStorage에서 저장된 뱃지 숫자를 가져와서 설정
+   if (sessionStorage.getItem('badgeCount')) {
+      document.getElementById('badge').textContent = sessionStorage.getItem('badgeCount');
+   }
+}
 
-    // sessionStorage에서 저장된 뱃지 숫자를 가져와서 설정
-    if (sessionStorage.getItem('badgeCount')) {
-        document.getElementById('badge').textContent = sessionStorage.getItem('badgeCount');
-    }
+// DOMContentLoaded 이벤트 리스너를 사용하여 문서가 완전히 로드된 후 실행하는 함수 호출
+document.addEventListener('DOMContentLoaded', init);
 
-    // 모든 basket 클래스를 가진 요소를 선택하고 각각에 대해 클릭 이벤트 리스너 추가
-    document.querySelectorAll('.basket').forEach(function(button, index) {
-        button.addEventListener('click', function() {
-            // 클릭된 버튼을 변수에 저장
-            const button = this;
+// 장바구니 추가 함수
+function aa() {
+   let book_id = parseInt(document.querySelector('.book_id').value);    // int형으로 담기
+   let count = parseInt(document.querySelector('.bcount').value);     // int형으로 담기
+   let countPrice = document.querySelector('.result').textContent;
+   //console.log(book_id);
 
-            // 버튼의 고유한 클릭 상태를 저장하기 위한 키 생성
-            const buttonKey = 'buttonClicked_' + index;
+   // 세션 스토리지에서 'book_ids' 배열을 불러오기 (없으면 빈 배열로 초기화)
+   let sessionBookIds = JSON.parse(sessionStorage.getItem('book_ids')) || [];
+   console.log(sessionBookIds);
+   
+   // 세션 스토리지에 저장하기 위해 객체로 묶어 JSON 문자열로 변환
+   let dataToStore = {
+      book_id: book_id,
+       count: count,
+       countPrice: countPrice
+   };
+   
+   
+   
+   // book_id가 세션 스토리지에 없는 경우 추가하고 뱃지 숫자 업데이트
+   if (!sessionBookIds.includes(book_id)) {
+       sessionBookIds.push(book_id); // book_id를 배열에 추가
+       sessionStorage.setItem('book_ids', JSON.stringify(sessionBookIds)); 
+      sessionStorage.setItem('formData', JSON.stringify(dataToStore));      // 배열을 세션 스토리지에 저장
+       let formData = JSON.parse(sessionStorage.getItem('formData'));
+      console.log(formData);
+      alert('장바구니에 추가되었습니다.');
 
-            // 버튼이 이미 클릭된 상태인지 확인
-            if (sessionStorage.getItem(buttonKey)) {
-                return; // 이미 클릭된 버튼이면 숫자 증가를 막음
-            }
+       // 뱃지 숫자 변경
+       var badge = parseInt(document.getElementById('badge').textContent);
+       var newBadgeCount = badge + 1;
+       document.getElementById('badge').textContent = newBadgeCount;
 
-            // 뱃지 숫자 변경
-            var badge = parseInt(document.getElementById('badge').textContent);
-            var newBadgeCount = badge + 1;
-            document.getElementById('badge').textContent = newBadgeCount;
-
-            // 뱃지 숫자를 sessionStorage에 저장
-            sessionStorage.setItem('badgeCount', newBadgeCount);
-
-            // 버튼 클릭 상태를 sessionStorage에 저장
-            sessionStorage.setItem(buttonKey, 'clicked');
-        });
-    });
-
-});
+       // 뱃지 숫자를 sessionStorage에 저장
+       sessionStorage.setItem('badgeCount', newBadgeCount);
+   } else {
+       alert('이미 장바구니에 있습니다.');
+   }
+}

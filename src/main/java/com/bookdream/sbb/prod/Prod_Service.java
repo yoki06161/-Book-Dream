@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class Prod_Service {
 	@Autowired
 	private final ProdBooksRepository prodRepository;
+	private final review_repository re_repo;
 	
 	public List<Prod_Books> getAllBooks() {
 		// prodRepository를 이용해 데이터 베이스에 저장된 모든 책을 찾음
@@ -34,4 +35,10 @@ public class Prod_Service {
 		Optional<Prod_Books> opb = this.prodRepository.findById(book_id);
 		return opb.get();
 	}
+	
+	// 내꺼
+	public List<Prod_Review> get_t_list() {
+		return this.re_repo.findAll();
+	}
+	
 }

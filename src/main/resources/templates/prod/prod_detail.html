@@ -103,8 +103,9 @@
 		
 	</body>
 	
+	<script th:inline="javascript" type="text/javascript"  th:src="@{/js/common-ui.js}"></script>
 	<script th:inline="javascript">
-		// book.book_price를 js 변수로 변환. /*는 주석이 아니라 /*.[[로 th템플릿 속성이랜다.
+	   // book.book_price를 js 변수로 변환. /*는 주석이 아니라 /*.[[로 th템플릿 속성이랜다.
 	    var price = /*[[${book.book_price}]]*/ '0'; // 초기값 '0' 설정
 	    
 	    // ,제거 후 실수로 변환. ,가 찾을 문자. g는 전역 검색을 뜻. 모든 ','을 ''로 바꾸겠단 뜻
@@ -115,14 +116,6 @@
 	    let result = document.querySelector('.result');
 	    let count = 1;
 
-	    function aa() {
-	        if (!click) {
-	            alert('장바구니에 추가되었습니다.');
-	            click = true;
-	        } else {
-	            alert('이미 장바구니에 있습니다.');
-	        }
-	    }
 
 	    function add() {
 	        if (count < 500) {
@@ -141,7 +134,7 @@
 	    }
 
 	    function updateResult() {
-			let inputValue = parseInt(input.value); // 입력값을 정수형으로 변환
+	      let inputValue = parseInt(input.value); // 입력값을 정수형으로 변환
 	            if (inputValue < 1) inputValue = 1; // 최소값 이하로 내려가지 않도록 보정
 	            if (inputValue > 500) inputValue = 500; // 최대값 이상으로 올라가지 않도록 보정
 	            input.value = inputValue; // 보정된 값을 다시 input에 설정
@@ -151,7 +144,7 @@
 	    }
 
 	    // 페이지 로드 시 초기 결과값 설정
-		// 없는게 나은거같다
+	   // 없는게 나은거같다
 	    updateResult();
 	</script>
 

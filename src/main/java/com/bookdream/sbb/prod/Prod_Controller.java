@@ -31,7 +31,7 @@ public class Prod_Controller {
 	@Autowired
 	private final Prod_Service prodService;
 //	private final Prod_Crawling crawling;
-	private final review_repository re_repo;
+//	private final review_repository re_repo;
 	
 	// 리스트
 	// prod로 들어오는 주소 여기로
@@ -50,27 +50,7 @@ public class Prod_Controller {
 //		System.out.println("모델값");
 //		System.out.println(model);
 		return "prod/prod_list";
-		//푸시되라
 	}
-//	
-//	// 제품 상세보기
-//	@GetMapping("/prod/detail")
-//	public String prod_book(@RequestParam("l_title") String title, @RequestParam("l_img") String img,
-//			@RequestParam("l_price") String price, @RequestParam("l_writer") String writer,
-//			@RequestParam("l_intro") String intro,
-//			HttpSession session) throws IOException {
-////		System.out.println("상세페이지에 출력될 타이틀 " + title);
-////		System.out.println("상세페이지에 출력될 이미지 " + img);
-////		System.out.println("상세페이지에 출력될 가격 " + price);
-//		
-////		session.setAttribute("s_title", title);
-////		session.setAttribute("s_img", img);
-////		session.setAttribute("s_price", price);
-////		session.setAttribute("s_writer", writer);
-////		session.setAttribute("s_intro", intro);
-//		return "prod/prod_detail";
-//	}
-	
 	
 	// 제품 상세보기. 소미씨가 해주신거.
 	// @PathVariable은 url에 있는 변수 인식하는거.
@@ -82,12 +62,20 @@ public class Prod_Controller {
 		return "prod/prod_detail";
 	}
 	
-	// db리스트 테스트
-		@GetMapping("prod/list_test")
-		public String list_t(Model model) {
-			List<Prod_Review> p_list = this.re_repo.findAll();
-			model.addAttribute("p_list", p_list);
-			return "prod/list_test";
-		}
+	// db리스트 테스트 !!!내꺼
+	@GetMapping("prod/list_test")
+	public String list_t(Model model) {
+		List<Prod_Review> p_list = this.prodService.get_t_list();
+		model.addAttribute("p_list", p_list);
+		return "prod/list_test";
+	}
+		
+	@GetMapping("prod/test_detail/{t_id}")
+	public String getMethodName(Model model, @PathVariable("t_id") Integer id) {
+		return "prod/test_detail";
+	}
+		
+		
+		
 	
 }

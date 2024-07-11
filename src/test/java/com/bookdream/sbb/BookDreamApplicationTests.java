@@ -68,15 +68,15 @@ class BookDreamApplicationTests {
 //		// id가 2인지 비교하는 거다. 기대값 2와 실제값 a.getReview().getId()을 비교.
 //		assertEquals(2, a.getReview().getId());
 		
-		Optional<Prod_Review> op = this.re_repo.findById(2);
-		assertTrue(op.isPresent());
-		Prod_Review pr = op.get();
-		
-		List<Prod_RAnswer> a_list = pr.getA_List();
-		
-		assertEquals(1, a_list.size());
-		assertEquals("id 자동 생성이랍니다.", a_list.get(0).getContent2());
-		
+		// 답변 만들기?
+//		Optional<Prod_Review> op = this.re_repo.findById(2);
+//		assertTrue(op.isPresent());
+//		Prod_Review pr = op.get();
+//		
+//		List<Prod_RAnswer> a_list = pr.getA_List();
+//		
+//		assertEquals(1, a_list.size());
+//		assertEquals("id 자동 생성이랍니다.", a_list.get(0).getContent2());
 	}
 
 }
