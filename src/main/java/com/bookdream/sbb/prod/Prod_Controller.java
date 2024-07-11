@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import groovyjarjarantlr4.v4.parse.GrammarTreeVisitor.mode_return;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import com.bookdream.sbb.prod_repo.*;
 
 
 // 스프링 실행시 로그인창 안뜨게한다
@@ -25,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class Prod_Controller {
 
+	@Autowired
+	private final Prod_Service prodService;
 //	private final Prod_Crawling crawling;
 	
 	// 리스트
@@ -34,7 +38,13 @@ public class Prod_Controller {
 	public String prod_list(Model model) throws IOException {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
 		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
-		model.addAttribute("C_Books", book_list);
+		// 크롤링된 데이터를 데이터베이스에 저장합니다.
+      prodService.saveBooks(book_list);
+
+      // 데이터베이스에서 저장된 데이터를 가져와서 모델에 추가합니다.(위 코드랑 같이 쓸 경우 최초 1회만 작동)
+      model.addAttribute("C_Books", prodService.getAllBooks());
+      // 크롤링된 데이터 그대로 출력 
+//		model.addAttribute("C_Books", book_list);
 //		System.out.println("모델값");
 //		System.out.println(model);
 		return "prod/prod_list";

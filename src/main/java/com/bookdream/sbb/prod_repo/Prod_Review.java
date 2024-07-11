@@ -1,4 +1,4 @@
-package com.bookdream.sbb.prod;
+package com.bookdream.sbb.prod_repo;
 
 import java.time.LocalDateTime;
 
