@@ -15,7 +15,7 @@ public class ChatService {
     private ChatRoomRepository chatRoomRepository;
 
     public List<Chat> getChatHistory(String senderId, String receiverId) {
-        return chatRepository.findBySenderIdAndReceiverId(senderId, receiverId);
+        return chatRepository.findBySenderIdAndReceiverIdOrReceiverIdAndSenderId(senderId, receiverId, receiverId, senderId);
     }
 
     public Chat saveChat(Chat chat) {
@@ -38,5 +38,10 @@ public class ChatService {
                     return chatRoomRepository.save(newChatRoom);
                 });
         return chatRoom;
+    }
+    
+    public void deleteChatRoom(String senderId, String receiverId, int tradeIdx) {
+        chatRoomRepository.findBySenderIdAndReceiverIdAndTradeIdx(senderId, receiverId, tradeIdx)
+                .ifPresent(chatRoomRepository::delete);
     }
 }

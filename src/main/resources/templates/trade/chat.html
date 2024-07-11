@@ -6,40 +6,70 @@
         body {
             background-color: #f8f9fa;
         }
+
         .container {
             background-color: #ffffff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .chat_section {
             overflow: auto;
             height: 600px;
             border: 1px solid #ddd;
             padding: 10px;
         }
+
         .outgoing_msg {
             text-align: right;
         }
+
         .sent_msg, .received_withd_msg {
             display: inline-block;
             padding: 10px;
             border-radius: 10px;
             margin-bottom: 10px;
         }
+
         .sent_msg {
             background-color: #dcf8c6;
         }
+
         .received_withd_msg {
             background-color: #f1f0f0;
         }
+
         .time_date {
             display: block;
             font-size: 0.8em;
             color: #999;
         }
+
+        .chat_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-transparent {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+            font-size: 1.5em; /* 버튼의 크기를 키움 */
+        }
+
+        .btn-transparent i {
+            font-size: 1.5em; /* 아이콘의 크기를 키움 */
+        }
+
+        .chat_header h2 {
+            margin-left: 10px;
+            flex-grow: 1;
+            text-align: center;
+        }
     </style>
-    
+
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
             const chatOutgoingButton = document.getElementById('chat-outgoing-button');
@@ -47,6 +77,7 @@
             const chatBox = document.getElementById('chat-box');
             const senderId = '[[${senderId}]]';
             const receiverId = '[[${receiverId}]]';
+            const tradeIdx = '[[${tradeIdx}]]';
 
             function sendMessage() {
                 const message = chatOutgoingMsg.value.trim();
@@ -58,14 +89,9 @@
                         },
                         body: JSON.stringify({ senderId: senderId, receiverId: receiverId, message: message })
                     })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
-                        chatOutgoingMsg.value = ''; // 입력 필드를 공백으로 설정
+                        chatOutgoingMsg.value = '';
                         chatBox.innerHTML += `
                             <div class="outgoing_msg">
                                 <div class="sent_msg">
@@ -103,30 +129,56 @@
             }
 
             chatOutgoingButton.addEventListener('click', sendMessage);
-
-            // Enter 키를 눌러도 메시지를 전송할 수 있도록 이벤트 리스너 추가
             chatOutgoingMsg.addEventListener('keydown', function (event) {
                 if (event.key === 'Enter') {
                     sendMessage();
                 }
             });
 
-            // Fetch chat history on page load
             fetchChatHistory();
-            setInterval(fetchChatHistory, 3000); // 3초마다 채팅 내역 갱신
+            setInterval(fetchChatHistory, 3000);
+
+            const leaveChatButton = document.getElementById('leave-chat-button');
+            leaveChatButton.addEventListener('click', function() {
+                fetch(`/trade/chat/leave?receiverId=${receiverId}&tradeIdx=${tradeIdx}`, {
+                    method: 'POST',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/trade/chat/rooms';
+                    } else {
+                        alert('채팅방 나가기에 실패했습니다.');
+                    }
+                });
+            });
         });
     </script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+        integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div layout:fragment="content" class="container my-3">
-        <h2 class="border-bottom py-2" style="text-align: center;">채팅하기</h2>
+        <div class="chat_header">
+            <button id="leave-chat-button" class="btn btn-transparent"
+                data-trade-idx="[[${tradeIdx}]]">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 style="flex-grow: 1; margin-right: 40px;">채팅하기</h2>
+        </div>
         <div class="card my-3">
             <div class="card-body">
                 <div class="container-fluid chat_section" id="chat-box"></div>
                 <div class="type_msg mt-3">
                     <div class="input_msg_write d-flex">
-                        <input id="chat-outgoing-msg" type="text" class="form-control write_msg" placeholder="메세지를 입력하세요" />
-                        <button id="chat-outgoing-button" class="btn btn-primary ml-2" type="button">전송</button>
+                        <input id="chat-outgoing-msg" type="text"
+                            class="form-control write_msg" placeholder="메세지를 입력하세요" />
+                        <button id="chat-outgoing-button" class="btn btn-primary ml-2"
+                            type="button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
             </div>
