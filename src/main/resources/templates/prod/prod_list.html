@@ -20,19 +20,16 @@
 		<div class="flex_wrap">
 			<!--|prod/다음부턴 controller에서 map으로 잡아줘야한다.-->
 			<a th:href="@{|prod/detail?l_title=${b_list.book_title}&l_img=${b_list.book_img}
-						&l_price=${b_list.book_price}&l_writer=${b_list.book_writer}
-						&l_intro=${b_list.book_intro}|}">
+						&l_price=${b_list.book_price}&l_writer=${b_list.book_writer}|}">
 				<!--Crawling에서 builder로 정한 변수?명-->
 				<img th:src = "${b_list.book_img}" />
 			</a>
 		<div class="txt_wrap">
 			<a th:href="@{|prod/detail?l_title=${b_list.book_title}&l_img=${b_list.book_img}
-			&l_price=${b_list.book_price}&l_writer=${b_list.book_writer}
-			&l_intro=${b_list.book_intro}|}">
+			&l_price=${b_list.book_price}&l_writer=${b_list.book_writer}|}">
 				<div th:text = "${b_list.book_title}"></div>
 				<div th:text = "${b_list.book_price}"></div>
 				<div th:text = "${b_list.book_writer}"></div>
-				<div th:text = "${b_list.book_intro}"></div>
 			</a>
 		</div>
 		</div>
