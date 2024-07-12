@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,12 +76,23 @@ public class Prod_Controller {
 	
 	// 질문 상세보기
 	@GetMapping("/test_detail/{t_id}")
-	public String getMethodName(Model model, @PathVariable("t_id") Integer id) throws DataNotFound {
+	public String t_detail(Model model, @PathVariable("t_id") Integer id) throws DataNotFound {
 		Prod_Review pr = this.prodService.get_t_detail(id);
 		model.addAttribute("pr", pr);
 		return "prod/test_detail";
 	}
-		
+	
+	// 답변하기
+	@PostMapping("/test_detail/answer/c/{tt_id}")
+	// 리퀘스트 파람은 name값이랑 똑같이.
+	public String t_answer(Model model, @PathVariable("tt_id") Integer id, @RequestParam("t_content") String t_con) throws DataNotFound {
+		Prod_Review pr = this.prodService.get_t_detail(id);
+		this.prodService.create(pr, t_con);
+		// 앞에 /prod를 안해서 이상하게 됐었다...
+		return String.format("redirect:/prod/test_detail/%s", id);
+	}
+	
+	
 	
 		
 	

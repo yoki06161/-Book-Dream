@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ public class Prod_Service {
 	@Autowired
 	private final ProdBooksRepository prodRepository;
 	private final review_repository re_repo;
+	private final ranswer_repository ra_repo;
 	
 	public List<Prod_Books> getAllBooks() {
 		// prodRepository를 이용해 데이터 베이스에 저장된 모든 책을 찾음
@@ -41,7 +43,7 @@ public class Prod_Service {
 		return this.re_repo.findAll();
 	}
 	
-	
+	// 아이디 값에 따라 질문 갖고오기
 	public Prod_Review get_t_detail(Integer id) throws DataNotFound {
 		Optional<Prod_Review> op = this.re_repo.findById(id);
 		if(op.isPresent()) {
@@ -49,6 +51,14 @@ public class Prod_Service {
 		} else {
 			throw new DataNotFound("질문이 없음");
 		}
+	}
+	
+	public void create(Prod_Review pr, String cont) {
+		Prod_RAnswer pra = new Prod_RAnswer();
+		pra.setContent2(cont);
+		pra.setA_time(LocalDateTime.now());
+		pra.setReview(pr);
+		this.ra_repo.save(pra);
 	}
 	
 }
