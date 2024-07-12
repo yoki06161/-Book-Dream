@@ -16,10 +16,10 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String senderId;
-    private String receiverId;
     private String message;
     private LocalDateTime createdAt;
     private Long chatRoomId;
+    private MessageType type;
 
     public enum MessageType {
         CHAT,

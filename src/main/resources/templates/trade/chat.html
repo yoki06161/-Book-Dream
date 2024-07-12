@@ -68,7 +68,6 @@
     <script type="text/javascript">
         var stompClient = null;
         var senderId = '[[${senderId}]]';
-        var receiverId = '[[${receiverId}]]';
         var chatRoomId = '[[${chatRoomId}]]';
 
         function connect() {
@@ -88,7 +87,6 @@
             if (messageContent && stompClient) {
                 var chatMessage = {
                     senderId: senderId,
-                    receiverId: receiverId,
                     message: messageContent,
                     chatRoomId: chatRoomId,
                     type: 'CHAT'
@@ -200,7 +198,6 @@
         <div class="card my-3">
             <div class="card-body">
                 <input type="hidden" id="senderId" value="[[${senderId}]]">
-                <input type="hidden" id="receiverId" value="[[${receiverId}]]">
                 <input type="hidden" id="chatRoomId" value="[[${chatRoomId}]]">
                 <div class="container-fluid chat_section" id="chat-box"></div>
                 <div class="type_msg mt-3">

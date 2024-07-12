@@ -30,14 +30,13 @@ public class ChatController {
     }
 
     @GetMapping("/start")
-    public String chatPage(@RequestParam("receiverId") String receiverId, @RequestParam("tradeIdx") int tradeIdx, @RequestParam("chatRoomId") Long chatRoomId, Principal principal, Model model) {
+    public String chatPage(@RequestParam("tradeIdx") int tradeIdx, @RequestParam("chatRoomId") Long chatRoomId, Principal principal, Model model) {
         if (principal == null) {
             return "redirect:/user/login";
         }
-        
+
         String senderId = principal.getName();
         model.addAttribute("senderId", senderId);
-        model.addAttribute("receiverId", receiverId);
         model.addAttribute("tradeIdx", tradeIdx);
         model.addAttribute("chatRoomId", chatRoomId);
         return "trade/chat";
@@ -60,12 +59,12 @@ public class ChatController {
         if (principal == null) {
             return "redirect:/user/login";
         }
-        
+
         String senderId = principal.getName();
         ChatRoom chatRoom = chatService.createChatRoom(senderId, receiverId, tradeIdx);
-        return "redirect:/trade/chat/start?receiverId=" + receiverId + "&tradeIdx=" + tradeIdx + "&chatRoomId=" + chatRoom.getId();
+        return "redirect:/trade/chat/start?tradeIdx=" + tradeIdx + "&chatRoomId=" + chatRoom.getId();
     }
-    
+
     @PostMapping("/leave")
     @ResponseBody
     public ResponseEntity<String> leaveChatRoom(@RequestParam("chatRoomId") Long chatRoomId, Principal principal) {
@@ -74,7 +73,7 @@ public class ChatController {
         }
 
         String userId = principal.getName();
-        chatService.deleteChatRoom(chatRoomId, userId);
+        chatService.leaveChatRoom(chatRoomId, userId);
         return ResponseEntity.ok("채팅방을 나갔습니다.");
     }
 
