@@ -36,9 +36,19 @@ public class Prod_Service {
 		return opb.get();
 	}
 	
-	// 내꺼
+	// 내꺼. 질문 리스트 갖고오는거
 	public List<Prod_Review> get_t_list() {
 		return this.re_repo.findAll();
+	}
+	
+	
+	public Prod_Review get_t_detail(Integer id) throws DataNotFound {
+		Optional<Prod_Review> op = this.re_repo.findById(id);
+		if(op.isPresent()) {
+			return op.get();
+		} else {
+			throw new DataNotFound("질문이 없음");
+		}
 	}
 	
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +23,8 @@ import com.bookdream.sbb.prod_repo.*;
 
 // 스프링 실행시 로그인창 안뜨게한다
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+// 기본적으로 prod를 쓰게 만듬. 만약 이거 지우면 밑에 링크들 다 앞에 /prod붙여줘야한다.
+@RequestMapping("/prod")
 // final필드 자동 생성용
 @RequiredArgsConstructor
 @Controller
@@ -35,7 +38,7 @@ public class Prod_Controller {
 	
 	// 리스트
 	// prod로 들어오는 주소 여기로
-	@GetMapping("/prod")
+	@GetMapping("")
 	// 자바에서 html로 데이터 전달할때 쓰는게 model
 	public String prod_list(Model model) throws IOException {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
@@ -54,7 +57,7 @@ public class Prod_Controller {
 	
 	// 제품 상세보기. 소미씨가 해주신거.
 	// @PathVariable은 url에 있는 변수 인식하는거.
-	@GetMapping("/prod/detail/{book_id}")
+	@GetMapping("/detail/{book_id}")
 	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) throws IOException{
 		Prod_Books book = prodService.getProdBooks(book_id);
 		model.addAttribute("book", book);
@@ -63,19 +66,22 @@ public class Prod_Controller {
 	}
 	
 	// db리스트 테스트 !!!내꺼
-	@GetMapping("prod/list_test")
+	@GetMapping("/list_test")
 	public String list_t(Model model) {
 		List<Prod_Review> p_list = this.prodService.get_t_list();
 		model.addAttribute("p_list", p_list);
 		return "prod/list_test";
 	}
-		
-	@GetMapping("prod/test_detail/{t_id}")
-	public String getMethodName(Model model, @PathVariable("t_id") Integer id) {
+	
+	// 질문 상세보기
+	@GetMapping("/test_detail/{t_id}")
+	public String getMethodName(Model model, @PathVariable("t_id") Integer id) throws DataNotFound {
+		Prod_Review pr = this.prodService.get_t_detail(id);
+		model.addAttribute("pr", pr);
 		return "prod/test_detail";
 	}
 		
-		
+	
 		
 	
 }
