@@ -13,8 +13,8 @@ public class ChatService {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
-    public List<Chat> getChatHistory(String userId, String otherUserId) {
-        return chatRepository.findBySenderIdAndReceiverIdOrReceiverIdAndSenderId(userId, otherUserId, otherUserId, userId);
+    public List<Chat> getChatHistory(Long chatRoomId) {
+        return chatRepository.findByChatRoomId(chatRoomId);
     }
 
     public Chat saveChat(Chat chat) {
@@ -39,8 +39,11 @@ public class ChatService {
         return chatRoom;
     }
     
-    public void deleteChatRoom(String senderId, String receiverId, int tradeIdx) {
-        chatRoomRepository.findBySenderIdAndReceiverIdAndTradeIdx(senderId, receiverId, tradeIdx)
-                .ifPresent(chatRoomRepository::delete);
+    public void deleteChatRoom(Long chatRoomId, String userId) {
+        chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
+            if (chatRoom.getSenderId().equals(userId) || chatRoom.getReceiverId().equals(userId)) {
+                chatRoomRepository.delete(chatRoom);
+            }
+        });
     }
 }

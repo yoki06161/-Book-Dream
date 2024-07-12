@@ -21,16 +21,16 @@ public class ChatController {
 
     @GetMapping("/history")
     @ResponseBody
-    public ResponseEntity<List<Chat>> getChatHistory(@RequestParam("senderId") String senderId, @RequestParam("receiverId") String receiverId, Principal principal) {
+    public ResponseEntity<List<Chat>> getChatHistory(@RequestParam("chatRoomId") Long chatRoomId, Principal principal) {
         if (principal == null) {
             return ResponseEntity.status(403).build();
         }
-        List<Chat> chatHistory = chatService.getChatHistory(senderId, receiverId);
+        List<Chat> chatHistory = chatService.getChatHistory(chatRoomId);
         return ResponseEntity.ok(chatHistory);
     }
 
     @GetMapping("/start")
-    public String chatPage(@RequestParam("receiverId") String receiverId, @RequestParam("tradeIdx") int tradeIdx, Principal principal, Model model) {
+    public String chatPage(@RequestParam("receiverId") String receiverId, @RequestParam("tradeIdx") int tradeIdx, @RequestParam("chatRoomId") Long chatRoomId, Principal principal, Model model) {
         if (principal == null) {
             return "redirect:/user/login";
         }
@@ -39,6 +39,7 @@ public class ChatController {
         model.addAttribute("senderId", senderId);
         model.addAttribute("receiverId", receiverId);
         model.addAttribute("tradeIdx", tradeIdx);
+        model.addAttribute("chatRoomId", chatRoomId);
         return "trade/chat";
     }
 
@@ -62,18 +63,18 @@ public class ChatController {
         
         String senderId = principal.getName();
         ChatRoom chatRoom = chatService.createChatRoom(senderId, receiverId, tradeIdx);
-        return "redirect:/trade/chat/start?receiverId=" + receiverId + "&tradeIdx=" + tradeIdx;
+        return "redirect:/trade/chat/start?receiverId=" + receiverId + "&tradeIdx=" + tradeIdx + "&chatRoomId=" + chatRoom.getId();
     }
     
     @PostMapping("/leave")
     @ResponseBody
-    public ResponseEntity<String> leaveChatRoom(@RequestParam("receiverId") String receiverId, @RequestParam("tradeIdx") int tradeIdx, Principal principal) {
+    public ResponseEntity<String> leaveChatRoom(@RequestParam("chatRoomId") Long chatRoomId, Principal principal) {
         if (principal == null) {
             return ResponseEntity.status(403).build();
         }
 
-        String senderId = principal.getName();
-        chatService.deleteChatRoom(senderId, receiverId, tradeIdx);
+        String userId = principal.getName();
+        chatService.deleteChatRoom(chatRoomId, userId);
         return ResponseEntity.ok("채팅방을 나갔습니다.");
     }
 

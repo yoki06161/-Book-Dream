@@ -50,10 +50,10 @@
             background-color: transparent;
             border: none;
             box-shadow: none;
-            font-size: 1.5em; /* 버튼의 크기를 키움 */
+            font-size: 1.5em;
         }
         .btn-transparent i {
-            font-size: 1.5em; /* 아이콘의 크기를 키움 */
+            font-size: 1.5em;
         }
         .chat_header h2 {
             margin-left: 10px;
@@ -69,6 +69,7 @@
         var stompClient = null;
         var senderId = '[[${senderId}]]';
         var receiverId = '[[${receiverId}]]';
+        var chatRoomId = '[[${chatRoomId}]]';
 
         function connect() {
             var socket = new SockJS('/ws');
@@ -89,6 +90,7 @@
                     senderId: senderId,
                     receiverId: receiverId,
                     message: messageContent,
+                    chatRoomId: chatRoomId,
                     type: 'CHAT'
                 };
                 stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
@@ -137,7 +139,7 @@
 
             const leaveChatButton = document.getElementById('leave-chat-button');
             leaveChatButton.addEventListener('click', function () {
-                fetch(`/trade/chat/leave?receiverId=${receiverId}&tradeIdx=${tradeIdx}`, {
+                fetch(`/trade/chat/leave?chatRoomId=${chatRoomId}`, {
                     method: 'POST',
                 })
                     .then(response => {
@@ -148,10 +150,15 @@
                         }
                     });
             });
+
+            const backButton = document.getElementById('back-button');
+            backButton.addEventListener('click', function () {
+                window.location.href = '/trade/chat/rooms';
+            });
         });
 
         function fetchChatHistory() {
-            fetch(`/trade/chat/history?senderId=${senderId}&receiverId=${receiverId}`, {
+            fetch(`/trade/chat/history?chatRoomId=${chatRoomId}`, {
                 method: 'GET',
             })
             .then(response => {
@@ -182,15 +189,19 @@
 <body>
     <div layout:fragment="content" class="container my-3">
         <div class="chat_header">
-            <button id="leave-chat-button" class="btn btn-transparent" data-trade-idx="[[${tradeIdx}]]">
+            <button id="back-button" class="btn btn-transparent" data-trade-idx="[[${tradeIdx}]]">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <h2 style="flex-grow: 1; margin-right: 40px;">채팅하기</h2>
+            <button id="leave-chat-button" class="btn btn-transparent">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
         </div>
         <div class="card my-3">
             <div class="card-body">
                 <input type="hidden" id="senderId" value="[[${senderId}]]">
                 <input type="hidden" id="receiverId" value="[[${receiverId}]]">
+                <input type="hidden" id="chatRoomId" value="[[${chatRoomId}]]">
                 <div class="container-fluid chat_section" id="chat-box"></div>
                 <div class="type_msg mt-3">
                     <div class="input_msg_write d-flex">

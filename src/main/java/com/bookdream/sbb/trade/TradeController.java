@@ -48,6 +48,9 @@ public class TradeController {
 
     @GetMapping("/create")
     public String createTradeForm(Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/user/login";
+        }
         String username = principal.getName();
         model.addAttribute("username", username);
         model.addAttribute("trade", new Trade());
