@@ -34,20 +34,17 @@ public class Prod_Service {
 	
 	// 받은 id에 따라 db에서 책 정보 조회
 	public Prod_Books getProdBooks(Integer book_id) {
+		// Optional임시 데이터 타입인듯. 무슨 데이터 타입이든 받아들이는
+		// if같은 조건문 쓸때 썼었다.
 		Optional<Prod_Books> opb = this.prodRepository.findById(book_id);
 		return opb.get();
 	}
 	
 	// ###################리뷰
 	// 리뷰 리스트 갖고오기
-	public Prod_d_Review getReview_List(Integer book_id) {
-		// Optional임시 데이터 타입인듯. 무슨 데이터 타입이든 받아들이는
-		Optional<Prod_d_Review> op = this.re_repo.findByBook(book_id);
-		// 리뷰가 없을시 오류가 뜨기때문에 조건닮. 질문이 있는 경우 조회된 값을 내보내도록. 없을시 null을 내보내도록.
-		if(op.isPresent()) {
-			return op.get();
-		}
-		return null;
+	public List<Prod_d_Review> getReview_List(Integer book_id) {
+		List<Prod_d_Review> r_list = this.re_repo.findByBook(book_id);
+		return r_list;
 	}
 	
 	// 리뷰 쓰기

@@ -64,7 +64,7 @@ public class Prod_Controller {
 		model.addAttribute("book", book);
 		
 		// 리뷰 보여주기
-		Prod_d_Review p_list = this.prodService.getReview_List(book_id);
+		List<Prod_d_Review> p_list = this.prodService.getReview_List(book_id);
 		model.addAttribute("p_list", p_list);
 		
 		return "prod/prod_detail";
