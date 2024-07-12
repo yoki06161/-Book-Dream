@@ -1,69 +1,50 @@
-package com.bookdream.sbb.user;
-
-import java.util.HashMap;
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-
-@Controller
-@RequiredArgsConstructor
-public class KakaoController {
-
-    private final KakaoAPI kakaoApi;
-    private final UserService userService;
-    private final UserDetailsService userDetailsService;
-
-    @RequestMapping(value = "/login")
-    public String login(@RequestParam("code") String code, HttpSession session) {
-        // 1번 인증코드 요청 전달
-        String accessToken = kakaoApi.getAccessToken(code);
-        // 2번 인증코드로 토큰 전달
-        HashMap<String, Object> userInfo = kakaoApi.getUserInfo(accessToken);
-
-        if (userInfo.get("email") != null) {
-            String email = (String) userInfo.get("email");
-            String nickname = (String) userInfo.get("nickname");
-
-            // 사용자 정보를 DB에서 확인하거나 새로 생성합니다.
-            SiteUser user = userService.getUserByEmail(email);
-            if (user == null) {
-                user = userService.createKakaoUser(email, nickname);
-            }
-
-            // Spring Security 세션에 사용자 정보 저장
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // 세션에 사용자 정보 저장
-            session.setAttribute("userId", user.getEmail());
-            session.setAttribute("accessToken", accessToken);
-            
-
-            // 리디렉션을 통해 메인 페이지로 이동
-            return "redirect:/";
-        } else {
-            // 로그인 실패 처리
-            return "redirect:/login?error";
-        }
-    }
-
-    // 로그아웃 처리
-    @RequestMapping(value = "/logout")
-    public String logout(HttpSession session) {
-        kakaoApi.kakaoLogout((String) session.getAttribute("accessToken"));
-        session.removeAttribute("accessToken");
-        session.removeAttribute("userId");
-        SecurityContextHolder.clearContext(); // Spring Security 세션 초기화
-        return "redirect:/";  // 로그아웃 후 메인 페이지로 리디렉션
-    }
-}
+//package com.bookdream.sbb.user;
+//
+//import org.springframework.http.HttpEntity;
+//import org.springframework.http.HttpHeaders;
+//import org.springframework.http.HttpMethod;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.util.LinkedMultiValueMap;
+//import org.springframework.util.MultiValueMap;
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.ResponseBody;
+//import org.springframework.web.client.RestTemplate;
+//
+//import lombok.RequiredArgsConstructor;
+//
+//@Controller
+//@RequiredArgsConstructor
+//public class KakaoController {
+//	
+//	@GetMapping("/auth/kakao/callback")
+//    public @ResponseBody String kakaoCallback(String code) { // Data를 리턴해주는 컨트롤러 함수
+//    	
+//		RestTemplate rt = new RestTemplate();
+//		
+//		// HttpHeader 오브젝트 생성
+//    	HttpHeaders headers = new HttpHeaders();
+//    	headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+//		
+//    	// HttpBody 오브젝트 생성
+//    	MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+//    	params.add("grant_type", "authorization_code");
+//    	params.add("client_id", "3192757b80d5d97c7263b2166d1afd23");
+//    	params.add("redirect_uri", "http://localhost:8080/auth/kakao/callback");
+//    	params.add("code", code);
+//    	
+//    	// HttpHeader와 HttpBody를 하나의 오브젝트에 담기
+//    	HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+//    	
+//    	// Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음
+//    	ResponseEntity<String> response = rt.exchange(
+//    			"https://kauth.kakao.com/oauth/token",
+//    			HttpMethod.POST,
+//    			kakaoTokenRequest,
+//    			String.class
+//    		);
+//    	
+//    	
+//		return "카카오 인증 완료:토큰요청에 대한 응답:" + response;
+//    }
+//}

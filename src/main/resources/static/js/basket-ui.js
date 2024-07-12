@@ -42,6 +42,26 @@ function init() {
     // 페이지 로드 시 초기 버튼 및 '전체선택' 체크박스 상태를 업데이트
 	updateButtonState();
     updateSelectAllState();
+	
+	// 장바구니 목록 출력 함수
+	function displayCartItems() {
+	    let sessionBookIds = JSON.parse(sessionStorage.getItem('book_ids')) || [];
+	    let cartListContainer = document.querySelector('.cart-list');
+
+	    // 장바구니에 담긴 각 책 정보를 출력
+	    sessionBookIds.forEach(function(book_id) {
+	        let cartItemData = JSON.parse(sessionStorage.getItem('cartItem_' + book_id));
+	        if (cartItemData) {
+	            // 여기서는 예시로 콘솔에 출력하는 대신, 웹 페이지에 동적으로 추가하는 방식으로 수정 가능
+	            console.log(`Book ID: ${cartItemData.book_id}, Count: ${cartItemData.count}, Price: ${cartItemData.countPrice}`);
+	            
+	            // 예시: 웹 페이지에 동적으로 추가
+	            let cartItemElement = document.createElement('div');
+	            cartItemElement.textContent = `Book ID: ${cartItemData.book_id}, Count: ${cartItemData.count}, Price: ${cartItemData.countPrice}`;
+	            cartListContainer.appendChild(cartItemElement);
+	        }
+	    });
+	}
 }
 
 // DOMContentLoaded 이벤트 리스너를 사용하여 init 함수 호출
