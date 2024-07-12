@@ -18,9 +18,10 @@ public class KakaoUserService {
 
     @Transactional(readOnly=true)
     public KakaoUser findKakaoUser(String email) {
-    	
-    	KakaoUser user = kakaoUserRepository.findByEmail(email).get();
-    	return user;
+    	KakaoUser kakaoUser = kakaoUserRepository.findByEmail(email).orElseGet(()->{
+    		return new KakaoUser();
+    	});
+    	return kakaoUser;
     }
     
 

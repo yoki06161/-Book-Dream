@@ -7,12 +7,17 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +27,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,8 +41,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
+	@Value("${cos.key}")
+	private String cosKey;
+	
     private UserService userService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    
     @Autowired
     private KakaoUserService kakaoUserService;
     
@@ -88,7 +98,7 @@ public class UserController {
     }
     
     @GetMapping("/auth/kakao/callback")
-    public @ResponseBody String kakaoCallback(@RequestParam("code") String code) { // Data를 리턴해주는 컨트롤러 함수
+    public String kakaoCallback(@RequestParam("code") String code) { // Data를 리턴해주는 컨트롤러 함수
     	
 		RestTemplate rt = new RestTemplate();
 		
@@ -159,30 +169,46 @@ public class UserController {
 			e.printStackTrace();
 		}
     	
-    	System.out.println("카카오 아이디(번호) : " + kakaoProfile.getId());
-    	System.out.println("카카오 아이디(번호) : " + kakaoProfile.getKakao_account().getEmail());
-    	System.out.println("블로그 서버 유저네임 : " + kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
-    	System.out.println("블로그 서버 이메일 : " + kakaoProfile.getKakao_account().getEmail());
-    	UUID garbagePassword = UUID.randomUUID();
-    	System.out.println("블로그 서버 패스워드 : " + garbagePassword);
+//    	System.out.println("카카오 아이디(번호) : " + kakaoProfile.getId());
+//    	System.out.println("카카오 아이디(번호) : " + kakaoProfile.getKakao_account().getEmail());
+//    	System.out.println("블로그 서버 유저네임 : " + kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
+//    	System.out.println("블로그 서버 이메일 : " + kakaoProfile.getKakao_account().getEmail());
+//    	System.out.println("카카오 유저 이름 : " + kakaoProfile.getProperties().getNickname());
+//    	System.out.println("블로그 서버 패스워드 : " + cosKey);
     	
     	KakaoUser kakaoUser = KakaoUser.builder()
-    			.username(kakaoProfile.getKakao_account().getEmail() +"_"+ kakaoProfile.getId())
-    			.password(garbagePassword.toString())
+    			.username(kakaoProfile.getProperties().getNickname())
+    			.password(cosKey)
     			.email(kakaoProfile.getKakao_account().getEmail())
     			.build();
     	
     	// 가입자 혹은 비가입자 체크 해서 처리
+//    	System.out.println(kakaoUser.getUsername());
+//    	System.out.println(kakaoUser.getEmail());
     	KakaoUser originUser = kakaoUserService.findKakaoUser(kakaoUser.getEmail());
     	
-    	if(originUser == null) {
+    	if(originUser.getUsername() == null) {
+    		System.out.println("기존 회원이 아니기에 자동 회원가입을 진행합니다.============================");
     		kakaoUserService.createKakaoUser(kakaoUser);
+    		System.out.println("회원가입 완료!============================");
     	}
     	
     	// 로그인 처리
-    	
-    	
-    	return "회원가입 완료";
+    	System.out.println("자동 로그인을 진행합니다.============================");
+    	try {
+    		System.out.println("됨?");
+    	    Authentication authentication = authenticationManager.authenticate(
+    	        new UsernamePasswordAuthenticationToken(kakaoUser.getUsername(), cosKey)
+    	    );
+    	    System.out.println("됨???");
+    	    SecurityContextHolder.getContext().setAuthentication(authentication);
+    	    return "redirect:/";
+    	} catch (AuthenticationException e) {
+    	    e.printStackTrace();
+    	    System.out.println("왜안됨?????????????????????????????????????????????");
+    	    return "redirect:/user/login";
+    	}
+
     }
    
     
@@ -309,10 +335,6 @@ public class UserController {
     @GetMapping("/user/userbuy")
     public String userbuy() {
         return "user/userbuy";
-    }
-    @GetMapping("/user/userpay")
-    public String userpay() {
-        return "user/userpay";
     }
     
 

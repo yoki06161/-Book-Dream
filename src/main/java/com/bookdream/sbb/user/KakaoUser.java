@@ -17,6 +17,19 @@ import lombok.Setter;
 @Builder
 public class KakaoUser {
 
+	public KakaoUser() {
+	}
+	
+	public KakaoUser(Long id, String username, String password, String email, String role, LocalDateTime createDate) {
+	    this.id = id;
+	    this.username = username;
+	    this.password = password;
+	    this.email = email;
+	    this.role =  "User";
+	    this.createDate = LocalDateTime.now();;
+	}
+
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
