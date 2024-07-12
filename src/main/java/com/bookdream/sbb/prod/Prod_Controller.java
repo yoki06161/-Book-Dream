@@ -73,7 +73,7 @@ public class Prod_Controller {
 	// 리뷰 쓰기
 	@PostMapping("/detail/write_review/{r_id}")
 	public String write_review(Model model,@PathVariable("r_id") Integer id, @RequestParam("w_content") String content) {
-		this.prodService.Write_Review(content);
+		this.prodService.Write_Review(content, id);
 		return String.format("redirect:/prod/detail/%s", id);
 	}
 	

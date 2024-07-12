@@ -51,9 +51,10 @@ public class Prod_Service {
 	}
 	
 	// 리뷰 쓰기
-	public void Write_Review(String review) {
+	public void Write_Review(String review, Integer book_id) {
 		Prod_d_Review pr = new Prod_d_Review();
 		pr.setReview(review);
+		pr.setBook(book_id);
 		pr.setTime(LocalDateTime.now());
 		this.re_repo.save(pr);
 	}
