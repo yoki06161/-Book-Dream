@@ -25,6 +25,9 @@ public class Prod_d_Review {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	// 책아이디
+	private Integer book;
+	
 	// 유저 이름
 	// 열 길이조절
 	@Column(length = 200)

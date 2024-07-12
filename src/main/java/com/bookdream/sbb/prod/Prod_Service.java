@@ -38,9 +38,16 @@ public class Prod_Service {
 		return opb.get();
 	}
 	
+	// ###################리뷰
 	// 리뷰 리스트 갖고오기
-	public List<Prod_d_Review> getReview_List() {
-		return this.re_repo.findAll();
+	public Prod_d_Review getReview_List(Integer book_id) {
+		// Optional임시 데이터 타입인듯. 무슨 데이터 타입이든 받아들이는
+		Optional<Prod_d_Review> op = this.re_repo.findByBook(book_id);
+		// 리뷰가 없을시 오류가 뜨기때문에 조건닮. 질문이 있는 경우 조회된 값을 내보내도록. 없을시 null을 내보내도록.
+		if(op.isPresent()) {
+			return op.get();
+		}
+		return null;
 	}
 	
 	// 리뷰 쓰기
