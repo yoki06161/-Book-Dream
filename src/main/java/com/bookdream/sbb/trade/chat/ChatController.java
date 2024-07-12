@@ -39,6 +39,10 @@ public class ChatController {
         model.addAttribute("senderId", senderId);
         model.addAttribute("tradeIdx", tradeIdx);
         model.addAttribute("chatRoomId", chatRoomId);
+
+        // 새로운 메시지 수 초기화
+        chatService.resetNewMessagesCount(chatRoomId);
+
         return "trade/chat";
     }
 
@@ -82,6 +86,10 @@ public class ChatController {
     public Chat sendMessage(Chat chatMessage) {
         chatMessage.setCreatedAt(LocalDateTime.now());
         chatService.saveChat(chatMessage);
+
+        // 새로운 메시지 수 증가
+        chatService.incrementNewMessagesCount(chatMessage.getChatRoomId());
+
         return chatMessage;
     }
 

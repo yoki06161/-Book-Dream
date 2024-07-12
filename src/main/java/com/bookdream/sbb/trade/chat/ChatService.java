@@ -83,4 +83,18 @@ public class ChatService {
             }
         });
     }
+
+    public void incrementNewMessagesCount(Long chatRoomId) {
+        chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
+            chatRoom.incrementNewMessagesCount();
+            chatRoomRepository.save(chatRoom);
+        });
+    }
+
+    public void resetNewMessagesCount(Long chatRoomId) {
+        chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
+            chatRoom.resetNewMessagesCount();
+            chatRoomRepository.save(chatRoom);
+        });
+    }
 }

@@ -22,6 +22,16 @@
             margin-bottom: 10px;
             border-radius: 5px;
             background-color: #f1f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .badge {
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 5px 10px;
+            font-size: 0.8em;
         }
     </style>
 </head>
@@ -30,8 +40,9 @@
         <h2 class="border-bottom py-2" style="text-align: center;">채팅방 목록</h2>
         <ul class="chat_room_list">
             <li th:each="chatRoom : ${chatRooms}">
-                <a th:href="@{/trade/chat/start(tradeIdx=${chatRoom.tradeIdx}, chatRoomId=${chatRoom.id})}" 
+                <a th:href="@{/trade/chat/start(tradeIdx=${chatRoom.tradeIdx}, chatRoomId=${chatRoom.id})}"
                    th:text="${chatRoom.senderId} + ' (' + ${chatRoom.bookTitle} + ')'"></a>
+                <span class="badge" th:if="${chatRoom.newMessagesCount > 0}" th:text="${chatRoom.newMessagesCount}"></span>
             </li>
         </ul>
     </div>

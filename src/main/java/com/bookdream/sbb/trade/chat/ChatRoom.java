@@ -20,8 +20,17 @@ public class ChatRoom {
     private int tradeIdx;
     private String bookTitle;
     private LocalDateTime lastMessageTime;
+    private int newMessagesCount;
 
     public String getChatRoomName() {
         return senderId + " & " + receiverId + " & " + tradeIdx;
+    }
+
+    public void incrementNewMessagesCount() {
+        this.newMessagesCount++;
+    }
+
+    public void resetNewMessagesCount() {
+        this.newMessagesCount = 0;
     }
 }
