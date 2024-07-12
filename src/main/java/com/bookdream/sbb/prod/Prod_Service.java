@@ -19,8 +19,8 @@ import lombok.RequiredArgsConstructor;
 public class Prod_Service {
 	@Autowired
 	private final ProdBooksRepository prodRepository;
-	private final review_repository re_repo;
-	private final ranswer_repository ra_repo;
+	private final Prod_RErepository re_repo;
+	private final Prod_RArepository ra_repo;
 	
 	public List<Prod_Books> getAllBooks() {
 		// prodRepository를 이용해 데이터 베이스에 저장된 모든 책을 찾음
@@ -38,14 +38,30 @@ public class Prod_Service {
 		return opb.get();
 	}
 	
-	// 내꺼. 질문 리스트 갖고오는거
-	public List<Prod_Review> get_t_list() {
+	// 리뷰 리스트 갖고오기
+	public List<Prod_d_Review> getReview_List() {
 		return this.re_repo.findAll();
 	}
 	
+	// 리뷰 쓰기
+	public void Write_Review(String review) {
+		Prod_d_Review pr = new Prod_d_Review();
+		pr.setReview(review);
+		pr.setTime(LocalDateTime.now());
+		this.re_repo.save(pr);
+	}
+	
+	
+	// 연습용으로 한것들
+	// !!!!!!!!!!!!!!!!!!!내꺼. 질문 리스트 갖고오는거
+//	public List<Prod_d_Review> get_t_list() {
+//		// select * from 테이블이랑 같은거임
+//		return this.re_repo.findAll();
+//	}
+	
 	// 아이디 값에 따라 질문 갖고오기
-	public Prod_Review get_t_detail(Integer id) throws DataNotFound {
-		Optional<Prod_Review> op = this.re_repo.findById(id);
+	public Prod_d_Review get_t_detail(Integer id) throws DataNotFound {
+		Optional<Prod_d_Review> op = this.re_repo.findById(id);
 		if(op.isPresent()) {
 			return op.get();
 		} else {
@@ -53,11 +69,11 @@ public class Prod_Service {
 		}
 	}
 	
-	public void create(Prod_Review pr, String cont) {
-		Prod_RAnswer pra = new Prod_RAnswer();
-		pra.setContent2(cont);
-		pra.setA_time(LocalDateTime.now());
-		pra.setReview(pr);
+	public void create(Prod_d_Review pr, String cont) {
+		Prod_d_Answer pra = new Prod_d_Answer();
+//		pra.setContent2(cont);
+//		pra.setA_time(LocalDateTime.now());
+//		pra.setReview(pr);
 		this.ra_repo.save(pra);
 	}
 	

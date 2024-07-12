@@ -43,7 +43,7 @@ public class Prod_Controller {
 	// 자바에서 html로 데이터 전달할때 쓰는게 model
 	public String prod_list(Model model) throws IOException {
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값
-		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
+//		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
 //		// 크롤링된 데이터를 데이터베이스에 저장합니다.
 //      prodService.saveBooks(book_list);
 
@@ -56,28 +56,42 @@ public class Prod_Controller {
 		return "prod/prod_list";
 	}
 	
-	// 제품 상세보기. 소미씨가 해주신거.
+	// 제품 상세보기.
 	// @PathVariable은 url에 있는 변수 인식하는거.
 	@GetMapping("/detail/{book_id}")
 	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) throws IOException{
 		Prod_Books book = prodService.getProdBooks(book_id);
 		model.addAttribute("book", book);
 		
+		// 리뷰 보여주기
+		List<Prod_d_Review> p_list = this.prodService.getReview_List();
+		model.addAttribute("p_list", p_list);
+		
 		return "prod/prod_detail";
 	}
 	
-	// db리스트 테스트 !!!내꺼
-	@GetMapping("/list_test")
-	public String list_t(Model model) {
-		List<Prod_Review> p_list = this.prodService.get_t_list();
-		model.addAttribute("p_list", p_list);
-		return "prod/list_test";
+	// 리뷰 쓰기
+	@PostMapping("/detail/write_review/{r_id}")
+	public String write_review(Model model,@PathVariable("r_id") Integer id, @RequestParam("w_content") String content) {
+		this.prodService.Write_Review(content);
+		return String.format("redirect:/prod/detail/%s", id);
 	}
 	
+	
+	// db리스트 테스트 !!!!!!!!!!!내꺼
+	// 그냥 테스트 리스트로 보내는거.
+//	@GetMapping("/list_test")
+//	public String list_t(Model model) {
+//		List<Prod_d_Review> p_list = this.prodService.get_t_list();
+//		model.addAttribute("p_list", p_list);
+//		return "prod/list_test";
+//	}
+	
+	// 테스트 리스트에서 상세보기로
 	// 질문 상세보기
 	@GetMapping("/test_detail/{t_id}")
 	public String t_detail(Model model, @PathVariable("t_id") Integer id) throws DataNotFound {
-		Prod_Review pr = this.prodService.get_t_detail(id);
+		Prod_d_Review pr = this.prodService.get_t_detail(id);
 		model.addAttribute("pr", pr);
 		return "prod/test_detail";
 	}
@@ -86,7 +100,7 @@ public class Prod_Controller {
 	@PostMapping("/test_detail/answer/c/{tt_id}")
 	// 리퀘스트 파람은 name값이랑 똑같이.
 	public String t_answer(Model model, @PathVariable("tt_id") Integer id, @RequestParam("t_content") String t_con) throws DataNotFound {
-		Prod_Review pr = this.prodService.get_t_detail(id);
+		Prod_d_Review pr = this.prodService.get_t_detail(id);
 		this.prodService.create(pr, t_con);
 		// 앞에 /prod를 안해서 이상하게 됐었다...
 		return String.format("redirect:/prod/test_detail/%s", id);
