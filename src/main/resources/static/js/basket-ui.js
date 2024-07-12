@@ -43,26 +43,23 @@ function init() {
 	updateButtonState();
     updateSelectAllState();
 	
-	// 장바구니 목록 출력 함수
-	function displayCartItems() {
-	    let sessionBookIds = JSON.parse(sessionStorage.getItem('book_ids')) || [];
-	    let cartListContainer = document.querySelector('.cart-list');
-
-	    // 장바구니에 담긴 각 책 정보를 출력
-	    sessionBookIds.forEach(function(book_id) {
-	        let cartItemData = JSON.parse(sessionStorage.getItem('cartItem_' + book_id));
-	        if (cartItemData) {
-	            // 여기서는 예시로 콘솔에 출력하는 대신, 웹 페이지에 동적으로 추가하는 방식으로 수정 가능
-	            console.log(`Book ID: ${cartItemData.book_id}, Count: ${cartItemData.count}, Price: ${cartItemData.countPrice}`);
-	            
-	            // 예시: 웹 페이지에 동적으로 추가
-	            let cartItemElement = document.createElement('div');
-	            cartItemElement.textContent = `Book ID: ${cartItemData.book_id}, Count: ${cartItemData.count}, Price: ${cartItemData.countPrice}`;
-	            cartListContainer.appendChild(cartItemElement);
-	        }
-	    });
-	}
+	// 페이지 로드 후 세션 스토리지에 저장된 formData 출력
+	displayFormData();
 }
+
+// 세션 스토리지에서 'formData'를 가져와서 콘솔에 출력하는 함수
+function displayFormData() {
+    let formData = JSON.parse(sessionStorage.getItem('formData'));
+    if (formData) {
+		console.log(formData);
+        console.log('Book ID:', formData.book_id);
+        console.log('Count:', formData.count);
+        console.log('Count Price:', formData.countPrice);
+    } else {
+        console.log('No formData found in sessionStorage.');
+    }
+}
+
 
 // DOMContentLoaded 이벤트 리스너를 사용하여 init 함수 호출
 document.addEventListener('DOMContentLoaded', init);

@@ -46,5 +46,7 @@ function aa() {
 	    sessionStorage.setItem('badgeCount', newBadgeCount);
 	} else {
 	    alert('이미 장바구니에 있습니다.');
+		let formData = JSON.parse(sessionStorage.getItem('formData'));
+		console.log(formData);
 	}
 }

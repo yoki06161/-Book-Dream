@@ -9,119 +9,17 @@
 	<br> <br> <input class="form-check-input" type="checkbox"
 		value="selectall" id="select_all" /> <label
 		id="select_all">&nbsp;전체 선택</label>
-	<table class="table align-middle text-center" style="margin-bottom:80px;">
+	<table th:if="${book}" class="table align-middle text-center" style="margin-bottom:80px;">
 		<!-- 상품 정보: 실제로는 tr한줄만 남겨두고 반복문+부트스트랩 처리하면 됨 -->
 		<tr>
 			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
+				th:value="${book.book_id}"></td>
 			<td><img src="image/test_img.jpg" alt="상품사진"
 				style="width: 82px; height: 118.34px;"></td>
 			<td><span class="fs-5 fw-bold">도서명</span> 
 			 <br> <br>
 				<p>그냥가격</p>
 				</td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span>
-				<br> <br>
-				<p>그냥가격</p>
-			</td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span>
-			 <br> <br>
-				<p>그냥가격</p></td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span>  
-			<br> <br>
-				<p>그냥가격</p>
-			</td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span> 
-			<br> <br>
-				<p>그냥가격</p></td>
 			<td><select>
 					<option value="1" selected>1</option>
 					<option value="2">2</option>
