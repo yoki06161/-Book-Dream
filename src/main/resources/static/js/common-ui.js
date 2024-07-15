@@ -1,4 +1,7 @@
 function init() {
+	// 세션 스토리지 전체 삭제(저장이 잘못되었을때 주석풀고 사용)
+	//sessionStorage.clear();
+	
 	// sessionStorage에서 저장된 뱃지 숫자를 가져와서 설정
 	if (sessionStorage.getItem('badgeCount')) {
 		document.getElementById('badge').textContent = sessionStorage.getItem('badgeCount');
@@ -12,7 +15,7 @@ document.addEventListener('DOMContentLoaded', init);
 function aa() {
 	let book_id = parseInt(document.querySelector('.book_id').value);    // int형으로 담기
 	let count = parseInt(document.querySelector('.bcount').value);     // int형으로 담기
-	let countPrice = document.querySelector('.result').textContent;
+	let countPrice = document.querySelector('.result').textContent + '원';
 	//console.log(book_id);
 
 	// 세션 스토리지에서 'book_ids' 배열을 불러오기 (없으면 빈 배열로 초기화)
@@ -25,10 +28,10 @@ function aa() {
 	    countPrice: countPrice
 	};
 
-	// 세션 스토리지에서 장바구니 내역 배열을 불러오기 
-	let storedData = sessionStorage.getItem("dataArray");
-	let dataArray = [];
-	console.log(storedData);
+	// 세션 스토리지에서 장바구니 내역 배열을 불러오기 (없으면 빈 배열로 초기화)
+	let dataArray = JSON.parse(sessionStorage.getItem("dataArray")) || [];
+	//let dataArray = [];
+	console.log(dataArray);
 	
 	
 	// book_id가 세션 스토리지에 없는 경우 book_id와  장바구니에 상품 정보를 각각 배열에 추가하고 뱃지 숫자 업데이트

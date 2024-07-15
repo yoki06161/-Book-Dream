@@ -26,29 +26,7 @@ public class BasketController {
 	private final Prod_Service prodService;
 	
 	@GetMapping("")
-	public String list(HttpSession session, Model model) {
-		 // formData 배열 가져오기
-	    String formDataListJson = (String) session.getAttribute("formDataList");
-	    if (formDataListJson != null && !formDataListJson.isEmpty()) {
-	        Gson gson = new Gson();
-	        Type formDataListType = new TypeToken<List<FormData>>() {}.getType();
-	        List<FormData> formDataList = gson.fromJson(formDataListJson, formDataListType);
-
-	        // 모델에 formDataList 추가
-	        model.addAttribute("formDataList", formDataList);
-	    }
-
-	    // book_id 배열 가져오기
-	    String bookIdListJson = (String) session.getAttribute("bookIdList");
-	    if (bookIdListJson != null && !bookIdListJson.isEmpty()) {
-	        Gson gson = new Gson();
-	        Type bookIdListType = new TypeToken<List<String>>() {}.getType();
-	        List<String> bookIdList = gson.fromJson(bookIdListJson, bookIdListType);
-
-	        // 모델에 bookIdList 추가
-	        model.addAttribute("bookIdList", bookIdList);
-	    }
-
+	public String list() {
 		return "basket/list";
 	}
 }
