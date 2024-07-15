@@ -22,7 +22,7 @@ public class ChatService {
     private TradeService tradeService;
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate; // STOMP 메시지 전송을 위한 템플릿
+    private SimpMessagingTemplate messagingTemplate;
 
     public List<Chat> getChatHistory(Long chatRoomId) {
         return chatRepository.findByChatRoomId(chatRoomId);
@@ -30,7 +30,12 @@ public class ChatService {
 
     public Chat saveChat(Chat chat) {
         chat.setCreatedAt(LocalDateTime.now());
-        return chatRepository.save(chat);
+        Chat savedChat = chatRepository.save(chat);
+
+        // 새로운 메시지가 저장될 때 새로운 메시지 카운트를 업데이트합니다.
+        updateNewMessagesCount(chat.getChatRoomId(), chat.getSenderId());
+
+        return savedChat;
     }
 
     public List<ChatRoom> getChatRooms(String userId) {
@@ -48,6 +53,8 @@ public class ChatService {
                     newChatRoom.setTradeIdx(tradeIdx);
                     newChatRoom.setBookTitle(bookTitle);
                     newChatRoom.setLastMessageTime(LocalDateTime.now());
+                    newChatRoom.setNewMessagesCountForSender(0);
+                    newChatRoom.setNewMessagesCountForReceiver(0);
                     return chatRoomRepository.save(newChatRoom);
                 });
         return chatRoom;
@@ -74,7 +81,6 @@ public class ChatService {
             leaveMessage.setType(Chat.MessageType.LEAVE);
             chatRepository.save(leaveMessage);
 
-            // STOMP 메시지 전송
             messagingTemplate.convertAndSend("/topic/public", leaveMessage);
 
             if (chatRoom.getSenderId() == null && chatRoom.getReceiverId() == null) {
@@ -84,17 +90,41 @@ public class ChatService {
         });
     }
 
-    public void incrementNewMessagesCount(Long chatRoomId) {
+    public void incrementNewMessagesCount(Long chatRoomId, String senderId, String currentUserId) {
         chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
-            chatRoom.incrementNewMessagesCount();
+            if (currentUserId.equals(chatRoom.getSenderId())) {
+                chatRoom.setNewMessagesCountForReceiver(chatRoom.getNewMessagesCountForReceiver() + 1);
+            } else {
+                chatRoom.setNewMessagesCountForSender(chatRoom.getNewMessagesCountForSender() + 1);
+            }
             chatRoomRepository.save(chatRoom);
         });
     }
 
-    public void resetNewMessagesCount(Long chatRoomId) {
+    public void resetNewMessagesCount(Long chatRoomId, String userId) {
         chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
-            chatRoom.resetNewMessagesCount();
+            if (userId.equals(chatRoom.getReceiverId())) {
+                chatRoom.setNewMessagesCountForReceiver(0);
+            } else {
+                chatRoom.setNewMessagesCountForSender(0);
+            }
+            chatRoomRepository.save(chatRoom);
+        });
+    }
+
+    private void updateNewMessagesCount(Long chatRoomId, String senderId) {
+        chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
+            if (senderId.equals(chatRoom.getSenderId())) {
+                chatRoom.setNewMessagesCountForReceiver(chatRoom.getNewMessagesCountForReceiver() + 1);
+            } else {
+                chatRoom.setNewMessagesCountForSender(chatRoom.getNewMessagesCountForSender() + 1);
+            }
             chatRoomRepository.save(chatRoom);
         });
     }
 }
+
+
+
+
+

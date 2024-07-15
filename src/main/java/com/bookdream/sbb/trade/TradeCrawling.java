@@ -32,7 +32,6 @@ public class TradeCrawling {
                 if (detailElements.size() > 0) {
                     details = detailElements.get(0).text(); // 저자, 옮긴이, 출판사 정보
                 }
-                
                 String priceText = "0"; // 기본값 설정
                 Elements priceElements = book.select("li span.ss_p2 b span");
                 if (priceElements.size() > 0) {

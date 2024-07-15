@@ -41,10 +41,12 @@ public class ChatController {
         model.addAttribute("chatRoomId", chatRoomId);
 
         // 새로운 메시지 수 초기화
-        chatService.resetNewMessagesCount(chatRoomId);
+        chatService.resetNewMessagesCount(chatRoomId, senderId);
 
         return "trade/chat";
     }
+
+
 
     @GetMapping("/rooms")
     public String chatRooms(Principal principal, Model model) {
@@ -55,6 +57,7 @@ public class ChatController {
         String userId = principal.getName();
         List<ChatRoom> chatRooms = chatService.getChatRooms(userId);
         model.addAttribute("chatRooms", chatRooms);
+        model.addAttribute("userId", userId);
         return "trade/chat_rooms";
     }
 
@@ -83,12 +86,17 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
-    public Chat sendMessage(Chat chatMessage) {
+    public Chat sendMessage(Chat chatMessage, Principal principal) {
         chatMessage.setCreatedAt(LocalDateTime.now());
         chatService.saveChat(chatMessage);
 
         // 새로운 메시지 수 증가
-        chatService.incrementNewMessagesCount(chatMessage.getChatRoomId());
+        if (principal != null) {
+            String currentUserId = principal.getName();
+            if (!currentUserId.equals(chatMessage.getSenderId())) {
+                chatService.incrementNewMessagesCount(chatMessage.getChatRoomId(), chatMessage.getSenderId(), currentUserId);
+            }
+        }
 
         return chatMessage;
     }

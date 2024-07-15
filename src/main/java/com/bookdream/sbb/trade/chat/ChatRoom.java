@@ -1,6 +1,8 @@
 package com.bookdream.sbb.trade.chat;
 
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,22 +17,53 @@ public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String senderId;
     private String receiverId;
     private int tradeIdx;
     private String bookTitle;
     private LocalDateTime lastMessageTime;
-    private int newMessagesCount;
+
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int newMessagesCountForSender = 0;
+
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int newMessagesCountForReceiver = 0;
+
+    private String lastMessageSenderId;
 
     public String getChatRoomName() {
         return senderId + " & " + receiverId + " & " + tradeIdx;
     }
 
-    public void incrementNewMessagesCount() {
-        this.newMessagesCount++;
+    public void incrementNewMessagesCount(String senderId) {
+        if (senderId.equals(this.senderId)) {
+            this.newMessagesCountForReceiver++;
+        } else {
+            this.newMessagesCountForSender++;
+        }
+        this.lastMessageSenderId = senderId;
     }
 
-    public void resetNewMessagesCount() {
-        this.newMessagesCount = 0;
+    public void resetNewMessagesCount(String userId) {
+        if (userId.equals(this.senderId)) {
+            this.newMessagesCountForReceiver = 0;
+        } else {
+            this.newMessagesCountForSender = 0;
+        }
+    }
+
+    public int getNewMessagesCountForUser(String userId) {
+        if (userId.equals(this.receiverId)) {
+            return newMessagesCountForReceiver;
+        } else {
+            return newMessagesCountForSender;
+        }
     }
 }
+
+
+
+
+
+
