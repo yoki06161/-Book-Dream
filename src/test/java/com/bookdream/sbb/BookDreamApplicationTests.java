@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.bookdream.sbb.prod_repo.Prod_RAnswer;
-import com.bookdream.sbb.prod_repo.Prod_Review;
-import com.bookdream.sbb.prod_repo.ranswer_repository;
-import com.bookdream.sbb.prod_repo.review_repository;
+import com.bookdream.sbb.prod_repo.Prod_d_Answer;
+import com.bookdream.sbb.prod_repo.Prod_d_Review;
+import com.bookdream.sbb.prod_repo.Prod_RArepository;
+import com.bookdream.sbb.prod_repo.Prod_RErepository;
 
 import jakarta.transaction.Transactional;
 
@@ -22,14 +22,34 @@ import jakarta.transaction.Transactional;
 class BookDreamApplicationTests {
 
 	@Autowired
-	private review_repository re_repo;
+	private Prod_RErepository re_repo;
 	
 	@Autowired
-	private ranswer_repository ra_repo;
+	private Prod_RArepository ra_repo;
 	
 	@Transactional
 	@Test
 	void testJpa() {
+		// 데이터 넣기
+//		Prod_EReview pr = new Prod_EReview();
+//		pr.setReview("재밌는 책이에요.");
+//		pr.setUser("홍길동");
+//		pr.setTime(LocalDateTime.now());
+//        this.re_repo.save(pr);  // 첫번째 질문 저장
+//
+//        Prod_EReview pr2 = new Prod_EReview();
+//        pr2.setReview("인생책");
+//        pr2.setUser("홍길동2");
+//        pr2.setTime(LocalDateTime.now());
+//        this.re_repo.save(pr2);  // 두번째 질문 저장
+		
+		// 조회
+//        List<Prod_EReview> all = this.re_repo.findAll();
+//        assertEquals(2, all.size());
+//
+//        Prod_EReview q = all.get(0);
+//        assertEquals("재밌는 책이에요.", q.getReview());
+        
 		// 수정
 //		Optional<Prod_Review> op = this.re_repo.findById(1);
 		// assertTrue는 if문같은거. ispresnt는 존재한다란 뜻. 즉 아이디 1인 데이터가 존재하는지 여부묻는거.
@@ -68,15 +88,15 @@ class BookDreamApplicationTests {
 //		// id가 2인지 비교하는 거다. 기대값 2와 실제값 a.getReview().getId()을 비교.
 //		assertEquals(2, a.getReview().getId());
 		
-		Optional<Prod_Review> op = this.re_repo.findById(2);
-		assertTrue(op.isPresent());
-		Prod_Review pr = op.get();
-		
-		List<Prod_RAnswer> a_list = pr.getA_List();
-		
-		assertEquals(1, a_list.size());
-		assertEquals("id 자동 생성이랍니다.", a_list.get(0).getContent2());
-		
+		// 답변 만들기?
+//		Optional<Prod_Review> op = this.re_repo.findById(2);
+//		assertTrue(op.isPresent());
+//		Prod_Review pr = op.get();
+//		
+//		List<Prod_RAnswer> a_list = pr.getA_List();
+//		
+//		assertEquals(1, a_list.size());
+//		assertEquals("id 자동 생성이랍니다.", a_list.get(0).getContent2());
 	}
 
 }

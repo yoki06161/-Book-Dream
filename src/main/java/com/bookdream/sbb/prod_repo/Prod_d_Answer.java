@@ -15,22 +15,26 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Prod_RAnswer {
+public class Prod_d_Answer {
 
+	// 답글 기본아이디
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(columnDefinition = "TEXT")
-	private String content2;
+	// 유저 이름
+	@Column(length = 200)
+	private String user;
 	
-	private LocalDateTime a_time;
+	// 답변
+	@Column(columnDefinition = "TEXT")
+	private String answer;
+	
+	// 작성 시간
+	private LocalDateTime time;
 	
 	// 댓글이랑 연결. 댓글이 부모, 답변이 자식. 매니가 답변, 원이 댓글
+	// 댓글 아이디랑 연결된다.
 	@ManyToOne
-	private Prod_Review review;
-	
-	
-	
-	
+	private Prod_d_Review review;
 }

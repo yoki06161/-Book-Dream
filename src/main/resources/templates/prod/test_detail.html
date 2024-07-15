@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>테스트</title>
+</head>
+<body>
+<h1>디테일테스트ㅡㅡ <br></h1>
+<a th:href="@{|/prod|}">메인으로</a><br>
+<span th:text="${pr.subject}"></span>
+<span th:text="${pr.test}"></span>
+<h2>답변들</h2>
+
+<!--#lists.sizes는 길이반환하는 메소드?-->
+<!--a_List는 Prod_Review에서 설정한 값-->
+<h5 th:text="|${#lists.size(pr.a_List)}개의 답변이 있음|"></h5>
+<ul>
+	<li th:each="pa : ${pr.a_List}" th:text="${pa.content2}"></li>
+</ul>
+
+<form th:action="@{|answer/c/${pr.id}|}" method="post">
+	<textarea id="cont" name="t_content"></textarea>
+	<input type="submit" value="답변등록" />
+</form>
+</tr>
+</body>
+</html>
