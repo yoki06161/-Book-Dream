@@ -62,7 +62,7 @@
 ////            System.out.println("이미지 count: " + book_img.size());
 ////            System.out.println("가격 count: " + book_price.size());
 ////            System.out.println("작가 count: " + book_writer.size());
-//            System.out.println("설명 count: " + book_intro.size());
+////            System.out.println("설명 count: " + book_intro.size());
 //
 //            
 //            for(int i = 0; i < book_title.size(); i++) {
@@ -86,6 +86,7 @@
 //            			.book_price(price)
 //            			.book_writer(writer)
 //            			.book_intro(intro)
+//            			.book_genre("베스트셀러")
 //            			.build();
 ////            	System.out.println("북스" + books);
 //            	

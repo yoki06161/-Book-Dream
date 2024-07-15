@@ -78,14 +78,14 @@ public class Prod_Controller {
 	}
 	
 	// 리뷰 답글 쓰기
-	@PostMapping("/detail/write_answer/{a_id}")
-	public String write_answer(Model model, @PathVariable("a_id") Integer id, @RequestParam("a_content") String content) {
+	@PostMapping("/detail/write_answer/{b_id}/{a_id}")
+	public String write_answer(Model model, @PathVariable("b_id") Integer b_id, @PathVariable("a_id") Integer id, @RequestParam("a_content") String content) {
 		// 답글 가져오기
 		Prod_d_Review review = this.prodService.getAnswer(id);
 		
 		// 답글 쓰기.()안의 값이 서비스의 ()랑 값이 같아야한다?
 		this.prodService.Write_Answer(review, id, content);
-		return String.format("redirect:/prod/detail/%s", id);
+		return String.format("redirect:/prod/detail/%s", b_id);
 	}
 	
 	// db리스트 테스트 !!!!!!!!!!!내꺼

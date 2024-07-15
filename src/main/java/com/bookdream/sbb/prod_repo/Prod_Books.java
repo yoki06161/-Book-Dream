@@ -46,6 +46,11 @@ public class Prod_Books {
 	@Column(length=50)
 	private String book_writer;
 	
+	// 책소개
 	@Column(length=6000)
 	private String book_intro;
+	
+	// 책 장르
+	@Column(length = 100)
+	private String book_genre;
 }

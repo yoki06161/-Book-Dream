@@ -114,11 +114,13 @@
 			<div th:text="'리뷰 : ' + ${pl.review}"></div>
 			<div th:text="'시간 : ' + ${pl.time}"></div>
 			<div th:text="'사용자 닉네임 : ' + ${pl.user}"></div>
+			
 			<button>답글보기</button>
-			<form th:action="@{|write_answer/${pl.id}|}" method="post">
+			<form th:action="@{|write_answer/${book.book_id}/${pl.id}|}" method="post">
 				<textarea name="a_content"></textarea>
 				<input type="submit" value="답글달기">
 			</form>
+			
 			<br>
 			<hr>
 		</div>
@@ -149,7 +151,7 @@
 			
 			// input값이 nan인 경우
 			let inputValue = parseInt(input.value);
-			// 왜인지 input.value로 쓰면 안됨.
+			// input.value는 문자형이라 숫자만 비교하는 nan으로 쓰면 실행 안됨.
 			if(isNaN(inputValue)) {
 				input.value = 1;
 			}
