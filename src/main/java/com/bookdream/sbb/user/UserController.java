@@ -45,6 +45,7 @@ public class UserController {
 	@Value("${cos.key}")
 	private String cosKey;
 	
+	@Autowired
     private UserService userService;
 
     @Autowired

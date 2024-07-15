@@ -7,9 +7,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
+@Table(name = "site_user")
 @Entity
 @Getter
 @Setter
@@ -32,7 +33,11 @@ public class SiteUser {
         this.role = "User";
     }
     
-    private LocalDateTime createDate;
+    private LocalDateTime create_date;
+    
+    {
+    	this.create_date = LocalDateTime.now();
+    }
     
     @Column(name = "last_name_change_date")
     private LocalDateTime lastNameChangeDate;

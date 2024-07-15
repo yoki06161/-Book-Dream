@@ -7,10 +7,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
+@Table(name = "kakao_user")
 @Entity
 @Getter
 @Setter
@@ -26,7 +27,7 @@ public class KakaoUser {
 	    this.password = password;
 	    this.email = email;
 	    this.role =  "User";
-	    this.createDate = LocalDateTime.now();;
+	    this.create_date = LocalDateTime.now();
 	}
 
 
@@ -47,5 +48,5 @@ public class KakaoUser {
         this.role = "USER";
     }
     
-    private LocalDateTime createDate;
+    private LocalDateTime create_date;
 }
