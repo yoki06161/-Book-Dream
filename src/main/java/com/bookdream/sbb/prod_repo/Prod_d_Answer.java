@@ -31,7 +31,7 @@ public class Prod_d_Answer {
 	private String answer;
 	
 	// 작성 시간
-	private LocalDateTime time;
+	private LocalDate time;
 	
 	// 댓글이랑 연결. 댓글이 부모, 답변이 자식. 매니가 답변, 원이 댓글
 	// 댓글 아이디랑 연결된다.

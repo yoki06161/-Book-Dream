@@ -1,5 +1,6 @@
 package com.bookdream.sbb.prod_repo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class Prod_d_Review {
 	
 	// 여기서 선언한 timeIs란 변수가 html에서 쓰인다. sql에는 time_is라 저장됐는데. 다른거인가?
 //	private LocalDateTime timeIs;
-	private LocalDateTime time;
+	private LocalDate time;
 	
 	// 답글이랑 연결. 댓글이 부모, 답변이 자식. 원이 댓글, 매니가 답변. 
 	// mappedBy값은 @ManyToOne에서 설정한 private Prod_Review review값. 즉 이름 똑같아야함

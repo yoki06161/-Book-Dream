@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -52,11 +53,31 @@ public class Prod_Service {
 		Prod_d_Review pr = new Prod_d_Review();
 		pr.setReview(review);
 		pr.setBook(book_id);
-		pr.setTime(LocalDateTime.now());
+		pr.setTime(LocalDate.now());
 		this.re_repo.save(pr);
 	}
 	
+	// 답글 가져오기
+	public Prod_d_Review getAnswer(Integer id) {
+		Optional<Prod_d_Review> op = this.re_repo.findById(id);
+		if(op.isPresent()) {
+			return op.get();
+		}
+		return null;
+	}
 	
+	// 리뷰 답글 쓰기
+	public void Write_Answer(Prod_d_Review review, Integer review_id, String content) {
+		Prod_d_Answer pa = new Prod_d_Answer();
+		pa.setId(review_id);
+		pa.setAnswer(content);
+		pa.setTime(LocalDate.now());
+		pa.setReview(review);
+		
+		this.ra_repo.save(pa);
+	}
+	
+
 	// 연습용으로 한것들
 	// !!!!!!!!!!!!!!!!!!!내꺼. 질문 리스트 갖고오는거
 //	public List<Prod_d_Review> get_t_list() {
@@ -81,5 +102,9 @@ public class Prod_Service {
 //		pra.setReview(pr);
 		this.ra_repo.save(pra);
 	}
+
+
+	
+
 	
 }

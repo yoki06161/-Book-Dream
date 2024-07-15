@@ -77,6 +77,16 @@ public class Prod_Controller {
 		return String.format("redirect:/prod/detail/%s", id);
 	}
 	
+	// 리뷰 답글 쓰기
+	@PostMapping("/detail/write_answer/{a_id}")
+	public String write_answer(Model model, @PathVariable("a_id") Integer id, @RequestParam("a_content") String content) {
+		// 답글 가져오기
+		Prod_d_Review review = this.prodService.getAnswer(id);
+		
+		// 답글 쓰기.()안의 값이 서비스의 ()랑 값이 같아야한다?
+		this.prodService.Write_Answer(review, id, content);
+		return String.format("redirect:/prod/detail/%s", id);
+	}
 	
 	// db리스트 테스트 !!!!!!!!!!!내꺼
 	// 그냥 테스트 리스트로 보내는거.
@@ -89,12 +99,12 @@ public class Prod_Controller {
 	
 	// 테스트 리스트에서 상세보기로
 	// 질문 상세보기
-	@GetMapping("/test_detail/{t_id}")
-	public String t_detail(Model model, @PathVariable("t_id") Integer id) throws DataNotFound {
-		Prod_d_Review pr = this.prodService.get_t_detail(id);
-		model.addAttribute("pr", pr);
-		return "prod/test_detail";
-	}
+//	@GetMapping("/test_detail/{t_id}")
+//	public String t_detail(Model model, @PathVariable("t_id") Integer id) throws DataNotFound {
+//		Prod_d_Review pr = this.prodService.get_t_detail(id);
+//		model.addAttribute("pr", pr);
+//		return "prod/test_detail";
+//	}
 	
 	// 답변하기
 	@PostMapping("/test_detail/answer/c/{tt_id}")

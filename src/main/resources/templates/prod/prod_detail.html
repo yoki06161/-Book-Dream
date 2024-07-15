@@ -108,13 +108,24 @@
 			<input type="submit" value="리뷰달기" />
 		</form>
 		
-		<ul th:each="pl:${p_list}">
-			<li th:text="'아이디 : ' + ${pl.id}"></li>
-			<li th:text="'리뷰 : ' + ${pl.review}"></li>
-			<li th:text="'시간 : ' + ${pl.time}"></li>
-			<li th:text="'사용자 닉네임 : ' + ${pl.user}"></li>
-		</ul>
-		
+		<div th:each="pl:${p_list}">
+			<div th:text="'아이디 : ' + ${pl.id}"></div>
+			<div th:text="'리뷰 : ' + ${pl.review}"></div>
+			<div th:text="'시간 : ' + ${pl.time}"></div>
+			<div th:text="'사용자 닉네임 : ' + ${pl.user}"></div>
+			<button>답글보기</button>
+			<form th:action="@{|write_answer/${pl.id}|}" method="post">
+				<textarea name="a_content"></textarea>
+				<input type="submit" value="답글달기">
+			</form>
+			<br>
+			<hr>
+		</div>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
 		
 	</body>
 	

@@ -5,6 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface Prod_RArepository extends JpaRepository<Prod_d_Answer, Integer>{
-
-	
 }
