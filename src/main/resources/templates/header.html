@@ -26,6 +26,7 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{|/trade/chat/rooms|}">
                         <i class="fas fa-comments"></i> 채팅
+                        <span class="badge" th:if="${totalNewMessagesCount > 0}" th:text="${totalNewMessagesCount}"></span>
                     </a>
                 </li>
                 <li class="nav-item">

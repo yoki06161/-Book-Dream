@@ -122,6 +122,14 @@ public class ChatService {
             chatRoomRepository.save(chatRoom);
         });
     }
+    
+    public int getTotalNewMessagesCount(String userId) {
+        List<ChatRoom> chatRooms = chatRoomRepository.findBySenderIdOrReceiverId(userId, userId);
+        return chatRooms.stream()
+                        .mapToInt(chatRoom -> chatRoom.getNewMessagesCountForUser(userId))
+                        .sum();
+    }
+
 }
 
 
