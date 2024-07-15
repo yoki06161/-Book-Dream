@@ -14,18 +14,25 @@ document.addEventListener('DOMContentLoaded', init);
 // 장바구니 추가 함수
 function aa() {
 	let book_id = parseInt(document.querySelector('.book_id').value);    // int형으로 담기
+	let book_img = document.querySelector('img').src;
+	let book_title = document.querySelector('.title').textContent;
+	let book_price = document.querySelector('.price').textContent;
+	 
 	let count = parseInt(document.querySelector('.bcount').value);     // int형으로 담기
-	let countPrice = document.querySelector('.result').textContent + '원';
+	let count_price = document.querySelector('.result').textContent + '원';
 	//console.log(book_id);
 
-	// 세션 스토리지에서 'book_ids' 배열을 불러오기 (없으면 빈 배열로 초기화)
+	// 세션 스토리지에서 'book_ids' 배열을 불러오기 (없으면 빈 배열로 초 기화)
 	let sessionBookIds = JSON.parse(sessionStorage.getItem('book_ids')) || [];
 	
 	// 세션 스토리지에 저장하기 위해 객체로 묶어 JSON 문자열로 변환
 	let dataToStore = {
 		book_id: book_id,
+		book_img: book_img,
+		book_title: book_title,
+		book_price: book_price,
 	    count: count,
-	    countPrice: countPrice
+	    count_price: count_price
 	};
 
 	// 세션 스토리지에서 장바구니 내역 배열을 불러오기 (없으면 빈 배열로 초기화)
