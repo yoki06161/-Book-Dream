@@ -17,7 +17,6 @@ function aa() {
 
 	// 세션 스토리지에서 'book_ids' 배열을 불러오기 (없으면 빈 배열로 초기화)
 	let sessionBookIds = JSON.parse(sessionStorage.getItem('book_ids')) || [];
-	console.log(sessionBookIds);
 	
 	// 세션 스토리지에 저장하기 위해 객체로 묶어 JSON 문자열로 변환
 	let dataToStore = {
@@ -25,16 +24,24 @@ function aa() {
 	    count: count,
 	    countPrice: countPrice
 	};
+
+	// 세션 스토리지에서 장바구니 내역 배열을 불러오기 
+	let storedData = sessionStorage.getItem("dataArray");
+	let dataArray = [];
+	console.log(storedData);
 	
 	
-	
-	// book_id가 세션 스토리지에 없는 경우 추가하고 뱃지 숫자 업데이트
+	// book_id가 세션 스토리지에 없는 경우 book_id와  장바구니에 상품 정보를 각각 배열에 추가하고 뱃지 숫자 업데이트
 	if (!sessionBookIds.includes(book_id)) {
-	    sessionBookIds.push(book_id); // book_id를 배열에 추가
+		// book_id를 배열에 추가
+	    sessionBookIds.push(book_id);
+		// 새 객체를 배열에 추가
+		dataArray.push(dataToStore);
+		// 배열을 JSON 문자열로 변환하여 세션 스토리지에 저장
 	    sessionStorage.setItem('book_ids', JSON.stringify(sessionBookIds)); 
-		sessionStorage.setItem('formData', JSON.stringify(dataToStore));      // 배열을 세션 스토리지에 저장
-	    let formData = JSON.parse(sessionStorage.getItem('formData'));
-		console.log(formData);
+		sessionStorage.setItem("dataArray", JSON.stringify(dataArray));
+		console.log(sessionBookIds);
+		console.log(dataArray);
 		alert('장바구니에 추가되었습니다.');
 
 	    // 뱃지 숫자 변경
@@ -46,7 +53,7 @@ function aa() {
 	    sessionStorage.setItem('badgeCount', newBadgeCount);
 	} else {
 	    alert('이미 장바구니에 있습니다.');
-		let formData = JSON.parse(sessionStorage.getItem('formData'));
-		console.log(formData);
+		console.log(sessionBookIds);
+		console.log(dataArray);
 	}
 }
