@@ -69,7 +69,6 @@ public class Prod_Service {
 	// 리뷰 답글 쓰기
 	public void Write_Answer(Prod_d_Review review, Integer review_id, String content) {
 		Prod_d_Answer pa = new Prod_d_Answer();
-		pa.setId(review_id);
 		pa.setAnswer(content);
 		pa.setTime(LocalDate.now());
 		pa.setReview(review);
