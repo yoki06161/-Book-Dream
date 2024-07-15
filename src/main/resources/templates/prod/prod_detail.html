@@ -75,7 +75,7 @@
 			<div class="txt_wrap">
 				<span th:text="${book.book_title}" class="title"></span>
 				<div class="s_wrap">
-					<span>판매가</span> <span th:text="${book.book_price}"></span>
+					<span>판매가</span><span th:text="${book.book_price}" class="count"></span>
 				</div>
 				<div class="c_wrap">
 					<!--class로하면 js설정하기 귀찮아서 아이디로함-->
@@ -140,32 +140,35 @@
 	    let click = false;
 	    let input = document.querySelector('.bcount');
 	    let result = document.querySelector('.result');
-	    let count = 1;
-
 
 	    function add() {
-	        if (count < 500) {
-	            count = count + 1;
-	            input.value = count;
+			// 일단 됨
+	        // if (count < 500) {
+	            // count = count + 1;
+	            // input.value = count;
+				// input.value값 숫자로. 원본은 문자형식임.
+				input.value = parseInt(input.value) + 1;
 	            updateResult();
-	        }
+	        // }
 	    }
 
 	    function min() {
-	        if (count > 1) {
-	            count = count - 1;
-	            input.value = count;
+	        // if (count > 1) {
+	            // count = count - 1;
+	            // input.value = count;
+				input.value = parseInt(input.value) - 1;
 	            updateResult();
-	        }
+	        // }
 	    }
 
 	    function updateResult() {
 	      let inputValue = parseInt(input.value); // 입력값을 정수형으로 변환
-	            if (inputValue < 1) inputValue = 1; // 최소값 이하로 내려가지 않도록 보정
-	            if (inputValue > 500) inputValue = 500; // 최대값 이상으로 올라가지 않도록 보정
+		  // min과 max로는 버튼 이벤트가 안막힌다.
+		  	if (inputValue < 1) inputValue = 1; // 최소값 이하로 내려가지 않도록 보정
+          	if (inputValue > 500) inputValue = 500; // 최대값 이상으로 올라가지 않도록 보정
 	            input.value = inputValue; // 보정된 값을 다시 input에 설정
 	            
-	            let total = inputValue * price;
+	            let total = parseInt(input.value) * price;
 	            result.textContent = total.toLocaleString();
 	    }
 
