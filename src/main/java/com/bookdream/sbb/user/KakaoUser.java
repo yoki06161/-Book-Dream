@@ -44,7 +44,7 @@ public class KakaoUser {
     private String role;
 
     {
-        this.role = "User";
+        this.role = "USER";
     }
     
     private LocalDateTime createDate;

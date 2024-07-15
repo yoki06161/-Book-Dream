@@ -26,6 +26,9 @@ public class SecurityConfig {
             .formLogin((formLogin) -> formLogin
             		.loginPage("/user/login")
             		.defaultSuccessUrl("/"))
+            .formLogin((kakaoLogin) -> kakaoLogin
+            		.loginPage("/auth/kakao/callback")
+            		.defaultSuccessUrl("/"))
             .logout((logout) -> logout
             		.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
             		.logoutSuccessUrl("/")
@@ -42,4 +45,6 @@ public class SecurityConfig {
 	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
 		return authenticationConfiguration.getAuthenticationManager();
 	}
+	
+
 }

@@ -15,6 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -193,21 +194,25 @@ public class UserController {
     		System.out.println("회원가입 완료!============================");
     	}
     	
-    	// 로그인 처리
+    	System.out.println("kakaoUser.getUsername() : " + kakaoUser.getUsername());
+    	System.out.println("cosKey : " + cosKey);
     	System.out.println("자동 로그인을 진행합니다.============================");
     	try {
-    		System.out.println("됨?");
     	    Authentication authentication = authenticationManager.authenticate(
     	        new UsernamePasswordAuthenticationToken(kakaoUser.getUsername(), cosKey)
     	    );
-    	    System.out.println("됨???");
-    	    SecurityContextHolder.getContext().setAuthentication(authentication);
-    	    return "redirect:/";
+
+    	    System.out.println("Authentication failed: " + authentication);
+	        SecurityContextHolder.getContext().setAuthentication(authentication);
+	        System.out.println("자동 로그인 성공!");
+	        return "redirect:/";
+
     	} catch (AuthenticationException e) {
     	    e.printStackTrace();
-    	    System.out.println("왜안됨?????????????????????????????????????????????");
+    	    System.out.println("자동 로그인 실패!");
     	    return "redirect:/user/login";
     	}
+
 
     }
    
