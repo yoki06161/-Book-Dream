@@ -92,7 +92,7 @@ function displayFormData() {
 				                        
 				let result = document.querySelector(`.row${index} .result`);
 
-				if (count > 1) {
+				if (count > 0) {
 					let total = count * price;
 				    result.textContent = total.toLocaleString() + '원';
 				} 
