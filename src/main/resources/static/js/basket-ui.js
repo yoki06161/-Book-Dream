@@ -14,6 +14,10 @@ function init() {
 
     // '전체선택' 체크박스의 상태를 업데이트하는 함수
     function updateSelectAllState() {
+        if (checkboxes.length === 0) {
+            selectAllCheckbox.checked = false; // 체크박스가 없으면 전체선택 체크 해제
+            return;
+        }
         const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
         selectAllCheckbox.checked = allChecked;
     }
@@ -45,6 +49,7 @@ function init() {
     // 페이지 로드 후 세션 스토리지에 저장된 formData 출력
     displayFormData();
 }
+
 
 // 세션 스토리지에서 폼데이터를 가져와서 콘솔에 출력하는 함수
 function displayFormData() {
@@ -113,11 +118,17 @@ function displayFormData() {
 
 					// 뱃지 숫자 설정
 					document.getElementById('badge').textContent = badgeCount;
-				} else {
-				    console.log(`Book ID ${bookIdToDelete} not found in dataArray`);
+	
+		            // 해당 행을 삭제
+		            tr.remove(bookIdToDelete);
+					
+					if (dataArray.length == 0){
+						// div 요소 생성 변수
+						let div = document.createElement('div');
+						div.innerHTML = `<h3 class="text-center">장바구니에 담은 상품이 없습니다</h3>`;
+						dataNotFound.append(div);
+					}
 				}
-	            // 해당 행을 삭제
-	            tr.remove(bookIdToDelete);
 	        });
 
 	        tr.innerHTML = `
@@ -145,7 +156,7 @@ function displayFormData() {
 
 	    // '전체선택' 체크박스 상태와 주문 버튼 상태 업데이트
 	    initCheckboxes();
-	} else {
+	} else if (dataArray.length == 0) {
 	    // div 요소 생성 변수
 	    let div = document.createElement('div');
 	    div.innerHTML = `<h3 class="text-center">장바구니에 담은 상품이 없습니다</h3>`;
