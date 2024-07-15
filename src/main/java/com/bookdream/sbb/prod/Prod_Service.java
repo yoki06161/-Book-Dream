@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class Prod_Service {
 	@Autowired
-	private final ProdBooksRepository prodRepository;
+	private final Prod_BooksRepository prodRepository;
 	private final Prod_RErepository re_repo;
 	private final Prod_RArepository ra_repo;
 	

@@ -55,14 +55,14 @@
 //            List<WebElement> book_img = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_thumb_box.size_lg > a > span > img")));
 //            List<WebElement> book_price = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_info_box > div.prod_price > span.price_normal > s")));
 //            List<WebElement> book_writer = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_info_box > span")));
-////            List<WebElement> book_intro = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_info_box > p")));
+//            List<WebElement> book_intro = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("#tabRoot > div.view_type_list.switch_prod_wrap > ol.prod_list > li > div.prod_area.horizontal > div.prod_info_box > p")));
 //            
 //            // 길이 안맞다고 오류뜰때 확인용
 ////            System.out.println("제목 count: " + book_title.size());
 ////            System.out.println("이미지 count: " + book_img.size());
 ////            System.out.println("가격 count: " + book_price.size());
 ////            System.out.println("작가 count: " + book_writer.size());
-////            System.out.println("설명 count: " + book_intro.size());
+//            System.out.println("설명 count: " + book_intro.size());
 //
 //            
 //            for(int i = 0; i < book_title.size(); i++) {
@@ -71,7 +71,7 @@
 //            	String img = book_img.get(i).getAttribute("src");
 //            	String price = book_price.get(i).getText();
 //            	String writer = book_writer.get(i).getText();
-////            	String intro = book_intro.get(i).getText();
+//            	String intro = book_intro.get(i).getText();
 //            	
 ////            	System.out.println(i + "타이틀: " + title);
 ////            	System.out.println(i + "이미지: " + img);
@@ -85,7 +85,7 @@
 //            			.book_img(img)
 //            			.book_price(price)
 //            			.book_writer(writer)
-////            			.book_intro(intro)
+//            			.book_intro(intro)
 //            			.build();
 ////            	System.out.println("북스" + books);
 //            	

@@ -94,12 +94,14 @@
 			</div>
 		</div>
 		<hr>
+		<h3>책소개</h3>
+		<p th:text="${book.book_intro}"></p>
 		<hr>
 		<h3>리뷰</h3>
 		<!--#lists.sizes는 길이반환하는 메소드. th:if는 조건-->
 		<!--th:if는 조건. p_list가 없을경우(댓글이 없을경우) 실행되면 없는걸 가져오려해서 오류뜸.-->
-		<h5 th:if="${p_list != null}" th:text="|${#lists.size(p_list)}개의 댓글|"></h5>
-		<h5 th:if="${p_list == null}" th:text="|0개의 댓글|"></h5>
+		<h5 th:if="${p_list != null}" th:text="|${#lists.size(p_list)}개의 리뷰|"></h5>
+		<h5 th:if="${p_list == null}" th:text="|0개의 리뷰|"></h5>
 		
 		<form th:action="@{|write_review/${book.book_id}|}" method="post">
 			<textarea name="w_content"></textarea>
