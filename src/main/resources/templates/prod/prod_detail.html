@@ -146,6 +146,14 @@
 	    function add() {
 			// input.value값 숫자로. 원본은 문자형식임.
 			input.value = parseInt(input.value) + 1;
+			
+			// input값이 nan인 경우
+			let inputValue = parseInt(input.value);
+			// 왜인지 input.value로 쓰면 안됨.
+			if(isNaN(inputValue)) {
+				input.value = 1;
+			}
+			
 	        updateResult();
 	    }
 
