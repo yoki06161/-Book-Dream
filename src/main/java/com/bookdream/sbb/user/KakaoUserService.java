@@ -5,29 +5,32 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class KakaoUserService {
 
     private final KakaoUserRepository kakaoUserRepository;
-
+    
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public KakaoUserService(KakaoUserRepository kakaoUserRepository) {
-        this.kakaoUserRepository = kakaoUserRepository;
-    }
-
-    @Transactional(readOnly = true)
+    @Transactional(readOnly=true)
     public KakaoUser findKakaoUser(String email) {
-        return kakaoUserRepository.findByEmail(email).orElse(null);
+    	KakaoUser kakaoUser = kakaoUserRepository.findByEmail(email).orElseGet(()->{
+    		return new KakaoUser();
+    	});
+    	return kakaoUser;
     }
+    
 
     @Transactional
     public void createKakaoUser(KakaoUser kakaoUser) {
-        // 패스워드 암호화
-        String encodedPassword = passwordEncoder.encode(kakaoUser.getPassword());
-        kakaoUser.setPassword(encodedPassword);
+    	String rawPassword = kakaoUser.getPassword();
+    	String encPassword = passwordEncoder.encode(rawPassword);
+    	kakaoUser.setPassword(encPassword);
         kakaoUserRepository.save(kakaoUser);
     }
-}
 
+}
