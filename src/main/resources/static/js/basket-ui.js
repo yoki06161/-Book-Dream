@@ -62,6 +62,7 @@ function displayFormData() {
             // 수량 선택 셀 추가
             let selectElement = document.createElement('select');
             selectElement.className = `count${index}`;
+			selectElement.name = `count`;
             for (let i = 1; i <= 10; i++) {
                 let option = document.createElement('option');
                 option.value = i;
@@ -87,14 +88,14 @@ function displayFormData() {
 
             // 행 내용 설정
             tr.innerHTML = `
-                <input type="hidden" value=${data.book_id}>
+                <input type="hidden" value=${data.book_id} name="book_id">
                 <td><input class="form-check-input" type="checkbox"></td>
                 <td><img src=${data.book_img} alt="상품사진" style="width: 82px; height: 118.34px;"></td>
                 <td class="text-start"><p class="fs-5 fw-bold">${data.book_title}</p>
 				<p class="fs-6" style="color:gray;">${data.book_writer}</p>
                 <p class="fs-5 price">${data.book_price}</p></td>
                 <td></td>
-                <td class="result">${data.count_price}</td>
+                <td class="result" name="count_price">${data.count_price}</td>
                 <td></td>`;
 
             // 수량 선택 셀과 단위 추가

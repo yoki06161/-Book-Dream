@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,46 @@ public class BasketController {
 	private final BasketService basketService;
 	
 	@GetMapping("")
-	public String list() {      
-		return "basket/list"; 
+	//@RequestParam("book_id") Integer book_id, @RequestParam("count") Integer count, @RequestParam("count_price") String count_price
+	public String list(Model model, HttpSession session) {
+		// 현재 인증된 사용자의 이메일 가져오기
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		// 로그인하지 않았다면, 세션에 저장된 장바구니 내역 출력
+		if(email == "anonymousUser") {
+			return "basket/list"; 
+		} else {
+			// 로그인했다면 DB에 저장된 장바구니 내역 불러오기
+			//세션스토리지에 저장된 정보와 테이블에 저장된 정보를 비교하여.. 동일한 상품 id가 있을 경우 기존테이블 정보 유지
+			
+			return "basket/list"; 
+		}
+	}
+	
+	@PostMapping("/add")
+	public ResponseEntity<String> basketAdd(@RequestBody List<Map<String, Object>> dataArray, Model model) {
+		// 현재 인증된 사용자의 이메일 가져오기
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		System.out.println(email);
+		
+		// 유저가 로그인했을때만(로그아웃했다가 로그인해도 됨!!)
+		if (email != "anonymousUser") {			
+			// 저장할 필드들 새로 DB에 저장
+	        List<Map<String, Object>> sessionData = new ArrayList<>();
+	        for (Map<String, Object> data : dataArray) {
+	            Map<String, Object> sessionEntry = new HashMap<>();
+	            sessionEntry.put("email", email);
+	            sessionEntry.put("book_id", data.get("book_id"));
+	            sessionEntry.put("count", data.get("count"));
+	            sessionEntry.put("count_price", data.get("count_price"));
+	            sessionData.add(sessionEntry);
+	        }
+	     // 서비스 계층의 메서드 호출하여 DB에 데이터 저장
+            basketService.saveBasketItems(sessionData);
+            System.out.println(sessionData);
+		}
+
+        // 응답
+        return ResponseEntity.ok("Session data saved successfully");
 	}
 }
