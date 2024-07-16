@@ -58,8 +58,8 @@ public class Prod_Service {
 	}
 	
 	// 답글 가져오기
-	public Prod_d_Review getAnswer(Integer id) {
-		Optional<Prod_d_Review> op = this.re_repo.findById(id);
+	public Prod_d_Answer getAnswer(Integer id) {
+		Optional<Prod_d_Answer> op = this.ra_repo.findById(id);
 		if(op.isPresent()) {
 			return op.get();
 		}
@@ -67,11 +67,11 @@ public class Prod_Service {
 	}
 	
 	// 리뷰 답글 쓰기
-	public void Write_Answer(Prod_d_Review review, Integer review_id, String content) {
+	public void Write_Answer(Prod_d_Review review_id, String content) {
 		Prod_d_Answer pa = new Prod_d_Answer();
 		pa.setAnswer(content);
 		pa.setTime(LocalDate.now());
-		pa.setReview(review);
+		pa.setReview(review_id);
 		
 		this.ra_repo.save(pa);
 	}

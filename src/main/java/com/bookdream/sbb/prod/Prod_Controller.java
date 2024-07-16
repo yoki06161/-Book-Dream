@@ -64,8 +64,12 @@ public class Prod_Controller {
 		model.addAttribute("book", book);
 		
 		// 리뷰 보여주기
-		List<Prod_d_Review> p_list = this.prodService.getReview_List(book_id);
-		model.addAttribute("p_list", p_list);
+		List<Prod_d_Review> r_list = this.prodService.getReview_List(book_id);
+		model.addAttribute("r_list", r_list);
+		
+		// 답글 가져오기
+		Prod_d_Answer answer = this.prodService.getAnswer(book_id);
+		model.addAttribute("a_list", answer);
 		
 		return "prod/prod_detail";
 	}
@@ -79,12 +83,9 @@ public class Prod_Controller {
 	
 	// 리뷰 답글 쓰기
 	@PostMapping("/detail/write_answer/{b_id}/{a_id}")
-	public String write_answer(Model model, @PathVariable("b_id") Integer b_id, @PathVariable("a_id") Integer id, @RequestParam("a_content") String content) {
-		// 답글 가져오기
-		Prod_d_Review review = this.prodService.getAnswer(id);
-		
+	public String write_answer(Model model, @PathVariable("b_id") Integer b_id, @PathVariable("a_id") Prod_d_Review id, @RequestParam("a_content") String content) {
 		// 답글 쓰기.()안의 값이 서비스의 ()랑 값이 같아야한다?
-		this.prodService.Write_Answer(review, id, content);
+		this.prodService.Write_Answer(id, content);
 		return String.format("redirect:/prod/detail/%s", b_id);
 	}
 	
