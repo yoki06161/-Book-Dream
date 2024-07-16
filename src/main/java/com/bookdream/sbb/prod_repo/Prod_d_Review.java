@@ -46,7 +46,7 @@ public class Prod_d_Review {
 	// mappedBy값은 @ManyToOne에서 설정한 private Prod_Review review값. 즉 이름 똑같아야함
 	// cascade = CascadeType.REMOVE는 댓글 지울때 답글도 지워지게.
 	@OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) 
-    private List<Prod_d_Answer> a_List;
+    private List<Prod_d_Answer> r_List;
 
 	
 }

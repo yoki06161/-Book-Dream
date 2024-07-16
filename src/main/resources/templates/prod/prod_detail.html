@@ -121,7 +121,9 @@
 				<input type="submit" value="답글달기">
 			</form>
 			<div th:each="al : ${a_list}">
-				<div tH:text="${al.answer}"></div>
+				<div tH:text="'아이디 ' + ${al.id}"></div>
+				<div tH:text="'리뷰 아이디 ' + ${al.review}"></div>
+				<div tH:text="'답글 ' + ${al.answer}"></div>
 			</div>
 			<br>
 			<hr>

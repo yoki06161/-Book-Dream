@@ -36,15 +36,16 @@ public class Prod_Service {
 	// 받은 id에 따라 db에서 책 정보 조회
 	public Prod_Books getProdBooks(Integer book_id) {
 		// Optional임시 데이터 타입인듯. 무슨 데이터 타입이든 받아들이는
-		// if같은 조건문 쓸때 썼었다.
+		// select * from prodRepository where id = book_id라 생각하자.
 		Optional<Prod_Books> opb = this.prodRepository.findById(book_id);
 		return opb.get();
 	}
 	
 	// ###################리뷰
-	// 리뷰 리스트 갖고오기
+	// 리뷰 리스트 갖고오기. 책에 맞는 리뷰갖고오기
 	public List<Prod_d_Review> getReview_List(Integer book_id) {
 		List<Prod_d_Review> r_list = this.re_repo.findByBook(book_id);
+		System.out.println("#################" + this.re_repo.findAll());
 		return r_list;
 	}
 	
@@ -58,12 +59,14 @@ public class Prod_Service {
 	}
 	
 	// 답글 가져오기
-	public Prod_d_Answer getAnswer(Integer id) {
-		Optional<Prod_d_Answer> op = this.ra_repo.findById(id);
-		if(op.isPresent()) {
-			return op.get();
-		}
-		return null;
+	public List<Prod_d_Answer> getAnswer_List(Integer r_id) {
+		List<Prod_d_Answer> a_list = ra_repo.findByReviewId(r_id);
+		
+//		Optional<Prod_d_Answer> op = this.ra_repo.findById(r_id);
+//		if(op.isPresent()) {
+//			return op.get();
+//		}
+		return a_list;
 	}
 	
 	// 리뷰 답글 쓰기

@@ -60,16 +60,19 @@ public class Prod_Controller {
 	// @PathVariable은 url에 있는 변수 인식하는거.
 	@GetMapping("/detail/{book_id}")
 	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) throws IOException{
+		// 책아이디 건네주기
 		Prod_Books book = prodService.getProdBooks(book_id);
 		model.addAttribute("book", book);
 		
 		// 리뷰 보여주기
-		List<Prod_d_Review> r_list = this.prodService.getReview_List(book_id);
-		model.addAttribute("r_list", r_list);
+//		List<Prod_d_Review> r_list = prodService.getReview_List(book_id);
+//		model.addAttribute("r_list", r_list);
+		model.addAttribute("r_list", prodService.getReview_List(book_id));
 		
-		// 답글 가져오기
-		Prod_d_Answer answer = this.prodService.getAnswer(book_id);
-		model.addAttribute("a_list", answer);
+		// 답글 보여주기
+//		Prod_d_Answer answer = prodService.getAnswer_List(book_id);
+		// 책아이디가 아닌 리뷰아이디를 갖고와야함
+		model.addAttribute("a_list", prodService.getAnswer_List(book_id));
 		
 		return "prod/prod_detail";
 	}
