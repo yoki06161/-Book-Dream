@@ -74,7 +74,7 @@ function displayFormData() {
 
             // 수량 변경 이벤트 리스너 추가
             selectElement.addEventListener('change', function() {
-                updateTotalPrice(index); // 수량 변경 시 총 가격 업데이트
+                updateCountPrice(index); // 수량 변경 시 수량당 가격 업데이트
             });
 
             // 삭제 버튼 추가
@@ -90,8 +90,9 @@ function displayFormData() {
                 <input type="hidden" value=${data.book_id}>
                 <td><input class="form-check-input" type="checkbox"></td>
                 <td><img src=${data.book_img} alt="상품사진" style="width: 82px; height: 118.34px;"></td>
-                <td class="text-start"><span class="fs-5 fw-bold">${data.book_title}</span>
-                <br><p class="price">${data.book_price}</p></td>
+                <td class="text-start"><p class="fs-5 fw-bold">${data.book_title}</p>
+				<p class="fs-6" style="color:gray;">${data.book_writer}</p>
+                <p class="fs-5 price">${data.book_price}</p></td>
                 <td></td>
                 <td class="result">${data.count_price}</td>
                 <td></td>`;
@@ -109,6 +110,7 @@ function displayFormData() {
             tr.className = `row${index}`;
             dataArrayList.appendChild(tr); // 테이블에 행 추가
 
+			
             // 삭제 모달 추가
             let modal = document.createElement('div');
             modal.className = 'modal fade';
@@ -134,6 +136,16 @@ function displayFormData() {
             `;
 
             document.body.appendChild(modal); // 삭제 모달을 문서에 추가
+			
+			// 수량당 가격 계산 및 총 가격 합계 업데이트
+			let count = parseInt(data.count); // 선택된 수량
+			let price = parseFloat(data.book_price.replace(/,/g, '')); // 상품 가격
+			let countPrice = count * price; // 수량당 가격 계산
+			totalSum += countPrice; // 총 가격 합계 누적
+
+			// 총 가격 합계 엘리먼트 업데이트
+			let totalSumElement = document.getElementById('totalSum');
+			totalSumElement.textContent = totalSum.toLocaleString(); // 통화 형식으로 총 가격 합계 표시
         });
 
         initCheckboxes(); // 체크박스 초기화 함수 호출
@@ -147,16 +159,24 @@ function displayFormData() {
     }
 }
 
-// 총 가격 업데이트 함수
-function updateTotalPrice(index) {
+// 전역 변수 선언
+let totalSum = 0; // 총 가격 합계 변수 선언
+
+// 수량당 가격 업데이트 함수
+function updateCountPrice(index) {
     let count = document.querySelector(`.row${index} select`).value; // 선택된 수량
     let price = document.querySelector(`.row${index} .price`).textContent; // 상품 가격
     price = parseFloat(price.replace(/,/g, '')); // 쉼표 제거 후 숫자 변환
-    let result = document.querySelector(`.row${index} .result`); // 총 가격 요소
+    let result = document.querySelector(`.row${index} .result`); // 수량당 가격 요소
 
     if (count > 0) {
-        let total = count * price; // 총 가격 계산
-        result.textContent = total.toLocaleString() + '원'; // 통화 형식으로 포맷팅하여 출력
+        let countPrice = count * price; // 수량당 가격 계산
+        result.textContent = countPrice.toLocaleString() + '원'; // 통화 형식으로 포맷팅하여 출력
+        
+        totalSum += countPrice; // 총 가격 합계 업데이트
+        
+        let totalSumElement = document.getElementById('totalSum'); // 총 가격 합계 표시 엘리먼트
+        totalSumElement.textContent = totalSum.toLocaleString(); // 통화 형식으로 총 가격 합계 표시
     }
 }
 
