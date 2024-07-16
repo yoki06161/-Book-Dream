@@ -49,7 +49,8 @@
 			<span th:text="${rl.time}"></span><br>
 			<div th:text="${rl.review}" class="review_cont"></div>
 			<br>
-			<button onclick="show_answer()">답글보기</button>
+			<!--this는 현재 실행중인 함수가 속한 객체?-->
+			<button onclick="show_answer(this)">답글보기</button>
 			<br>
 			<div class="answer_wrap">
 				<form th:action="@{|write_answer/${book.book_id}/${rl.id}|}" method="post">
@@ -127,8 +128,11 @@
 			}
 	    }
 		
-		function show_answer() {
-		    let a_wrap = document.querySelector('.answer_wrap');
+		function show_answer(button) {
+			// parentElement는 직계 부모 요소. 버튼의 바로 위 부모 요소
+			// 부모요소를 찾고 부모요소에 속한 answer_wrap을 찾음. 즉 div th:each="rl:${r_list}" > .answer_wrap임 
+		    let a_wrap = button.parentElement.querySelector('.answer_wrap');
+			
 		    if (a_wrap.style.display === 'block') {
 		        a_wrap.style.display = 'none'; // 보이는 상태면 숨기기
 		    } else {
