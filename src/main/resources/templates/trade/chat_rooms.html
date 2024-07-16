@@ -30,8 +30,16 @@ body {
 	align-items: center;
 }
 
+.chat_badge {
+	background-color: red;
+	color: white;
+	border-radius: 50%; /* 배지를 동그랗게 만들기 */
+	padding: 2px 10px; /* 배지 내부 여백 조정 */
+	font-size: 0.8em; /* 배지 텍스트 크기 조정 */
+	min-width: 20px; /* 배지 최소 크기 설정 */
+	display: inline-block;
+}
 </style>
-
 </head>
 <body>
 	<div layout:fragment="content" class="container my-3">
@@ -40,13 +48,10 @@ body {
 			<li th:each="chatRoom : ${chatRooms}" data-chat-room-id="${chatRoom.id}">
 				<a th:href="@{/trade/chat/start(tradeIdx=${chatRoom.tradeIdx}, chatRoomId=${chatRoom.id})}"
 				th:text="${chatRoom.senderId} + ' (' + ${chatRoom.bookTitle} + ')'"></a>
-				<span class="badge"
-				th:if="${chatRoom.getNewMessagesCountForUser(userId)} > 0"
+				<span class="chat_badge" th:if="${chatRoom.getNewMessagesCountForUser(userId)} > 0"
 				th:text="${chatRoom.getNewMessagesCountForUser(userId)}"></span>
 			</li>
 		</ul>
 	</div>
-
-	
 </body>
 </html>
