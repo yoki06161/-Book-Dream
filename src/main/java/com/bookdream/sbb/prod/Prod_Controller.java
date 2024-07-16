@@ -91,37 +91,4 @@ public class Prod_Controller {
 		this.prodService.Write_Answer(id, content);
 		return String.format("redirect:/prod/detail/%s", b_id);
 	}
-	
-	// db리스트 테스트 !!!!!!!!!!!내꺼
-	// 그냥 테스트 리스트로 보내는거.
-//	@GetMapping("/list_test")
-//	public String list_t(Model model) {
-//		List<Prod_d_Review> p_list = this.prodService.get_t_list();
-//		model.addAttribute("p_list", p_list);
-//		return "prod/list_test";
-//	}
-	
-	// 테스트 리스트에서 상세보기로
-	// 질문 상세보기
-//	@GetMapping("/test_detail/{t_id}")
-//	public String t_detail(Model model, @PathVariable("t_id") Integer id) throws DataNotFound {
-//		Prod_d_Review pr = this.prodService.get_t_detail(id);
-//		model.addAttribute("pr", pr);
-//		return "prod/test_detail";
-//	}
-	
-	// 답변하기
-	@PostMapping("/test_detail/answer/c/{tt_id}")
-	// 리퀘스트 파람은 name값이랑 똑같이.
-	public String t_answer(Model model, @PathVariable("tt_id") Integer id, @RequestParam("t_content") String t_con) throws DataNotFound {
-		Prod_d_Review pr = this.prodService.get_t_detail(id);
-		this.prodService.create(pr, t_con);
-		// 앞에 /prod를 안해서 이상하게 됐었다...
-		return String.format("redirect:/prod/test_detail/%s", id);
-	}
-	
-	
-	
-		
-	
 }
