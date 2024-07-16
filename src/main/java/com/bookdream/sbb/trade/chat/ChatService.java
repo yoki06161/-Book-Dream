@@ -35,8 +35,17 @@ public class ChatService {
         // 새로운 메시지가 저장될 때 새로운 메시지 카운트를 업데이트합니다.
         updateNewMessagesCount(chat.getChatRoomId(), chat.getSenderId());
 
+        // 채팅방의 마지막 메시지와 시간을 업데이트합니다.
+        chatRoomRepository.findById(chat.getChatRoomId()).ifPresent(chatRoom -> {
+            chatRoom.setLastMessage(chat.getMessage());
+            chatRoom.setLastMessageTime(chat.getCreatedAt());
+            chatRoom.setLastMessageSenderId(chat.getSenderId());
+            chatRoomRepository.save(chatRoom);
+        });
+
         return savedChat;
     }
+
 
     public List<ChatRoom> getChatRooms(String userId) {
         return chatRoomRepository.findBySenderIdOrReceiverId(userId, userId);

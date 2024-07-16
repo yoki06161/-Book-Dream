@@ -31,6 +31,7 @@ public class ChatRoom {
     private int newMessagesCountForReceiver = 0;
 
     private String lastMessageSenderId;
+    private String lastMessage;  // 마지막 메시지 내용
 
     public String getChatRoomName() {
         return senderId + " & " + receiverId + " & " + tradeIdx;

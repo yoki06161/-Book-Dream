@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,12 @@ import java.util.List;
 @Controller
 @RequestMapping("/trade/chat")
 public class ChatController {
+    
     @Autowired
     private ChatService chatService;
+    
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/history")
     @ResponseBody
@@ -45,8 +50,6 @@ public class ChatController {
 
         return "trade/chat";
     }
-
-
 
     @GetMapping("/rooms")
     public String chatRooms(Principal principal, Model model) {
@@ -97,6 +100,9 @@ public class ChatController {
                 chatService.incrementNewMessagesCount(chatMessage.getChatRoomId(), chatMessage.getSenderId(), currentUserId);
             }
         }
+
+        // 채팅방 목록 갱신을 위해 새 메시지 이벤트 발행
+        messagingTemplate.convertAndSend("/topic/chatRoomsUpdate", chatMessage);
 
         return chatMessage;
     }
