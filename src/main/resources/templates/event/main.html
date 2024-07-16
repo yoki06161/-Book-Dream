@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>온라인 서점</title>
+	<style>
+	    .center {
+	        display: flex;       /* 플렉스박스 레이아웃을 사용 */
+	        align-items: center; /* 세로 방향 가운데 정렬 */
+	        justify-content: center; /* 가로 방향 가운데 정렬 */
+	    }
+	    .logo {
+	        height: 200px; /* 로고의 높이를 적절히 조절하세요 */
+	        margin-right: 20px; /* 이미지와 텍스트 사이의 간격 조절 */
+	    }
+	    h1 {
+	        margin: 0; /* h1 태그의 기본 마진 제거 */
+	    }
+	</style>
+</head>
+<body>
+    <div layout:fragment="content" class="container mt-4">
+        <div class="center">
+            <img src="/image/logo300.png" alt="BOOKDREAM Logo" class="logo">
+            <h1>에 오신걸 환영합니다!</h1>
+        </div>
+        <h2>오늘의 Pick</h2>
+        <div id="todays-pick">
+            <!-- 추천 도서 목록을 동적으로 표시 -->
+            <ul>
+                <li th:each="book : ${recommendedBooks}">
+                    <span th:text="${book.title}">Book Title</span> -
+                    <span th:text="${book.author}">Author Name</span>
+                    (가격: <span th:text="${book.price}">Price</span>)
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
