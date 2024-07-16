@@ -120,10 +120,13 @@
 				<textarea name="a_content"></textarea>
 				<input type="submit" value="답글달기">
 			</form>
-			<div th:each="al : ${a_list}">
+			<!--리스트는 전부 불러오는건데 if로 답변 리뷰 id값과 리뷰 id값이 같은 것만을 출력하게함.-->
+			<div th:each="al : ${a_list}" th:if="${al.review.id == rl.id}">
 				<div tH:text="'아이디 ' + ${al.id}"></div>
-				<div tH:text="'리뷰 아이디 ' + ${al.review}"></div>
+				<!--{답변테이블.리뷰.리뷰테이블의 속성}으로 하면 리뷰테이블 속성불러오기 가능. 연결돼있으니까.-->
+				<div tH:text="'리뷰 아이디 ' + ${al.review.id}"></div>
 				<div tH:text="'답글 ' + ${al.answer}"></div>
+				<hr>
 			</div>
 			<br>
 			<hr>

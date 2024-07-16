@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface Prod_RArepository extends JpaRepository<Prod_d_Answer, Integer>{
-	List<Prod_d_Answer> findByReviewId(Integer r_id);
 }

@@ -58,14 +58,9 @@ public class Prod_Service {
 		this.re_repo.save(pr);
 	}
 	
-	// 답글 가져오기
-	public List<Prod_d_Answer> getAnswer_List(Integer r_id) {
-		List<Prod_d_Answer> a_list = ra_repo.findByReviewId(r_id);
-		
-//		Optional<Prod_d_Answer> op = this.ra_repo.findById(r_id);
-//		if(op.isPresent()) {
-//			return op.get();
-//		}
+	// 리뷰 답글 갖고오기.
+	public List<Prod_d_Answer> getAnswer_List() {
+		List<Prod_d_Answer> a_list = ra_repo.findAll();
 		return a_list;
 	}
 	

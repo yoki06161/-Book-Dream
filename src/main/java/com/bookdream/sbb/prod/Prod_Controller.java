@@ -71,8 +71,8 @@ public class Prod_Controller {
 		
 		// 답글 보여주기
 //		Prod_d_Answer answer = prodService.getAnswer_List(book_id);
-		// 책아이디가 아닌 리뷰아이디를 갖고와야함
-		model.addAttribute("a_list", prodService.getAnswer_List(book_id));
+		// !!!!!!! 책아이디가 아닌 리뷰아이디를 갖고와야함
+		model.addAttribute("a_list", prodService.getAnswer_List());
 		
 		return "prod/prod_detail";
 	}

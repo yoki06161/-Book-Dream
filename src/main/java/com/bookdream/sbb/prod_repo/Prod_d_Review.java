@@ -47,6 +47,4 @@ public class Prod_d_Review {
 	// cascade = CascadeType.REMOVE는 댓글 지울때 답글도 지워지게.
 	@OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE) 
     private List<Prod_d_Answer> r_List;
-
-	
 }
