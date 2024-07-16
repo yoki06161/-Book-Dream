@@ -43,7 +43,8 @@ public class TradeCrawling {
                 Trade trade = new Trade();
                 trade.setTitle(title);
                 trade.setInfo(details);
-                trade.setPrice(parsePrice(priceText));
+                trade.setPrice(0); // 판매가 초기화
+                trade.setOriginalPrice(parsePrice(priceText)); // 정가 설정
                 trade.setImage(imgUrl);
                 trade.setIntro("");
                 trades.add(trade);

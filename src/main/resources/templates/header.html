@@ -1,8 +1,24 @@
 <nav th:fragment="headerfragment" class="navbar navbar-expand-lg navbar-light border-bottom">
-<link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
-    integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+        integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .nav-item .fa-comments {
+            font-size: 1.5rem; /* 아이콘 크기 조정 */
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -10px; /* 아이콘과 배지의 겹치는 위치 조정 */
+            right: -10px; /* 아이콘과 배지의 겹치는 위치 조정 */
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px; /* 배지 내부 여백 줄이기 */
+            font-size: 0.6em; /* 배지 텍스트 크기 줄이기 */
+        }
+    </style>
     <div class="container-fluid mx-auto">
         <a class="navbar-brand" href="@{|/main|}">Book Dream(로고자리)</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -11,26 +27,18 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/event|}">이벤트</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/prod|}">상품(서적)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/trade/list|}">중고거래</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/free|}">커뮤니티</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" th:href="@{|/event|}">이벤트</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{|/prod|}">상품(서적)</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{|/trade/list|}">중고거래</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{|/free|}">커뮤니티</a></li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{|/trade/chat/rooms|}">
-                        <i class="fas fa-comments"></i> 채팅
-                        <span class="badge" th:if="${totalNewMessagesCount > 0}" th:text="${totalNewMessagesCount}"></span>
+                        <i class="fas fa-comments">
+                            <span class="badge" th:if="${totalNewMessagesCount > 0}" th:text="${totalNewMessagesCount}"></span>
+                        </i>
                     </a>
                 </li>
-                <li class="nav-item">
-            		<a class="nav-link" th:href="@{|/basket|}">장바구니(아이콘)</a>
+                <li class="nav-item"><a class="nav-link" th:href="@{|/basket|}">장바구니(아이콘)</a></li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/login|}">로그인</a>
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/modifyform|}">마이페이지</a>
@@ -43,4 +51,3 @@
         </div>
     </div>
 </nav>
-

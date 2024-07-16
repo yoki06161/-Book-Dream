@@ -31,4 +31,10 @@ public class Trade {
     private LocalDateTime postdate;
     private String id;
     private String image;
+    
+    @NotNull
+    private int originalPrice;
+    
+    @NotNull
+    private String status = ""; 
 }

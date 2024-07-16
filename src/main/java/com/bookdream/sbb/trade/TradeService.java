@@ -54,6 +54,7 @@ public class TradeService {
             trade.setInfo(updatedTrade.getInfo());
             trade.setIntro(updatedTrade.getIntro());
             trade.setImage(updatedTrade.getImage());
+            trade.setOriginalPrice(updatedTrade.getOriginalPrice()); // 정가 업데이트
             try {
                 return tradeRepository.save(trade);
             } catch (Exception e) {

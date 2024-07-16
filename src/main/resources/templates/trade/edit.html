@@ -13,7 +13,7 @@
                     console.log(data); // 디버깅 메시지 추가
                     document.getElementById('title').value = data.title; // 가져온 제목 설정
                     document.getElementById('info').value = data.info; // 변경된 필드명
-                    document.getElementById('originalPrice').value = data.price; // 원래 정가를 넣음
+                    document.getElementById('originalPrice').value = data.originalPrice; // 정가 설정
                     document.getElementById('intro').value = data.intro;
                     document.getElementById('hiddenImage').value = data.image; // 숨겨진 필드에 이미지 URL 설정
                     var imageContainer = document.getElementById('imageContainer');
@@ -22,6 +22,7 @@
                     // 필드 비활성화
                     document.getElementById('title').disabled = true;
                     document.getElementById('info').disabled = true;
+                    document.getElementById('originalPrice').disabled = true;
                 } else {
                     alert('책 정보를 찾을 수 없습니다.');
                 }
@@ -33,6 +34,7 @@
         function enableFieldsAndSubmit() {
             document.getElementById('title').disabled = false;
             document.getElementById('info').disabled = false;
+            document.getElementById('originalPrice').disabled = false;
             document.getElementById('tradeForm').submit();
         }
     </script>
@@ -49,7 +51,7 @@
             <!-- 책 검색 전용 입력 필드 -->
             <div class="mb-3">
                 <label for="searchKeyword" class="form-label">책 검색:</label>
-                <input type="text" id="searchKeyword" class="form-control" required />
+                <input type="text" id="searchKeyword" class="form-control" />
                 <button type="button" class="btn btn-primary" onclick="fillFields()">찾기</button>
             </div>
             
@@ -64,7 +66,7 @@
             </div>
             <div class="mb-3">
                 <label for="originalPrice" class="form-label">정가:</label>
-                <input type="text" id="originalPrice" class="form-control" disabled />
+                <input type="text" id="originalPrice" class="form-control" th:field="*{originalPrice}" required disabled />
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">판매가:</label>

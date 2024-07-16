@@ -8,8 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -40,10 +38,31 @@ public class TradeController {
     }
 
     @GetMapping("/detail/{idx}")
-    public String detailTrade(@PathVariable("idx") int idx, Model model) {
+    public String detailTrade(@PathVariable("idx") int idx, Model model, Principal principal) {
         Trade trade = tradeService.getTradeById(idx);
         model.addAttribute("trade", trade);
+
+        if (principal != null) {
+            String username = principal.getName();
+            model.addAttribute("username", username);
+        }
+
         return "trade/detail";
+    }
+
+    @PostMapping("/updateStatus/{idx}")
+    public String updateStatus(@PathVariable("idx") int idx, @RequestParam("status") String status, RedirectAttributes redirectAttributes) {
+        try {
+            Trade trade = tradeService.getTradeById(idx);
+            trade.setStatus(status);
+            tradeService.updateTrade(idx, trade);
+            redirectAttributes.addFlashAttribute("successMsg", "상태가 성공적으로 변경되었습니다!");
+        } catch (Exception e) {
+            System.out.println("Exception occurred while updating status: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMsg", "상태 변경 실패: " + e.getMessage());
+        }
+        return "redirect:/trade/detail/" + idx;
     }
 
     @GetMapping("/create")
@@ -121,6 +140,11 @@ public class TradeController {
                 updatedTrade.setImage(fileName); // 로컬 파일 이름으로 설정
             } else {
                 updatedTrade.setImage(existingTrade.getImage());
+            }
+
+            // 기존 데이터 유지
+            if (updatedTrade.getOriginalPrice() == 0) {
+                updatedTrade.setOriginalPrice(existingTrade.getOriginalPrice()); // 기존 정가 유지
             }
 
             tradeService.updateTrade(idx, updatedTrade);

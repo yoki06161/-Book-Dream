@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <head>
-<title>중고거래</title>
-<style>
-    body {
-        background-color: #f8f9fa;
-    }
-    .container {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .cover_area img {
-        max-width: 80%;
-        height: auto;
-    }
-    .card {
-        margin-bottom: 20px;
-        padding: 15px;
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-    }
-    .card img {
-        margin-bottom: 15px;
-    }
-    .card-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-    .card-text {
-        font-size: 1rem;
-        margin-bottom: 10px;
-    }
-</style>
+    <title>중고거래</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .cover_area img {
+            max-width: 80%;
+            height: auto;
+        }
+        .card {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+        }
+        .card img {
+            margin-bottom: 15px;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <div layout:fragment="content" class="container my-3">
@@ -72,7 +72,8 @@
                             </a>
                             <p class="card-text"><span th:text="${trade.info}"></span></p>
                             <p class="card-text"><span th:text="${#temporals.format(trade.postdate, 'yyyy-MM-dd HH:mm')}"></span></p>
-                            <p class="card-text"><span th:text="${trade.price}"></span>원</p>
+                            <p class="card-text">정가: <span th:text="${trade.originalPrice}"></span>원</p> <!-- 정가 추가 -->
+                            <p class="card-text">판매가: <span th:text="${trade.price}"></span>원</p> <!-- 판매가 추가 -->
                         </div>
                     </div>
                 </div>
