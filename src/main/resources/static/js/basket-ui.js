@@ -1,71 +1,80 @@
-document.addEventListener('DOMContentLoaded', init);
+// 전역 변수 선언
+let totalSum = 0; // 총 가격 합계 변수 선언
+
+// 주문하기 버튼 상태 변경
+function updateButtonState() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)');
+    const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+    document.getElementById('order').disabled = !anyChecked;
+}
+
+function updateTotalSum() {
+    totalSum = 0;
+
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)');
+    checkboxes.forEach(function(checkbox, index) {
+        if (checkbox.checked) {
+            let price = parseFloat(document.querySelector(`.row${index} .result`).textContent.replace(/[^0-9]/g, ''));
+            totalSum += price;
+        }
+    });
+
+    let totalSumElement = document.getElementById('totalSum');
+    if (totalSumElement) {
+        totalSumElement.textContent = totalSum.toLocaleString() + '원';
+    }
+}
 
 function init() {
-    // 전역 변수 선언
-    const selectAllCheckbox = document.getElementById('select_all'); // 전체 선택 체크박스 요소
-    const orderButton = document.getElementById('order'); // 주문 버튼 요소
+	const selectAllCheckbox = document.getElementById('select_all'); // 전체 선택 체크박스 요소
+	const orderButton = document.getElementById('order'); // 주문 버튼 요소
 
-    // 주문 버튼 상태 업데이트 함수
-    function updateButtonState() {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)'); // 전체 체크박스 제외한 체크박스들
-        const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked); // 하나 이상 체크된 체크박스가 있는지 확인
-        orderButton.disabled = !anyChecked; // 체크된 체크박스가 없으면 주문 버튼 비활성화
-    }
-
+	// 주문 버튼 상태 업데이트 함수
+	function updateButtonState() {
+	    const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)');
+	    const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+	    orderButton.disabled = !anyChecked;
+	}
+	
     // 전체 선택 체크박스 상태 업데이트 함수
     function updateSelectAllState() {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)'); // 전체 체크박스 제외한 체크박스들
-        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked); // 모든 체크박스가 체크되었는지 확인
-        selectAllCheckbox.checked = allChecked; // 전체 선택 체크박스의 상태 업데이트
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)');
+        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+        selectAllCheckbox.checked = allChecked;
     }
 
     // 체크박스 변경 이벤트 핸들러
     function handleCheckboxChange() {
-        updateButtonState(); // 주문 버튼 상태 업데이트
-        updateSelectAllState(); // 전체 선택 체크박스 상태 업데이트
+        updateButtonState();
+        updateSelectAllState();
+        updateTotalSum();
     }
 
     // 전체 선택 체크박스 클릭 이벤트 리스너
     selectAllCheckbox.addEventListener('change', function () {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)'); // 전체 체크박스 제외한 체크박스들
-        const selectAll = selectAllCheckbox.checked; // 전체 선택 체크박스의 상태
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)');
+        const selectAll = selectAllCheckbox.checked;
         checkboxes.forEach((checkbox) => {
-            checkbox.checked = selectAll; // 전체 체크박스의 상태에 따라 각 체크박스의 체크 상태 설정
+            checkbox.checked = selectAll;
         });
-        updateButtonState(); // 주문 버튼 상태 업데이트
+        updateButtonState();
+        updateTotalSum();
     });
 
     // 문서의 체크박스 변경 이벤트 리스너
     document.addEventListener('change', function (event) {
         if (event.target.matches('input[type="checkbox"]:not(#select_all)')) {
-            handleCheckboxChange(); // 체크박스 변경 시 이벤트 핸들러 호출
+            handleCheckboxChange();
         }
     });
-	
-	// 주문 버튼 클릭 이벤트 리스너
-	orderButton.addEventListener('click', function() {
-	    // 체크된 항목들의 데이터를 담을 배열
-	    let selectedItems = [];
-
-	    let checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)'); // 체크박스들
-	    checkboxes.forEach(function(checkbox, index) {
-	        if (checkbox.checked) {
-	            let data = retrieveData(index); // 체크된 항목의 데이터를 가져옴 (index에 해당하는 데이터를 가져오는 함수 필요)
-	            selectedItems.push(data);
-	        }
-	    });
-		// 선택된 항목들을 세션 스토리지에 저장
-		sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-	});
 
     displayFormData(); // 데이터 표시 함수 호출
 }
 
-// retrieveData 함수 추가
+// 데이터 가져오기 함수
 function retrieveData(index) {
-    // index를 이용해 필요한 데이터를 가져옴
     const row = document.querySelector(`.row${index}`);
-	const bookImage = row.querySelector('img').src; // 행 내의 이미지를 선택
+    const bookImage = row.querySelector('img').src; // 행 내의 이미지를 선택
     const bookId = row.querySelector('input[type="hidden"]').value;
     const bookTitle = row.querySelector('.fs-5.fw-bold').textContent;
     const bookWriter = row.querySelector('.fs-6').textContent;
@@ -75,7 +84,7 @@ function retrieveData(index) {
 
     return {
         book_id: bookId,
-		book_img: bookImage,
+        book_img: bookImage,
         book_title: bookTitle,
         book_writer: bookWriter,
         book_price: bookPrice,
@@ -92,6 +101,7 @@ function displayFormData() {
 
     // 기존 상품 목록 초기화
     dataArrayList.innerHTML = '';
+    dataNotFound.innerHTML = ''; // 메시지 영역 초기화
 
     if (dataArray.length > 0) {
         // 데이터 배열을 순회하며 각 상품 정보를 테이블에 추가
@@ -101,7 +111,7 @@ function displayFormData() {
             // 수량 선택 셀 추가
             let selectElement = document.createElement('select');
             selectElement.className = `count${index}`;
-			selectElement.name = `count`;
+            selectElement.name = `count`;
             for (let i = 1; i <= 10; i++) {
                 let option = document.createElement('option');
                 option.value = i;
@@ -131,7 +141,7 @@ function displayFormData() {
                 <td><input class="form-check-input" type="checkbox"></td>
                 <td><img src=${data.book_img} alt="상품사진" style="width: 82px; height: 118.34px;"></td>
                 <td class="text-start"><p class="fs-5 fw-bold">${data.book_title}</p>
-				<p class="fs-6" style="color:gray;">${data.book_writer}</p>
+                <p class="fs-6" style="color:gray;">${data.book_writer}</p>
                 <p class="fs-5 price">${data.book_price}</p></td>
                 <td></td>
                 <td class="result" name="count_price">${data.count_price}</td>
@@ -150,7 +160,6 @@ function displayFormData() {
             tr.className = `row${index}`;
             dataArrayList.appendChild(tr); // 테이블에 행 추가
 
-			
             // 삭제 모달 추가
             let modal = document.createElement('div');
             modal.className = 'modal fade';
@@ -176,16 +185,6 @@ function displayFormData() {
             `;
 
             document.body.appendChild(modal); // 삭제 모달을 문서에 추가
-			
-			// 수량당 가격 계산 및 총 가격 합계 업데이트
-			let count = parseInt(data.count); // 선택된 수량
-			let price = parseFloat(data.book_price.replace(/,/g, '')); // 상품 가격
-			let countPrice = count * price; // 수량당 가격 계산
-			totalSum += countPrice; // 총 가격 합계 누적
-
-			// 총 가격 합계 엘리먼트 업데이트
-			let totalSumElement = document.getElementById('totalSum');
-			totalSumElement.textContent = totalSum.toLocaleString(); // 통화 형식으로 총 가격 합계 표시
         });
 
         initCheckboxes(); // 체크박스 초기화 함수 호출
@@ -193,108 +192,85 @@ function displayFormData() {
         // 상품이 없을 때 메시지 표시
         let div = document.createElement('div');
         div.innerHTML = `<h3 class="text-center">장바구니에 담은 상품이 없습니다</h3>`;
-        dataNotFound.append(div); // 메시지를 표시할 요소에 추가
+        dataNotFound.appendChild(div); // 메시지를 표시할 요소에 추가
         // 장바구니가 비어 있을 경우 전체 선택 체크박스 해제
         document.getElementById('select_all').checked = false;
     }
 }
 
-// 전역 변수 선언
-let totalSum = 0; // 총 가격 합계 변수 선언
-
 // 수량당 가격 업데이트 함수
 function updateCountPrice(index) {
-    let count = document.querySelector(`.row${index} select`).value; // 선택된 수량
-    let price = document.querySelector(`.row${index} .price`).textContent; // 상품 가격
-    price = parseFloat(price.replace(/,/g, '')); // 쉼표 제거 후 숫자 변환
-    let result = document.querySelector(`.row${index} .result`); // 수량당 가격 요소
+	let countSelect = document.querySelector(`.row${index} select`); // 선택된 수량 select 엘리먼트
+	if (!countSelect) return; // 선택된 엘리먼트가 없으면 함수 종료
 
-    if (count > 0) {
-        let countPrice = count * price; // 수량당 가격 계산
-        result.textContent = countPrice.toLocaleString() + '원'; // 통화 형식으로 포맷팅하여 출력
-        
-        totalSum += countPrice; // 총 가격 합계 업데이트
-        
-        let totalSumElement = document.getElementById('totalSum'); // 총 가격 합계 표시 엘리먼트
-        totalSumElement.textContent = totalSum.toLocaleString(); // 통화 형식으로 총 가격 합계 표시
-    }
-}
+	let count = parseInt(countSelect.value); // 선택된 수량
+	let priceText = document.querySelector(`.row${index} .price`).textContent; // 상품 가격 텍스트
+	let price = parseFloat(priceText.replace(/[^0-9]/g, '')); // 가격에서 숫자 부분 추출
 
-// 체크박스 초기화 함수
-function initCheckboxes() {
-    const selectAllCheckbox = document.getElementById('select_all'); // 전체 선택 체크박스 요소
-    const orderButton = document.getElementById('order'); // 주문 버튼 요소
+	// 수량당 가격 업데이트
+	let resultElement = document.querySelector(`.row${index} .result`);
+	if (resultElement) {
+	    let countPrice = (count * price).toLocaleString(); // 수량당 가격 계산 후 통화 형식으로 변환
+	    resultElement.textContent = countPrice + '원'; // 결과 엘리먼트에 텍스트 설정
+	}
 
-    // 주문 버튼 상태 업데이트 함수
-    function updateButtonState() {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)'); // 전체 체크박스 제외한 체크박스들
-        const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked); // 하나 이상 체크된 체크박스가 있는지 확인
-        orderButton.disabled = !anyChecked; // 체크된 체크박스가 없으면 주문 버튼 비활성화
-    }
-
-    // 전체 선택 체크박스 상태 업데이트 함수
-    function updateSelectAllState() {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)'); // 전체 체크박스 제외한 체크박스들
-        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked); // 모든 체크박스가 체크되었는지 확인
-        selectAllCheckbox.checked = allChecked; // 전체 선택 체크박스의 상태 업데이트
-    }
-
-    // 체크박스 변경 이벤트 핸들러
-    function handleCheckboxChange() {
-        updateButtonState(); // 주문 버튼 상태 업데이트
-        updateSelectAllState(); // 전체 선택 체크박스 상태 업데이트
-    }
-
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)'); // 전체 체크박스 제외한 체크박스들
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', handleCheckboxChange); // 체크박스 변경 이벤트 리스너 추가
-    });
-
-    // 전체 선택 체크박스 클릭 이벤트 리스너
-    selectAllCheckbox.addEventListener('change', function () {
-        const selectAll = selectAllCheckbox.checked; // 전체 선택 체크박스의 상태
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = selectAll; // 전체 체크박스의 상태에 따라 각 체크박스의 체크 상태 설정
-        });
-        updateButtonState(); // 주문 버튼 상태 업데이트
-    });
-
-    updateButtonState(); // 초기 버튼 상태 업데이트
-    updateSelectAllState(); // 초기 전체 선택 체크박스 상태 업데이트
+	updateTotalSum(); // 이 부분에서 updateTotalSum 함수 호출
 }
 
 // 삭제 버튼 클릭 이벤트 리스너
 document.addEventListener('click', function(event) {
     if (event.target.classList.contains('delete')) {
-        event.stopPropagation(); // 이벤트 전파 방지
-        let index = event.target.getAttribute('data-index'); // 삭제할 인덱스 가져오기
-        let dataArray = JSON.parse(sessionStorage.getItem("dataArray")) || []; // 세션 스토리지에서 데이터 배열 가져오기
-        deleteItem(index, dataArray[index]); // 아이템 삭제 함수 호출
+        event.stopPropagation();
+        let index = event.target.getAttribute('data-index');
+        let dataArray = JSON.parse(sessionStorage.getItem("dataArray")) || [];
+        deleteItem(index, dataArray[index]);
     }
 });
 
 // 아이템 삭제 함수
 function deleteItem(index, data) {
-    let bookIdToDelete = data.book_id; // 삭제할 아이템의 ID
+    let bookIdToDelete = data.book_id; // 삭제할 상품 ID
     let dataArray = JSON.parse(sessionStorage.getItem("dataArray")) || []; // 세션 스토리지에서 데이터 배열 가져오기
-    let indexToDelete = dataArray.findIndex(item => item.book_id === bookIdToDelete); // 삭제할 아이템의 인덱스 찾기
+    let indexToDelete = dataArray.findIndex(item => item.book_id === bookIdToDelete); // 삭제할 상품의 인덱스 찾기
 
     if (indexToDelete !== -1) {
-        dataArray.splice(indexToDelete, 1); // 데이터 배열에서 아이템 삭제
-        sessionStorage.setItem("dataArray", JSON.stringify(dataArray)); // 삭제 후 데이터 배열을 세션 스토리지에 다시 저장
-        let badgeCount = dataArray.length; // 장바구니 아이템 수 계산
-        sessionStorage.setItem('badgeCount', badgeCount); // 세션 스토리지에 장바구니 아이템 수 저장
-        document.getElementById('badge').textContent = badgeCount; // UI에서 장바구니 아이템 수 업데이트
-		
-		// 로그인한 사용자라면 장바구니 DB에서 해당 사용자의 해당 상품 삭제
-		//if (isAuthenticated) {
-		//    sendDataToServer(dataArray, csrfHeader, csrfToken);
-		//}
+        dataArray.splice(indexToDelete, 1); // 배열에서 상품 삭제
+        sessionStorage.setItem("dataArray", JSON.stringify(dataArray)); // 세션 스토리지에 업데이트된 배열 저장
+        let badgeCount = dataArray.length; // 장바구니 아이템 개수 업데이트
+        sessionStorage.setItem('badgeCount', badgeCount); // 세션 스토리지에 업데이트된 아이템 개수 저장
+        document.getElementById('badge').textContent = badgeCount; // UI에 아이템 개수 업데이트
 
-        // 삭제 후 페이지 새로고침
-        location.reload();
+        displayFormData(); // 데이터를 삭제한 후 UI 다시 렌더링
     }
 }
+
+// 체크박스 초기화 함수
+function initCheckboxes() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = false; // 모든 체크박스 초기화
+    });
+
+    updateButtonState(); // 버튼 상태 업데이트
+    updateTotalSum(); // 총 가격 업데이트
+}
+
+// 주문 버튼 클릭 이벤트 리스너
+document.getElementById('order').addEventListener('click', function() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked:not(#select_all)');
+    const selectedItems = Array.from(checkboxes).map(function(checkbox) {
+        let index = checkbox.parentElement.parentElement.rowIndex - 1; // 행 인덱스 계산
+        return retrieveData(index); // 인덱스에 해당하는 데이터 반환
+    });
+
+    // 주문을 처리하는 코드 작성
+    // 예: console.log(selectedItems);
+});
+
+
+// 초기화 함수
+document.addEventListener('DOMContentLoaded', init);
+
 
 /*
 function sendDataToServer(dataArray, csrfHeader, csrfToken) {
