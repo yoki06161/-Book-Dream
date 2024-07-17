@@ -89,6 +89,15 @@
             cursor: pointer;
             margin-right: 10px;
         }
+        .image-preview {
+            display: none;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .image-preview img {
+            max-width: 50px;
+            margin-right: 10px;
+        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
@@ -99,6 +108,7 @@
         var senderId = '[[${senderId}]]';
         var chatRoomId = '[[${chatRoomId}]]';
         var lastMessageDate = null;
+        var imageFile = null;
 
         function connect() {
             var socket = new SockJS('/ws');
@@ -106,9 +116,16 @@
             stompClient.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
                 stompClient.subscribe('/topic/public', function (messageOutput) {
-                    showMessage(JSON.parse(messageOutput.body));
+                    var message = JSON.parse(messageOutput.body);
+                    if (message.type === 'IMAGE') {
+                        setTimeout(function () {
+                            showMessage(message);
+                        }, 1000); // 1초의 딜레이 후 이미지를 표시
+                    } else {
+                        showMessage(message);
+                    }
                 });
-                fetchChatHistory(); // 초기 채팅 기록 불러오기
+                setTimeout(fetchChatHistory, 1000); // 초기 채팅 기록 불러올 때 1초의 딜레이
             });
         }
 
@@ -123,11 +140,7 @@
                 };
                 stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
                 document.getElementById('chat-outgoing-msg').value = '';
-            }
-        }
-
-        function sendImage(imageFile) {
-            if (imageFile && stompClient) {
+            } else if (imageFile && stompClient) {
                 var reader = new FileReader();
                 reader.onload = function(event) {
                     var chatMessage = {
@@ -137,9 +150,27 @@
                         type: 'IMAGE'
                     };
                     stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+                    resetImagePreview();
+                    setTimeout(fetchChatHistory, 1000); // 이미지 전송 후 1초의 딜레이 후 채팅 기록을 다시 불러옴
                 };
                 reader.readAsDataURL(imageFile);
             }
+        }
+
+        function resetImagePreview() {
+            imageFile = null;
+            document.querySelector('.image-preview').style.display = 'none';
+            document.querySelector('.image-preview img').src = '';
+            document.getElementById('chat-image-input').value = '';
+        }
+
+        function showImagePreview(file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                document.querySelector('.image-preview img').src = event.target.result;
+                document.querySelector('.image-preview').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
         }
 
         function showMessage(message) {
@@ -200,6 +231,7 @@
             const chatOutgoingMsg = document.getElementById('chat-outgoing-msg');
             const chatBox = document.getElementById('chat-box');
             const chatImageInput = document.getElementById('chat-image-input');
+            const imageSendButton = document.getElementById('chat-image-send');
 
             chatOutgoingButton.addEventListener('click', sendMessage);
 
@@ -210,8 +242,11 @@
             });
 
             chatImageInput.addEventListener('change', function (event) {
-                sendImage(event.target.files[0]);
+                imageFile = event.target.files[0];
+                showImagePreview(imageFile);
             });
+
+            imageSendButton.addEventListener('click', sendMessage);
 
             const leaveChatButton = document.getElementById('leave-chat-button');
             leaveChatButton.addEventListener('click', function () {
@@ -244,11 +279,13 @@
                 return response.json();
             })
             .then(data => {
-                var chatBox = document.getElementById('chat-box');
-                chatBox.innerHTML = '';
-                data.forEach(chat => {
-                    showMessage(chat); // 기존 메시지를 화면에 추가
-                });
+                setTimeout(function() {
+                    var chatBox = document.getElementById('chat-box');
+                    chatBox.innerHTML = '';
+                    data.forEach(chat => {
+                        showMessage(chat); // 기존 메시지를 화면에 추가
+                    });
+                }, 1000); // 1초의 딜레이 후 기존 메시지 표시
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -279,6 +316,10 @@
                 <div class="container-fluid chat_section" id="chat-box"></div>
                 <div class="type_msg mt-3">
                     <div class="input_msg_write d-flex">
+                        <div class="image-preview">
+                            <img src="" alt="Image preview">
+                            <button id="chat-image-send" class="btn btn-primary">전송</button>
+                        </div>
                         <label for="chat-image-input" class="btn btn-secondary">
                             <i class="fas fa-paperclip"></i>
                         </label>
