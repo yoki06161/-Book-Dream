@@ -21,13 +21,13 @@
 
         .chat_room_list li {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 20px;
             margin-bottom: 10px;
             border-radius: 5px;
             background-color: #f1f0f0;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             position: relative;
         }
 
@@ -37,6 +37,9 @@
             border-radius: 50%;
             padding: 5px 10px;
             font-size: 0.8em;
+            position: absolute;
+            top: 41px;
+            right: 10px;
         }
 
         .chat-room-info {
@@ -47,48 +50,14 @@
             font-size: 0.9em;
             color: #666;
         }
+
+        .message-time {
+            font-size: 0.8em;
+            color: #999;
+            position: absolute;
+            right: 10px;
+        }
     </style>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script type="text/javascript">
-        var stompClient = null;
-
-        function connect() {
-            var socket = new SockJS('/ws');
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, function (frame) {
-                console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/chatRoomsUpdate', function (messageOutput) {
-                    updateChatRooms(JSON.parse(messageOutput.body));
-                });
-            });
-        }
-
-        function updateChatRooms(message) {
-            var chatRoomId = message.chatRoomId;
-            var lastMessage = message.message;
-            var lastMessageTime = new Date(message.createdAt).toLocaleString();
-
-            var chatRoomElement = document.querySelector('[data-chat-room-id="' + chatRoomId + '"]');
-            if (chatRoomElement) {
-                chatRoomElement.querySelector('.last-message').textContent = lastMessage + " (" + lastMessageTime + ")";
-                var badge = chatRoomElement.querySelector('.chat_badge');
-                if (badge) {
-                    badge.textContent = parseInt(badge.textContent) + 1;
-                } else {
-                    var newBadge = document.createElement('span');
-                    newBadge.classList.add('chat_badge');
-                    newBadge.textContent = 1;
-                    chatRoomElement.appendChild(newBadge);
-                }
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            connect();
-        });
-    </script>
 </head>
 <body>
     <div layout:fragment="content" class="container my-3">
@@ -99,8 +68,9 @@
                     <a th:href="@{/trade/chat/start(tradeIdx=${chatRoom.tradeIdx}, chatRoomId=${chatRoom.id})}"
                        th:text="${chatRoom.senderId} + ' (' + ${chatRoom.bookTitle} + ')'"></a>
                     <div class="last-message"
-                         th:text="${chatRoom.lastMessage + ' (' + #temporals.format(chatRoom.lastMessageTime, 'yyyy-MM-dd HH:mm') + ')'}"></div>
+                         th:text="${chatRoom.lastMessage}"></div>
                 </div>
+                <div class="message-time" th:text="${chatRoom.getFormattedLastMessageTime()}"></div>
                 <span class="chat_badge"
                       th:if="${chatRoom.getNewMessagesCountForUser(userId)} > 0"
                       th:text="${chatRoom.getNewMessagesCountForUser(userId)}"></span>

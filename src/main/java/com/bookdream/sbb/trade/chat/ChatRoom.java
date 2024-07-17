@@ -61,6 +61,10 @@ public class ChatRoom {
             return newMessagesCountForSender;
         }
     }
+    
+    public String getFormattedLastMessageTime() {
+        return DateUtils.formatDateTime(lastMessageTime);
+    }
 }
 
 

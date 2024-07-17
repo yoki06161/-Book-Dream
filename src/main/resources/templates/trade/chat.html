@@ -60,6 +60,24 @@
             flex-grow: 1;
             text-align: center;
         }
+        .date-separator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .date-separator span {
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #555;
+            display: flex;
+            align-items: center;
+        }
+        .date-separator i {
+            margin-right: 5px;
+        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
@@ -69,6 +87,7 @@
         var stompClient = null;
         var senderId = '[[${senderId}]]';
         var chatRoomId = '[[${chatRoomId}]]';
+        var lastMessageDate = null;
 
         function connect() {
             var socket = new SockJS('/ws');
@@ -98,13 +117,30 @@
 
         function showMessage(message) {
             var chatBox = document.getElementById('chat-box');
+            var messageDate = new Date(message.createdAt).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            });
+
+            if (lastMessageDate !== messageDate) {
+                var dateSeparator = document.createElement('div');
+                dateSeparator.classList.add('date-separator');
+                dateSeparator.innerHTML = `
+                    <span><i class="fas fa-calendar-alt"></i>${messageDate}</span>
+                `;
+                chatBox.appendChild(dateSeparator);
+                lastMessageDate = messageDate;
+            }
+
             var messageElement = document.createElement('div');
             if (message.senderId === senderId) {
                 messageElement.classList.add('outgoing_msg');
                 messageElement.innerHTML = `
                     <div class="sent_msg">
                         <p>${message.message}</p>
-                        <span class="time_date">${new Date(message.createdAt).toLocaleString()}</span>
+                        <span class="time_date">${new Date(message.createdAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                 `;
             } else {
@@ -112,7 +148,7 @@
                 messageElement.innerHTML = `
                     <div class="received_withd_msg">
                         <p>${message.message}</p>
-                        <span class="time_date">${new Date(message.createdAt).toLocaleString()}</span>
+                        <span class="time_date">${new Date(message.createdAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                 `;
             }
@@ -176,7 +212,6 @@
                 console.error('Error:', error);
             });
         }
-
     </script>
 
     <link rel="stylesheet"
