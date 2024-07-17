@@ -68,9 +68,13 @@ public class BasketController {
 	            sessionEntry.put("count_price", data.get("count_price"));
 	            sessionData.add(sessionEntry);
 	        }
-	     // 서비스 계층의 메서드 호출하여 DB에 데이터 저장
-            basketService.saveBasketItems(sessionData);
-            System.out.println(sessionData);
+	        try {
+                basketService.saveBasketItems(sessionData, email);
+                System.out.println(sessionData);
+            } catch (Exception e) {
+                // 중복 데이터가 있는 경우 예외 처리
+                return ResponseEntity.badRequest().body("Duplicate entry detected");
+            }
 		}
 
         // 응답

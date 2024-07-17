@@ -1,33 +1,42 @@
 package com.bookdream.sbb.basket;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.bookdream.sbb.prod_repo.Prod_Books;
-import com.bookdream.sbb.prod_repo.Prod_BooksRepository;
-
-import lombok.RequiredArgsConstructor;
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class BasketService {
-	
-	@Autowired
-	private BasketRepository basketRepository;
-	private Prod_BooksRepository prodRepository;
-	
-    public void saveBasketItems(List<Map<String, Object>> sessionData) {
-        for (Map<String, Object> data : sessionData) {
-            Basket basket = new Basket();
-            basket.setEmail((String) data.get("email"));
-            basket.setBook_id((Integer) data.get("book_id"));
-            basket.setCount((Integer) data.get("count"));
-            basket.setCount_price((String) data.get("count_price"));
-            basketRepository.save(basket);
+    @Autowired
+    private BasketRepository basketRepository;
+
+    @Transactional
+    public void saveBasketItems(List<Map<String, Object>> sessionData, String email) {
+        List<Basket> basketsToSave = sessionData.stream()
+                .map(data -> {
+                    Integer bookId = Integer.valueOf(data.get("book_id").toString());
+                    Optional<Basket> existingBasket = basketRepository.findByBookIdAndEmail(bookId, email);
+                    if (existingBasket.isEmpty()) {
+                        Basket basket = new Basket();
+                        basket.setEmail(email);
+                        basket.setBook_id(bookId);
+                        basket.setCount(Integer.valueOf(data.get("count").toString()));
+                        basket.setCount_price(data.get("count_price").toString());
+                        return basket;
+                    } else {
+                        return null; // 중복된 항목은 제외
+                    }
+                })
+                .filter(basket -> basket != null) // null 값을 제외
+                .collect(Collectors.toList());
+
+        if (!basketsToSave.isEmpty()) {
+            basketRepository.saveAll(basketsToSave);
         }
     }
 }
+

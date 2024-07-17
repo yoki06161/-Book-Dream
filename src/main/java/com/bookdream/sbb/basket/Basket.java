@@ -35,5 +35,5 @@ public class Basket {
 	private String count_price;
 
 	@Column
-	private int book_id;
+	private Integer book_id;
 }
