@@ -8,6 +8,15 @@
 		gap: 50px;
 	}
 	
+	.l_genre_wrap {
+		position: fixed;
+		left: 100px;
+		padding: 10px;
+		background: #fff;
+		border: 1px solid #ddd;
+		border-radius: 10px;
+	}
+	
 	.l_intro_wrap {
 		display: -webkit-box;
 	    overflow: hidden;

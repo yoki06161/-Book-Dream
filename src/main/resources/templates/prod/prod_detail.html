@@ -47,8 +47,7 @@
 		<div th:each="rl:${r_list}">
 			<span th:text="'사용자 닉네임 : ' + ${rl.user}"></span> | 
 			<span th:text="${rl.time}"></span><br>
-			<div th:text="${rl.review}" class="review_cont"></div>
-			<br>
+			<pre th:text="${rl.review}" class="review_cont"></pre><br>
 			<!--this는 현재 실행중인 함수가 속한 객체?-->
 			<button onclick="show_answer(this)">답글보기</button>
 			<br>
@@ -62,7 +61,7 @@
 				<div th:each="al : ${a_list}" th:if="${al.review.id == rl.id}">
 					<div tH:text="'아이디 ' + ${al.id}"></div>
 					<!--{답변테이블.리뷰.리뷰테이블의 속성}으로 하면 리뷰테이블 속성불러오기 가능. 연결돼있으니까.-->
-					<div tH:text="'답글 ' + ${al.answer}"></div>
+					<pre tH:text="'답글 ' + ${al.answer}"></pre>
 					<hr>
 				</div>
 			</div>
