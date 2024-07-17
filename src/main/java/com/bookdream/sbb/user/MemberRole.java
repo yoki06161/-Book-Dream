@@ -1,5 +1,5 @@
-//package com.bookdream.sbb.user;
-//
-//public enum MemberRole {
-//    USER, ADMIN
-//}
+package com.bookdream.sbb.user;
+
+public enum MemberRole {
+    USER, ADMIN
+}
