@@ -1,7 +1,6 @@
 package com.bookdream.sbb.trade.chat;
 
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +30,8 @@ public class ChatRoom {
     private int newMessagesCountForReceiver = 0;
 
     private String lastMessageSenderId;
+
+    @Column(columnDefinition = "TEXT")
     private String lastMessage;  // 마지막 메시지 내용
 
     public String getChatRoomName() {
@@ -66,9 +67,3 @@ public class ChatRoom {
         return DateUtils.formatDateTime(lastMessageTime);
     }
 }
-
-
-
-
-
-

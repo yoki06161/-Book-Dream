@@ -117,15 +117,15 @@
                 console.log('Connected: ' + frame);
                 stompClient.subscribe('/topic/public', function (messageOutput) {
                     var message = JSON.parse(messageOutput.body);
-                    if (message.type === 'IMAGE') {
+                    if (message.senderId !== senderId) {
                         setTimeout(function () {
                             showMessage(message);
-                        }, 1000); // 1초의 딜레이 후 이미지를 표시
+                        });
                     } else {
                         showMessage(message);
                     }
                 });
-                setTimeout(fetchChatHistory, 1000); // 초기 채팅 기록 불러올 때 1초의 딜레이
+                fetchChatHistory(); // 초기 채팅 기록 불러오기
             });
         }
 
@@ -151,7 +151,7 @@
                     };
                     stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
                     resetImagePreview();
-                    setTimeout(fetchChatHistory, 1000); // 이미지 전송 후 1초의 딜레이 후 채팅 기록을 다시 불러옴
+                    setTimeout(fetchChatHistory);
                 };
                 reader.readAsDataURL(imageFile);
             }
@@ -285,7 +285,7 @@
                     data.forEach(chat => {
                         showMessage(chat); // 기존 메시지를 화면에 추가
                     });
-                }, 1000); // 1초의 딜레이 후 기존 메시지 표시
+                });
             })
             .catch(error => {
                 console.error('Error:', error);

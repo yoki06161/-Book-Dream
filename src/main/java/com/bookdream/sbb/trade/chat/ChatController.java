@@ -93,7 +93,12 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
-    public Chat sendMessage(Chat chatMessage, Principal principal) {
+    public Chat sendMessage(Chat chatMessage, Principal principal) throws InterruptedException {
+        // 이미지 메시지인 경우에만 1초 딜레이 추가
+        if (chatMessage.getType() == Chat.MessageType.IMAGE) {
+            Thread.sleep(1000);
+        }
+
         chatMessage.setCreatedAt(LocalDateTime.now());
         chatService.saveChat(chatMessage);
 
