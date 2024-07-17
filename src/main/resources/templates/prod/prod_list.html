@@ -28,7 +28,7 @@
 	
 	<!--b_list는 여기서 새로 만든 리스트. C_books의 리스트를 참조하겠단뜻-->
 	<!--each는 반복. for문이랑 같음. 그안에 있는것들을 반복하겠다.-->
-	<div th:each = "b_list : ${C_Books}" th:if="${b_genre} == ${b_list.book_genre}">
+	<div th:each = "b_list : ${C_Books}" th:if="${b_genre == b_list.book_genre}">
 		<div class="flex_wrap">
 			<!--|prod/다음부턴 controller에서 map으로 잡아줘야한다.-->
 			<a th:href="@{|prod/detail/${b_list.book_id}|}">
@@ -38,6 +38,24 @@
 		<div class="txt_wrap">
 			<a th:href="@{|prod/detail/${b_list.book_id}|}">
 				<!-- <div th:text = "${b_list.book_id}"></div> -->
+				<div th:text = "${b_list.book_title}"></div>
+				<div th:text = "${b_list.book_price}"></div>
+				<div th:text = "'장르 ' + ${b_list.book_genre}"></div>
+				<div th:text = "${b_list.book_writer}"></div>
+				<div th:text = "${b_list.book_intro}"></div>
+			</a>
+		</div>
+		</div>
+	<hr>
+	</div>
+	<!--책 전체 출력. /prod인건 b_genre값이 없어서 위의 코드가 실행안됨.-->
+	<div th:each = "b_list : ${C_Books}" th:if="${b_genre == ''}">
+		<div class="flex_wrap">
+			<a th:href="@{|prod/detail/${b_list.book_id}|}">
+				<img th:src = "${b_list.book_img}" />
+			</a>
+		<div class="txt_wrap">
+			<a th:href="@{|prod/detail/${b_list.book_id}|}">
 				<div th:text = "${b_list.book_title}"></div>
 				<div th:text = "${b_list.book_price}"></div>
 				<div th:text = "'장르 ' + ${b_list.book_genre}"></div>
