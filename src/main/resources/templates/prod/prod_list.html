@@ -1,19 +1,10 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
 	<title>상품페이지</title>
-	<style>
-		a {
-			text-decoration: none;
-		}
-		
-		.flex_wrap {
-			display: flex;
-			gap: 50px;
-		}
-		
-	</style>
+	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	</head>
 	<body>
+	<a th:href="@{|/prod|}">모두 보기</a>
 	<a th:href="@{|/prod?genre=베스트셀러|}">베스트 셀러</a> | <a th:href="@{|/prod?genre=소설|}">소설</a> 
 	| <a th:href="@{|/prod?genre=시/에세이|}">시/에세이</a> | <a th:href="@{|/prod?genre=인문학|}">인문학</a> 
 	| <a th:href="@{|/prod?genre=역사/문화|}">역사/문화</a><br>
@@ -40,14 +31,14 @@
 				<!--Crawling에서 builder로 정한 변수?명-->
 				<img th:src = "${b_list.book_img}" />
 			</a>
-		<div class="txt_wrap">
+		<div>
 			<a th:href="@{|prod/detail/${b_list.book_id}|}">
 				<!-- <div th:text = "${b_list.book_id}"></div> -->
 				<div th:text = "${b_list.book_title}"></div>
 				<div th:text = "${b_list.book_price}"></div>
 				<div th:text = "'장르 ' + ${b_list.book_genre}"></div>
 				<div th:text = "${b_list.book_writer}"></div>
-				<div th:text = "${b_list.book_intro}"></div>
+				<div th:text = "${b_list.book_intro}" class="l_intro_wrap"></div>
 			</a>
 		</div>
 		</div>
@@ -65,7 +56,7 @@
 				<div th:text = "${b_list.book_price}"></div>
 				<div th:text = "'장르 ' + ${b_list.book_genre}"></div>
 				<div th:text = "${b_list.book_writer}"></div>
-				<div th:text = "${b_list.book_intro}"></div>
+				<div th:text = "${b_list.book_intro}" class="l_intro_wrap"></div>
 			</a>
 		</div>
 		</div>
