@@ -21,10 +21,10 @@
     <input type="text" id="search_kw" th:value="${kw}">
     <button id="search_btn">검색</button>
 	
-	<form th:action="@{|/prod/${b_genre}|}" method="get" id="searchForm">
+	<form th:action="@{|/prod|}" method="get" id="searchForm">
+        <input type="hidden" id="send_genre" name="genre" th:value="${b_genre}">
         <input type="hidden" id="send_kw" name="kw" th:value="${kw}">
     </form>
-	
 	
 	<!--b_list는 여기서 새로 만든 리스트. C_books의 리스트를 참조하겠단뜻-->
 	<!--each는 반복. for문이랑 같음. 그안에 있는것들을 반복하겠다.-->
