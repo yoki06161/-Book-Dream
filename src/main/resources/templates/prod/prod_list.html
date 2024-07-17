@@ -21,7 +21,7 @@
     <input type="text" id="search_kw" th:value="${kw}">
     <button id="search_btn">검색</button>
 	
-	<form th:action="@{|/prod|}" method="get" id="searchForm">
+	<form th:action="@{|/prod/${b_genre}|}" method="get" id="searchForm">
         <input type="hidden" id="send_kw" name="kw" th:value="${kw}">
     </form>
 	

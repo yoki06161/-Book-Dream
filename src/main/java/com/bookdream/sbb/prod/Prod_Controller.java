@@ -37,11 +37,11 @@ public class Prod_Controller {
 	
 	// 제품 리스트
 	// prod로 들어오는 주소 여기로
-	@GetMapping("")
+	@GetMapping("/{genre}")
 	// 자바에서 html로 데이터 전달할때 쓰는게 model
 	// defaultValue는 kw값이 없을 경우 오류 안뜨게.
 	public String prod_list(Model model, @RequestParam(value = "kw", defaultValue = "") String kw, 
-			@RequestParam(value = "genre", defaultValue = "") String genre) throws IOException {
+			@PathVariable("genre") String genre) throws IOException {
 		
 //		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
 		// 크롤링된 데이터를 데이터베이스에 저장합니다.
