@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface KakaoUserRepository extends JpaRepository<KakaoUser, Long> {
 
-    Optional<KakaoUser> findByEmail(String email);
+	KakaoUser findByEmail(String email);
 
     boolean existsByEmail(String email);
 

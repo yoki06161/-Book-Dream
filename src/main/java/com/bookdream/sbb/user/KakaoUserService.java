@@ -11,25 +11,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KakaoUserService {
 
+	@Autowired
     private final KakaoUserRepository kakaoUserRepository;
     
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional(readOnly=true)
     public KakaoUser findKakaoUser(String email) {
-    	KakaoUser kakaoUser = kakaoUserRepository.findByEmail(email).orElseGet(()->{
-    		return new KakaoUser();
-    	});
-    	return kakaoUser;
+        return kakaoUserRepository.findByEmail(email);
     }
-    
 
     @Transactional
     public void createKakaoUser(KakaoUser kakaoUser) {
-    	String rawPassword = kakaoUser.getPassword();
-    	String encPassword = passwordEncoder.encode(rawPassword);
-    	kakaoUser.setPassword(encPassword);
+//    	String rawPassword = kakaoUser.getPassword();
+//    	String encPassword = passwordEncoder.encode(rawPassword);
+    	kakaoUser.setPassword(kakaoUser.getPassword());
         kakaoUserRepository.save(kakaoUser);
     }
 
