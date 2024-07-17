@@ -41,8 +41,47 @@ function init() {
             handleCheckboxChange(); // 체크박스 변경 시 이벤트 핸들러 호출
         }
     });
+	
+	// 주문 버튼 클릭 이벤트 리스너
+	orderButton.addEventListener('click', function() {
+	    // 체크된 항목들의 데이터를 담을 배열
+	    let selectedItems = [];
+
+	    let checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)'); // 체크박스들
+	    checkboxes.forEach(function(checkbox, index) {
+	        if (checkbox.checked) {
+	            let data = retrieveData(index); // 체크된 항목의 데이터를 가져옴 (index에 해당하는 데이터를 가져오는 함수 필요)
+	            selectedItems.push(data);
+	        }
+	    });
+		// 선택된 항목들을 세션 스토리지에 저장
+		sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+	});
 
     displayFormData(); // 데이터 표시 함수 호출
+}
+
+// retrieveData 함수 추가
+function retrieveData(index) {
+    // index를 이용해 필요한 데이터를 가져옴
+    const row = document.querySelector(`.row${index}`);
+	const bookImage = row.querySelector('img').src; // 행 내의 이미지를 선택
+    const bookId = row.querySelector('input[type="hidden"]').value;
+    const bookTitle = row.querySelector('.fs-5.fw-bold').textContent;
+    const bookWriter = row.querySelector('.fs-6').textContent;
+    const bookPrice = row.querySelector('.price').textContent;
+    const count = row.querySelector('select').value;
+    const countPrice = row.querySelector('.result').textContent;
+
+    return {
+        book_id: bookId,
+		book_img: bookImage,
+        book_title: bookTitle,
+        book_writer: bookWriter,
+        book_price: bookPrice,
+        count: count,
+        count_price: countPrice
+    };
 }
 
 // 데이터 표시 함수
@@ -246,8 +285,42 @@ function deleteItem(index, data) {
         let badgeCount = dataArray.length; // 장바구니 아이템 수 계산
         sessionStorage.setItem('badgeCount', badgeCount); // 세션 스토리지에 장바구니 아이템 수 저장
         document.getElementById('badge').textContent = badgeCount; // UI에서 장바구니 아이템 수 업데이트
+		
+		// 로그인한 사용자라면 장바구니 DB에서 해당 사용자의 해당 상품 삭제
+		//if (isAuthenticated) {
+		//    sendDataToServer(dataArray, csrfHeader, csrfToken);
+		//}
 
         // 삭제 후 페이지 새로고침
         location.reload();
     }
 }
+
+/*
+function sendDataToServer(dataArray, csrfHeader, csrfToken) {
+    // 배열을 JSON 문자열로 변환
+    let jsonData = JSON.stringify(dataArray);
+
+    fetch('/basket/delete', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
+        body: jsonData  // jsonData를 전송
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Network response was not ok.');
+        }
+    })
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+*/

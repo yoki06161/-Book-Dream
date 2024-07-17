@@ -32,8 +32,14 @@ public class Basket {
 	private Integer count;
 
 	@Column(length=50)
+
 	private String count_price;
 
+
+
+
 	@Column
+
 	private Integer book_id;
+
 }
