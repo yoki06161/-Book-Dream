@@ -40,16 +40,18 @@ public class Prod_Controller {
 	// prod로 들어오는 주소 여기로
 	@GetMapping("")
 	// 자바에서 html로 데이터 전달할때 쓰는게 model
-	public String prod_list(Model model) throws IOException {
-		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값(데이터 지우신듯
+	public String prod_list(Model model, @RequestParam(value = "kw", defaultValue = "") String kw) throws IOException {
 		
 //		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
 //		// 크롤링된 데이터를 데이터베이스에 저장합니다.
 //      prodService.saveBooks(book_list);
 
-      // 데이터베이스에서 저장된 데이터를 가져와서 모델에 추가합니다.
-      model.addAttribute("C_Books", prodService.getAllBooks());
-      // 크롤링된 데이터 그대로 출력 
+		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값(데이터 지우신듯
+//		model.addAttribute("C_Books", prodService.getAllBooks());
+		model.addAttribute("C_Books", prodService.getSearchBooks(kw));
+		model.addAttribute("kw", kw);
+		
+		// 크롤링된 데이터 그대로 출력 
 //		model.addAttribute("C_Books", book_list);
 //		System.out.println("모델값");
 //		System.out.println(model);
@@ -70,8 +72,6 @@ public class Prod_Controller {
 		model.addAttribute("r_list", prodService.getReview_List(book_id));
 		
 		// 답글 보여주기
-//		Prod_d_Answer answer = prodService.getAnswer_List(book_id);
-		// !!!!!!! 책아이디가 아닌 리뷰아이디를 갖고와야함
 		model.addAttribute("a_list", prodService.getAnswer_List());
 		
 		return "prod/prod_detail";
