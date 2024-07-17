@@ -14,8 +14,8 @@
 	</style>
 	</head>
 	<body>
-	<a href="">베스트 셀러</a>
-	<a href="#">소설</a>
+	<a th:href="@{|/prod?genre=베스트셀러|}">베스트 셀러</a><br>
+	<a th:href="@{|/prod?genre=소설|}">소설</a><br>
 	<a href="#">외국</a>
 	<!--검색-->
     <input type="text" id="search_kw" th:value="${kw}">
