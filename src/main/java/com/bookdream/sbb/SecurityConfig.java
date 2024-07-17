@@ -33,18 +33,17 @@ public class SecurityConfig {
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
                     XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
             .formLogin((formLogin) -> formLogin
-                .loginPage("/user/login")
+                .loginPage("/user/loginform")
+                .loginProcessingUrl("/user/login") 
                 .defaultSuccessUrl("/"))
             .logout((logout) -> logout
             	    .logoutUrl("/user/logout")
             	    .logoutSuccessUrl("/") // 예시로 /home 으로 설정
-            	    .addLogoutHandler(customLogoutHandler)
-            	)
-
+            	    .addLogoutHandler(customLogoutHandler))
             .oauth2Login((oauth2Login) -> oauth2Login
                 .loginPage("/oauth-login/login")
                 .defaultSuccessUrl("/")
-                .failureUrl("/oauth-login/login")
+                .failureUrl("/user/login")
                 .permitAll())
             .csrf((csrf) -> csrf.disable());
 

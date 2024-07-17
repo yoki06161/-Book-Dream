@@ -6,38 +6,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -50,39 +31,26 @@ public class UserController {
 
 	@Autowired
     private UserService userService;
+	
+	@GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("loginType", "user");
+        model.addAttribute("pageName", "스프링 시큐리티 로그인");
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    
-    @Autowired
-    private KakaoUserService kakaoUserService;
-    
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
-    
-//    @GetMapping(value = {"", "/"})
-//    public String home(Model model) {
-//        
-//        model.addAttribute("loginType", "security-login");
-//        model.addAttribute("pageName", "스프링 시큐리티 로그인");
-//
-//        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-//        GrantedAuthority auth = iter.next();
-//        String role = auth.getAuthority();
-//
-//        SiteUser loginMember = userService.getUserByEmail(loginId);
-//
-//        if (loginMember != null) {
-//            model.addAttribute("name", loginMember.getUsername());
-//        }
-//
-//        return "layout";
-//    }
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+        GrantedAuthority auth = iter.next();
+        String role = auth.getAuthority();
+
+        SiteUser loginMember = userService.getUserByEmail(loginId);
+
+        if (loginMember != null) {
+            model.addAttribute("name", loginMember.getUsername());
+        }
+        return "layout";
+    }
     
     @GetMapping("/signup")
     public String signupForm(UserCreateForm userCreateForm) {
@@ -92,12 +60,12 @@ public class UserController {
     @PostMapping("/signup")
     public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/signupform";
+            return "user/signupform";
         }
 
         if (!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())) {
             bindingResult.rejectValue("password2", "passwordIncorrect", "패스워드가 다릅니다.");
-            return "/signupform";
+            return "user/signupform";
         }
 
         Map<String, String> map = new HashMap<>();
@@ -114,11 +82,11 @@ public class UserController {
             } else {
                 bindingResult.reject("signupFailed", e.getMessage());
             }
-            return "/signupform";
+            return "user/signupform";
         } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", e.getMessage());
-            return "/signupform";
+            return "user/signupform";
         }
 
         return "redirect:/";
@@ -133,7 +101,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modifypwform")
     public String modifypwform(UserModifyPwForm userModifyForm) {
-        return "/modifypwform";
+        return "user/modifypwform";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -169,7 +137,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modifynameform")
     public String modifynameform(UserModifyNameForm userModifyNameForm) {
-    	return "/modifynameform";
+    	return "user/modifynameform";
     }
     
     @PreAuthorize("isAuthenticated()")
@@ -178,24 +146,19 @@ public class UserController {
         SiteUser user = this.userService.getUser(principal.getName());
         
         if (bindingResult.hasErrors()) {
-            return "/modifynameform";
-        }
-        
-        if (!this.userService.isSamePassword(user, userModifyNameForm.getCurrentPassword())) {
-            bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
-            return "/modifynameform";
+            return "user/modifynameform";
         }
         
         if (user.getLastNameChangeDate() != null) {
         	if (LocalDateTime.now().isBefore(user.getLastNameChangeDate().plusDays(14))) {
         		bindingResult.rejectValue("nameChangeLimit","beforeNameChangeLimit", "이름을 변경한 지 14일이 지나지 않았습니다.");
-        		return "/modifynameform";
+        		return "user/modifynameform";
         	}
         }
         
         if (userModifyNameForm.getNewName().equals(user.getUsername())) {
             bindingResult.rejectValue("newName", "sameAsCurrentName", "현재 이름과 같습니다.");
-            return "/modifynameform";
+            return "user/modifynameform";
         }
         	
         try {
@@ -203,7 +166,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("modifyNameFailed", e.getMessage());
-            return "/modifynameform";
+            return "user/modifynameform";
         }
         
         return "redirect:/";
@@ -216,7 +179,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/userdel")
     public String userdel(UserDelForm userDelForm) {
-        return "/userdel";
+        return "user/userdel";
     }
     
     @PreAuthorize("isAuthenticated()")
@@ -225,12 +188,12 @@ public class UserController {
         SiteUser user = this.userService.getUser(principal.getName());
         
         if (bindingResult.hasErrors()) {
-            return "/userdel";
+            return "user/userdel";
         }
 
         if (!this.userService.isSamePassword(user, userDelForm.getCurrentPassword())) {
             bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
-            return "/userdel";
+            return "user/userdel";
         }
         
         try {
@@ -238,7 +201,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("deleteUserFailed", e.getMessage());
-            return "/userdel";
+            return "user/userdel";
         }
         
      // 로그아웃 처리
@@ -252,7 +215,7 @@ public class UserController {
     
     @GetMapping("/userbuy")
     public String userbuy() {
-        return "/userbuy";
+        return "user/userbuy";
     }
     
 
