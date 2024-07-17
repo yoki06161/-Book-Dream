@@ -34,22 +34,24 @@ public class Prod_Controller {
 	// @Autowired 이미 생성된 빈을 가져온단 뜻
 	@Autowired
 	private final Prod_Service prodService;
-//	private final review_repository re_repo;
 	
-	// 리스트
+	// 제품 리스트
 	// prod로 들어오는 주소 여기로
 	@GetMapping("")
 	// 자바에서 html로 데이터 전달할때 쓰는게 model
-	public String prod_list(Model model, @RequestParam(value = "kw", defaultValue = "") String kw) throws IOException {
+	// defaultValue는 kw값이 없을 경우 오류 안뜨게.
+	public String prod_list(Model model, @RequestParam(value = "kw", defaultValue = "") String kw, 
+			@RequestParam(value = "genre", defaultValue = "") String genre) throws IOException {
 		
 //		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
-//		// 크롤링된 데이터를 데이터베이스에 저장합니다.
-//      prodService.saveBooks(book_list);
+		// 크롤링된 데이터를 데이터베이스에 저장합니다.
+//		prodService.saveBooks(book_list);
 
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값(데이터 지우신듯
 //		model.addAttribute("C_Books", prodService.getAllBooks());
 		model.addAttribute("C_Books", prodService.getSearchBooks(kw));
 		model.addAttribute("kw", kw);
+		model.addAttribute("b_genre", genre);
 		
 		// 크롤링된 데이터 그대로 출력 
 //		model.addAttribute("C_Books", book_list);
@@ -79,14 +81,16 @@ public class Prod_Controller {
 	
 	// 리뷰 쓰기
 	@PostMapping("/detail/write_review/{r_id}")
-	public String write_review(Model model,@PathVariable("r_id") Integer id, @RequestParam("w_content") String content) {
+	public String write_review(Model model,@PathVariable("r_id") Integer id, 
+			@RequestParam("w_content") String content) {
 		this.prodService.Write_Review(content, id);
 		return String.format("redirect:/prod/detail/%s", id);
 	}
 	
 	// 리뷰 답글 쓰기
 	@PostMapping("/detail/write_answer/{b_id}/{a_id}")
-	public String write_answer(Model model, @PathVariable("b_id") Integer b_id, @PathVariable("a_id") Prod_d_Review id, @RequestParam("a_content") String content) {
+	public String write_answer(Model model, @PathVariable("b_id") Integer b_id, 
+			@PathVariable("a_id") Prod_d_Review id, @RequestParam("a_content") String content) {
 		// 답글 쓰기.()안의 값이 서비스의 ()랑 값이 같아야한다?
 		this.prodService.Write_Answer(id, content);
 		return String.format("redirect:/prod/detail/%s", b_id);

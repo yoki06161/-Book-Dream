@@ -14,7 +14,7 @@
 	</style>
 	</head>
 	<body>
-	<a href="#">베스트 셀러</a>
+	<a href="">베스트 셀러</a>
 	<a href="#">소설</a>
 	<a href="#">외국</a>
 	<!--검색-->
@@ -28,10 +28,10 @@
 	
 	<!--b_list는 여기서 새로 만든 리스트. C_books의 리스트를 참조하겠단뜻-->
 	<!--each는 반복. for문이랑 같음. 그안에 있는것들을 반복하겠다.-->
-	<div th:each = "b_list : ${C_Books}">
+	<div th:each = "b_list : ${C_Books}" th:if="${b_genre} == ${b_list.book_genre}">
 		<div class="flex_wrap">
 			<!--|prod/다음부턴 controller에서 map으로 잡아줘야한다.-->
-			<a th:href="@{|prod/detail?book_id=${b_list.book_id}|}">
+			<a th:href="@{|prod/detail/${b_list.book_id}|}">
 				<!--Crawling에서 builder로 정한 변수?명-->
 				<img th:src = "${b_list.book_img}" />
 			</a>
@@ -40,6 +40,7 @@
 				<!-- <div th:text = "${b_list.book_id}"></div> -->
 				<div th:text = "${b_list.book_title}"></div>
 				<div th:text = "${b_list.book_price}"></div>
+				<div th:text = "'장르 ' + ${b_list.book_genre}"></div>
 				<div th:text = "${b_list.book_writer}"></div>
 				<div th:text = "${b_list.book_intro}"></div>
 			</a>
