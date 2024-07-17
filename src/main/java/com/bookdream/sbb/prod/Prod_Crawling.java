@@ -38,7 +38,7 @@ public class Prod_Crawling {
         List<Prod_Books> book_list = new ArrayList<>();
         
         try {
-            String url = "https://product.kyobobook.co.kr/bestseller/online?period=001&dsplDvsnCode=001&dsplTrgtDvsnCode=004&saleCmdtClstCode=01";
+            String url = "https://product.kyobobook.co.kr/bestseller/online?period=001&dsplDvsnCode=001&dsplTrgtDvsnCode=004&saleCmdtClstCode=19";
             driver.get(url);
 
 //            // 스크롤 내리기용 자바스크립트
@@ -87,7 +87,7 @@ public class Prod_Crawling {
             			.book_price(price)
             			.book_writer(writer)
             			.book_intro(intro)
-            			.book_genre("소설")
+            			.book_genre("역사/문화")
             			.build();
 //            	System.out.println("북스" + books);
             	

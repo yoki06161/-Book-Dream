@@ -78,7 +78,6 @@ public class Prod_Service {
 	// 리뷰 리스트 갖고오기. 책에 맞는 리뷰갖고오기
 	public List<Prod_d_Review> getReview_List(Integer book_id) {
 		List<Prod_d_Review> r_list = this.re_repo.findByBook(book_id);
-		System.out.println("#################" + this.re_repo.findAll());
 		return r_list;
 	}
 	

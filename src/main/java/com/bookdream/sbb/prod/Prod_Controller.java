@@ -44,7 +44,7 @@ public class Prod_Controller {
 			@RequestParam(value = "genre", defaultValue = "") String genre) throws IOException {
 		
 //		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
-		// 크롤링된 데이터를 데이터베이스에 저장합니다.
+////		 크롤링된 데이터를 데이터베이스에 저장합니다.
 //		prodService.saveBooks(book_list);
 
 		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값(데이터 지우신듯

@@ -14,11 +14,16 @@
 	</style>
 	</head>
 	<body>
-	<a th:href="@{|/prod?genre=베스트셀러|}">베스트 셀러</a><br>
-	<a th:href="@{|/prod?genre=소설|}">소설</a><br>
-	<a href="#">외국</a>
+	<a th:href="@{|/prod?genre=베스트셀러|}">베스트 셀러</a> | <a th:href="@{|/prod?genre=소설|}">소설</a> 
+	| <a th:href="@{|/prod?genre=시/에세이|}">시/에세이</a> | <a th:href="@{|/prod?genre=인문학|}">인문학</a> 
+	| <a th:href="@{|/prod?genre=역사/문화|}">역사/문화</a><br>
+	<!--
+	<div th:if="${C_Books != null}" th:text="|${#lists.size(C_Books.book_title)}개의 책|"></div>
+	<div th:if="${C_Books == null}" th:text="|0개의 책|"></div>
+	-->
+	
 	<!--검색-->
-    <input type="text" id="search_kw" th:value="${kw}">
+    <input type="text" id="search_kw" th:value="${kw}" placeholder="제목 또는 작가명으로 검색">
     <button id="search_btn">검색</button>
 	
 	<form th:action="@{|/prod|}" method="get" id="searchForm">
