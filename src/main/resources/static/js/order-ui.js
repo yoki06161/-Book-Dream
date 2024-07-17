@@ -1,7 +1,12 @@
 function init() {
-  // list 페이지에서 체크된 항목들의 데이터가 담긴 배열 가져오기
+  // list 페이지에서 체크된 항목들의 데이터가 담긴 배열+총가격 가져오기
   let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems'));
-  console.log(selectedItems);
+  let totalSum = JSON.parse(sessionStorage.getItem('totalSum'));
+
+  let totalSumElement = document.getElementById('totalSum');
+  if (totalSumElement) {
+      totalSumElement.textContent = totalSum.toLocaleString() + '원';
+  }
 
   const form = document.getElementById('orderForm');
   const submitBtn = document.getElementById('pay');

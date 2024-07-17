@@ -1,7 +1,7 @@
 // 전역 변수 선언
 let totalSum = 0; // 총 가격 합계 변수 선언
 
-// 주문하기 버튼 상태 변경
+// 주문하기 버튼 상태 변경(전역 함수)
 function updateButtonState() {
     const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)');
     const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
@@ -257,15 +257,22 @@ function initCheckboxes() {
 
 // 주문 버튼 클릭 이벤트 리스너
 document.getElementById('order').addEventListener('click', function() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked:not(#select_all)');
-    const selectedItems = Array.from(checkboxes).map(function(checkbox) {
-        let index = checkbox.parentElement.parentElement.rowIndex - 1; // 행 인덱스 계산
-        return retrieveData(index); // 인덱스에 해당하는 데이터 반환
+    let selectedItems = [];
+    let checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#select_all)'); // 체크박스들
+    let totalSum = parseFloat(document.getElementById('totalSum').textContent.replace(/[^\d.-]/g, '')); // 총 가격 값
+
+    checkboxes.forEach(function(checkbox, index) {
+        if (checkbox.checked) {
+            let data = retrieveData(index); // 체크된 항목의 데이터를 가져옴 (index에 해당하는 데이터를 가져오는 함수 필요)
+            selectedItems.push(data);
+        }
     });
 
-    // 주문을 처리하는 코드 작성
-    // 예: console.log(selectedItems);
+    // 선택된 항목들과 총가격을 세션 스토리지에 저장
+    sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+    sessionStorage.setItem('totalSum', totalSum); // totalSum을 숫자 값으로 저장
 });
+
 
 
 // 초기화 함수
