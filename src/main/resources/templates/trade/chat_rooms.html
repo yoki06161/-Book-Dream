@@ -84,11 +84,9 @@
                 stompClient.subscribe('/topic/chatRoomsUpdate', function (messageOutput) {
                     var chatRoom = JSON.parse(messageOutput.body);
                     console.log('Received message: ', chatRoom);
-                    if (chatRoom.type === 'chatRoomsUpdate') {
-                        setTimeout(function () {
-                            updateChatRoomList(chatRoom);
-                        });
-                    }
+                    setTimeout(function () {
+                        updateChatRoomList(chatRoom);
+                    });
                 });
             });
         }
@@ -138,5 +136,7 @@
             </li>
         </ul>
     </div>
+
+    
 </body>
 </html>
