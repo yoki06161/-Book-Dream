@@ -1,6 +1,5 @@
 package com.bookdream.sbb.prod;
 
-import com.bookdream.sbb.DataNotFoundException;
 import com.bookdream.sbb.prod_repo.*;
 import com.bookdream.sbb.user.SiteUser;
 import com.bookdream.sbb.user.UserRepository;
@@ -122,13 +121,15 @@ public class Prod_Service {
 		return s_list;
 	}
     
-    // 두목님 유저 정보 갖고오기.
+    // 테스트 2
     public SiteUser getBoss_user(String user) {
-    	Optional<SiteUser> username = user_repo.findByusername(user);
+    	Optional<SiteUser> username = user_repo.findByUsername(user);
+    	System.out.println("###########################서비스 유저 값 확인 " + user);
+    	System.out.println("###########################서비스 유저 값 확인2 " + username);
     	if(username.isPresent()) {
     		return username.get();
     	} else {
-            throw new DataNotFoundException("siteuser not found!!");
-        }
+    		return null;
+    	}
 	}
 }

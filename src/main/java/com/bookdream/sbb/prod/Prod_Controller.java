@@ -92,6 +92,7 @@ public class Prod_Controller {
 			Principal pc) {
 		
 		SiteUser user = prodService.getBoss_user(pc.getName());
+		System.out.println("####################컨트롤러 유저 값 확인 " + user);
 		
 		this.prodService.Write_Review(content, id, user);
 		return String.format("redirect:/prod/detail/%s", id);
