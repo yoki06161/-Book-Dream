@@ -21,6 +21,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -41,6 +42,7 @@ implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // Sprin
     implementation 'org.springframework.boot:spring-boot-devtools' // 애플리케이션의 자동 재시작, 빠른 리로드 및 기타 개발 편의 기능을 제공합니다.
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // 애플리케이션에서 유효성 검사를 쉽게 수행할 수 있도록 지원하는 의존성입니다.
 	implementation 'org.springframework.boot:spring-boot-starter-mail' // 이메일 사용
+	implementation 'com.github.iamport:iamport-rest-client-java:0.2.23'	  // 아임포트 결제 api 사용
 }
 
 tasks.named('test') {

@@ -52,7 +52,7 @@ public class BasketController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<String> basketAdd(@RequestBody List<Map<String, Object>> dataArray, Model model) {
+	public ResponseEntity<String> basketAdd(@RequestBody List<Map<String, Object>> dataArray) {
 		// 현재 인증된 사용자의 이메일 가져오기
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		System.out.println(email);
