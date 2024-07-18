@@ -25,17 +25,11 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{|/basket|}">장바구니(아이콘)</a>
                 </li>
-<!--                 <li class="nav-item">
-                    <p th:if="${name == null}">로그인 해주세요!</p>
-                </li> -->
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/login|}">로그인</a>
                 </li>
-	            <li class="nav-item">
-                    <p th:unless="${name == null}" th:text="${name} + '님 환영합니다!'"></p>
-                </li>
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/modifynameform|}">마이페이지</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/userinfo|}">마이페이지</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/signup|}">회원가입</a>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3" style="display:flex">
+    <div style="width:230px;padding:0 10px">
+        <nav th:replace="~{user/mynav :: headerfragment}"></nav>
+    </div>
+    <div class="main-content" style="width:700px;padding-left:50px">
+	    <h2>사용자 정보</h2>
+	    <hr>
+	    <div class="mb-3">
+	        <label for="name" class="form-label">이름</label>
+	        <span th:text="${name}" class="form-control"></span>
+	        <label for="email" class="form-label">이메일</label>
+	        <span th:text="${email}" class="form-control"></span>
+	    </div>
+    </div>
+</div>
+</html>
