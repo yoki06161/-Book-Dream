@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+//두목님꺼 합치고 테이블 새로 만들어지는 오류 해결.
+//테이블 명 지정함으로써 새로 안만들어진다.
+@Table (name = "prod_books")
 @ToString
 @Builder
 @Getter
