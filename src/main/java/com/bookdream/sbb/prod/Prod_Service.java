@@ -57,7 +57,7 @@ public class Prod_Service {
 	public Prod_Books getProdBooks(Integer book_id) {
 		// Optional임시 데이터 타입인듯. 무슨 데이터 타입이든 받아들이는
 		// select * from prodRepository where id = book_id라 생각하자.
-		Optional<Prod_Books> opb = this.prodRepository.findById(book_id);
+		Optional<Prod_Books> opb = prodRepository.findById(book_id);
 		System.out.println("##############opb는 ? " + opb);
 		return opb.get();
 	}
@@ -83,7 +83,7 @@ public class Prod_Service {
 	// ###################리뷰
 	// 리뷰 리스트 갖고오기. 책에 맞는 리뷰갖고오기
 	public List<Prod_d_Review> getReview_List(Integer book_id) {
-		List<Prod_d_Review> r_list = this.re_repo.findByBook(book_id);
+		List<Prod_d_Review> r_list = re_repo.findByBook(book_id);
 		return r_list;
 	}
 	
@@ -95,7 +95,7 @@ public class Prod_Service {
 		pr.setTime(LocalDate.now());
 		pr.setUser(user);
 		
-		this.re_repo.save(pr);
+		re_repo.save(pr);
 	}
 	
 	// 리뷰 답글 갖고오기.
@@ -112,18 +112,11 @@ public class Prod_Service {
 		pa.setReview(review_id);
 		pa.setUser(user);
 		
-		this.ra_repo.save(pa);
+		ra_repo.save(pa);
 	}
 	
-	// 두목님꺼 테스트
-	// 내가 추가한 사용자 정보 갖고오기
-    public List<SiteUser> getBoss_d() {
-    	List<SiteUser> s_list = user_repo.findAll();
-		return s_list;
-	}
-    
-    // 테스트 2
-    public String getBoss_user(String user) {
+    // 리뷰 및 답글에 로그인한 사용자 닉네임 넣기.
+    public String getUserName(String user) {
     	// 로그인할떄 email값이 들어와서 email = user인 값을 db로 찾는다. where email = user 
     	Optional<SiteUser> user_email = user_repo.findByEmail(user);
     	
