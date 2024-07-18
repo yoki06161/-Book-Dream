@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.Mapping;
@@ -83,7 +84,11 @@ public class Prod_Controller {
 	}
 	
 	// 리뷰 쓰기
+	// PreAuthorize는 로그인 여부 확인. 로그인 해야만 사용할 수 있음.
+	// authenticated는 인증 된 사용자란다.
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/detail/write_review/{r_id}")
+	// Principal은 스프링시큐리티 쓸떄 쓰인다나. 사용자 관련인거같음
 	public String write_review(Model model,@PathVariable("r_id") Integer id, 
 			@RequestParam("w_content") String content,
 			Principal pc) {
@@ -96,7 +101,7 @@ public class Prod_Controller {
 	}
 	
 	// 리뷰 답글 쓰기
-	// Principal은 스프링시큐리티 쓸떄 쓰인다나. 사용자 관련인거같음
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/detail/write_answer/{b_id}/{a_id}")
 	public String write_answer(Model model, @PathVariable("b_id") Integer b_id, 
 			@PathVariable("a_id") Prod_d_Review id, @RequestParam("a_content") String content,
