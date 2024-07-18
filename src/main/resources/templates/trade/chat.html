@@ -89,26 +89,46 @@
             cursor: pointer;
             margin-right: 10px;
         }
+        .image-preview {
+            display: none;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .image-preview img {
+            max-width: 50px;
+            margin-right: 10px;
+        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
     <script type="text/javascript">
         var stompClient = null;
         var senderId = '[[${senderId}]]';
         var chatRoomId = '[[${chatRoomId}]]';
         var lastMessageDate = null;
+        var imageFile = null;
+
         function connect() {
             var socket = new SockJS('/ws');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
                 stompClient.subscribe('/topic/public', function (messageOutput) {
-                    showMessage(JSON.parse(messageOutput.body));
+                    var message = JSON.parse(messageOutput.body);
+                    if (message.senderId !== senderId) {
+                        setTimeout(function () {
+                            showMessage(message);
+                        });
+                    } else {
+                        showMessage(message);
+                    }
                 });
                 fetchChatHistory(); // 초기 채팅 기록 불러오기
             });
         }
+
         function sendMessage() {
             var messageContent = document.getElementById('chat-outgoing-msg').value.trim();
             if (messageContent && stompClient) {
@@ -120,11 +140,7 @@
                 };
                 stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
                 document.getElementById('chat-outgoing-msg').value = '';
-            }
-        }
-
-        function sendImage(imageFile) {
-            if (imageFile && stompClient) {
+            } else if (imageFile && stompClient) {
                 var reader = new FileReader();
                 reader.onload = function(event) {
                     var chatMessage = {
@@ -134,9 +150,27 @@
                         type: 'IMAGE'
                     };
                     stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+                    resetImagePreview();
+                    setTimeout(fetchChatHistory);
                 };
                 reader.readAsDataURL(imageFile);
             }
+        }
+
+        function resetImagePreview() {
+            imageFile = null;
+            document.querySelector('.image-preview').style.display = 'none';
+            document.querySelector('.image-preview img').src = '';
+            document.getElementById('chat-image-input').value = '';
+        }
+
+        function showImagePreview(file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                document.querySelector('.image-preview img').src = event.target.result;
+                document.querySelector('.image-preview').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
         }
 
         function showMessage(message) {
@@ -147,6 +181,7 @@
                 day: 'numeric',
                 weekday: 'long'
             });
+
             if (lastMessageDate !== messageDate) {
                 var dateSeparator = document.createElement('div');
                 dateSeparator.classList.add('date-separator');
@@ -156,10 +191,10 @@
                 chatBox.appendChild(dateSeparator);
                 lastMessageDate = messageDate;
             }
+
             var messageElement = document.createElement('div');
             if (message.senderId === senderId) {
                 messageElement.classList.add('outgoing_msg');
-                messageElement.innerHTML = `
                 messageElement.innerHTML = message.type === 'IMAGE' ? `
                     <div class="sent_msg">
                         <img src="${message.message}" alt="image" style="max-width: 100%; height: auto;" />
@@ -173,7 +208,6 @@
                 `;
             } else {
                 messageElement.classList.add('received_msg');
-                messageElement.innerHTML = `
                 messageElement.innerHTML = message.type === 'IMAGE' ? `
                     <div class="received_withd_msg">
                         <img src="${message.message}" alt="image" style="max-width: 100%; height: auto;" />
@@ -183,11 +217,21 @@
                     <div class="received_withd_msg">
                         <p>${message.message}</p>
                         <span class="time_date">${new Date(message.createdAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                `;
+            }
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            connect();
 
             const chatOutgoingButton = document.getElementById('chat-outgoing-button');
             const chatOutgoingMsg = document.getElementById('chat-outgoing-msg');
             const chatBox = document.getElementById('chat-box');
             const chatImageInput = document.getElementById('chat-image-input');
+            const imageSendButton = document.getElementById('chat-image-send');
 
             chatOutgoingButton.addEventListener('click', sendMessage);
 
@@ -198,8 +242,11 @@
             });
 
             chatImageInput.addEventListener('change', function (event) {
-                sendImage(event.target.files[0]);
+                imageFile = event.target.files[0];
+                showImagePreview(imageFile);
             });
+
+            imageSendButton.addEventListener('click', sendMessage);
 
             const leaveChatButton = document.getElementById('leave-chat-button');
             leaveChatButton.addEventListener('click', function () {
@@ -214,11 +261,13 @@
                         }
                     });
             });
+
             const backButton = document.getElementById('back-button');
             backButton.addEventListener('click', function () {
                 window.location.href = '/trade/chat/rooms';
             });
         });
+
         function fetchChatHistory() {
             fetch(`/trade/chat/history?chatRoomId=${chatRoomId}`, {
                 method: 'GET',
@@ -230,10 +279,12 @@
                 return response.json();
             })
             .then(data => {
-                var chatBox = document.getElementById('chat-box');
-                chatBox.innerHTML = '';
-                data.forEach(chat => {
-                    showMessage(chat); // 기존 메시지를 화면에 추가
+                setTimeout(function() {
+                    var chatBox = document.getElementById('chat-box');
+                    chatBox.innerHTML = '';
+                    data.forEach(chat => {
+                        showMessage(chat); // 기존 메시지를 화면에 추가
+                    });
                 });
             })
             .catch(error => {
@@ -241,6 +292,7 @@
             });
         }
     </script>
+
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
         integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
@@ -264,6 +316,10 @@
                 <div class="container-fluid chat_section" id="chat-box"></div>
                 <div class="type_msg mt-3">
                     <div class="input_msg_write d-flex">
+                        <div class="image-preview">
+                            <img src="" alt="Image preview">
+                            <button id="chat-image-send" class="btn btn-primary">전송</button>
+                        </div>
                         <label for="chat-image-input" class="btn btn-secondary">
                             <i class="fas fa-paperclip"></i>
                         </label>

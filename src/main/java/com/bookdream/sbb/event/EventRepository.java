@@ -15,10 +15,10 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     // 특정 키워드를 포함하는 이벤트 검색
     @Query("SELECT e FROM Event e WHERE e.title LIKE %:kw% OR e.description LIKE %:kw%")
     Page<Event> findAllByKeyword(@Param("kw") String kw, Pageable pageable);
-
+    
     // 이벤트 시작 날짜를 기준으로 역순 정렬된 모든 이벤트를 페이지로 반환
     Page<Event> findAllByOrderByStartDateDesc(Pageable pageable);
-
+    
     // 이벤트 제목을 기반으로 단일 이벤트 검색
     Event findByTitle(String title);
 
