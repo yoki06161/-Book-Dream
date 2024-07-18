@@ -32,10 +32,8 @@ public class ChatService {
         chat.setCreatedAt(LocalDateTime.now());
         Chat savedChat = chatRepository.save(chat);
 
-        // 새로운 메시지가 저장될 때 새로운 메시지 카운트를 업데이트합니다.
         updateNewMessagesCount(chat.getChatRoomId(), chat.getSenderId());
 
-        // 채팅방의 마지막 메시지와 시간을 업데이트합니다.
         chatRoomRepository.findById(chat.getChatRoomId()).ifPresent(chatRoom -> {
             if (chat.getType() == Chat.MessageType.IMAGE) {
                 chatRoom.setLastMessage("사진을 보냈습니다.");
@@ -45,6 +43,9 @@ public class ChatService {
             chatRoom.setLastMessageTime(chat.getCreatedAt());
             chatRoom.setLastMessageSenderId(chat.getSenderId());
             chatRoomRepository.save(chatRoom);
+
+            // 채팅방 목록 갱신을 위한 알림 전송
+            messagingTemplate.convertAndSend("/topic/chatRoomsUpdate", chatRoom);
         });
 
         return savedChat;
