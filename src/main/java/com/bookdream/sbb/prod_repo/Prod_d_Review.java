@@ -34,7 +34,7 @@ public class Prod_d_Review {
 	private Integer book;
 	
 	// 유저 이름
-	@ManyToOne
+	@Column(length = 200)
 	private String user;
 	
 	// 리뷰내용

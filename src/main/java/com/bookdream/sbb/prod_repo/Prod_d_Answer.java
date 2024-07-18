@@ -29,8 +29,8 @@ public class Prod_d_Answer {
 	private Integer id;
 	
 	// 유저 이름
-	@ManyToOne
-	private SiteUser user;
+	@Column(length = 200)
+	private String user;
 	
 	// 답변
 	@Column(columnDefinition = "TEXT")

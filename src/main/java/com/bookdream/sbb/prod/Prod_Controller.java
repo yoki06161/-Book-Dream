@@ -106,7 +106,7 @@ public class Prod_Controller {
 			@PathVariable("a_id") Prod_d_Review id, @RequestParam("a_content") String content,
 			Principal pc) {
 		// 두목님 테스트
-		SiteUser user = prodService.getBoss_user(pc.getName());
+		String user = prodService.getBoss_user(pc.getName());
 		
 		this.prodService.Write_Answer(id, content, user);
 		return String.format("redirect:/prod/detail/%s", b_id);

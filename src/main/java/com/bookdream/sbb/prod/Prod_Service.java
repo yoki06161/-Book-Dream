@@ -88,7 +88,7 @@ public class Prod_Service {
 	}
 	
 	// 리뷰 쓰기
-	public void Write_Review(String review, Integer book_id, SiteUser user) {
+	public void Write_Review(String review, Integer book_id, String user) {
 		Prod_d_Review pr = new Prod_d_Review();
 		pr.setReview(review);
 		pr.setBook(book_id);
@@ -105,7 +105,7 @@ public class Prod_Service {
 	}
 	
 	// 리뷰 답글 쓰기
-	public void Write_Answer(Prod_d_Review review_id, String content, SiteUser user) {
+	public void Write_Answer(Prod_d_Review review_id, String content, String user) {
 		Prod_d_Answer pa = new Prod_d_Answer();
 		pa.setAnswer(content);
 		pa.setTime(LocalDate.now());
@@ -129,14 +129,11 @@ public class Prod_Service {
     	
     	if(user_email.isPresent()) {
     		// username.get()이라고만 쓰면 com.bookdream.sbb.user.SiteUser@67b61fcd식으로 경로만 뜬다.
-        	// get원하는 칼럼명()을 해야 그 칼럼의 값을 갖고옴.
-    		// 찾은 optional값을 site유저 형식으로 저장?
-    		SiteUser s_user = user_email.get();
-    		// 위의 site유저형식으로 저장한 거에서 username칼럼 갖고오기
-    	    String user_name = s_user.getUsername();
-        	    
+        	// .get()모두.get원하는 칼럼명(). get원하는 칼럼명()을 해야 그 칼럼의 값을 갖고옴.
+    		// SiteUser의 username칼럼 자체가 string 형태라 stieuser user_name = 으로 못불러온다.
+    		String user_name = user_email.get().getUsername();
+
     	    System.out.println("###########################서비스 user값 " + user);
-    	    System.out.println("###########################서비스 s_user값 " + s_user);
     	    System.out.println("###########################서비스 user_name값" + user_name);
         	System.out.println("###########################서비스 user_email.get()값" + user_email.get());
         	
