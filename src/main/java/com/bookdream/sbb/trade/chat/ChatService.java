@@ -37,7 +37,11 @@ public class ChatService {
 
         // 채팅방의 마지막 메시지와 시간을 업데이트합니다.
         chatRoomRepository.findById(chat.getChatRoomId()).ifPresent(chatRoom -> {
-            chatRoom.setLastMessage(chat.getMessage());
+            if (chat.getType() == Chat.MessageType.IMAGE) {
+                chatRoom.setLastMessage("사진을 보냈습니다.");
+            } else {
+                chatRoom.setLastMessage(chat.getMessage());
+            }
             chatRoom.setLastMessageTime(chat.getCreatedAt());
             chatRoom.setLastMessageSenderId(chat.getSenderId());
             chatRoomRepository.save(chatRoom);

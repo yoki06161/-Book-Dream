@@ -17,6 +17,8 @@
             height: 600px;
             border: 1px solid #ddd;
             padding: 10px;
+            position: relative;
+            transition: filter 0.3s ease;
         }
         .outgoing_msg {
             text-align: right;
@@ -81,6 +83,7 @@
         .input_msg_write {
             position: relative;
             display: flex;
+            transition: filter 0.3s ease;
         }
         .input_msg_write input[type="file"] {
             display: none;
@@ -92,11 +95,29 @@
         .image-preview {
             display: none;
             align-items: center;
-            margin-bottom: 10px;
+            justify-content: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            flex-direction: column;
+            z-index: 1000;
         }
         .image-preview img {
-            max-width: 50px;
-            margin-right: 10px;
+            max-width: 200px;
+            margin-bottom: 10px;
+        }
+        .image-preview button {
+            margin: 5px;
+        }
+        .blurred {
+            filter: blur(5px);
+            pointer-events: none;
         }
     </style>
 
@@ -162,6 +183,8 @@
             document.querySelector('.image-preview').style.display = 'none';
             document.querySelector('.image-preview img').src = '';
             document.getElementById('chat-image-input').value = '';
+            document.querySelector('.chat_section').classList.remove('blurred');
+            document.querySelector('.input_msg_write').classList.remove('blurred');
         }
 
         function showImagePreview(file) {
@@ -169,6 +192,8 @@
             reader.onload = function(event) {
                 document.querySelector('.image-preview img').src = event.target.result;
                 document.querySelector('.image-preview').style.display = 'flex';
+                document.querySelector('.chat_section').classList.add('blurred');
+                document.querySelector('.input_msg_write').classList.add('blurred');
             };
             reader.readAsDataURL(file);
         }
@@ -232,6 +257,7 @@
             const chatBox = document.getElementById('chat-box');
             const chatImageInput = document.getElementById('chat-image-input');
             const imageSendButton = document.getElementById('chat-image-send');
+            const imageCancelButton = document.getElementById('chat-image-cancel');
 
             chatOutgoingButton.addEventListener('click', sendMessage);
 
@@ -247,6 +273,7 @@
             });
 
             imageSendButton.addEventListener('click', sendMessage);
+            imageCancelButton.addEventListener('click', resetImagePreview);
 
             const leaveChatButton = document.getElementById('leave-chat-button');
             leaveChatButton.addEventListener('click', function () {
@@ -316,10 +343,6 @@
                 <div class="container-fluid chat_section" id="chat-box"></div>
                 <div class="type_msg mt-3">
                     <div class="input_msg_write d-flex">
-                        <div class="image-preview">
-                            <img src="" alt="Image preview">
-                            <button id="chat-image-send" class="btn btn-primary">전송</button>
-                        </div>
                         <label for="chat-image-input" class="btn btn-secondary">
                             <i class="fas fa-paperclip"></i>
                         </label>
@@ -328,6 +351,13 @@
                         <button id="chat-outgoing-button" class="btn btn-primary ml-2" type="button">
                             <i class="fas fa-paper-plane"></i>
                         </button>
+                    </div>
+                    <div class="image-preview">
+                        <img src="" alt="Image preview">
+                        <div>
+                            <button id="chat-image-send" class="btn btn-primary">전송</button>
+                            <button id="chat-image-cancel" class="btn btn-secondary">취소</button>
+                        </div>
                     </div>
                 </div>
             </div>
