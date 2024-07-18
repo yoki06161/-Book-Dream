@@ -1,5 +1,6 @@
 package com.bookdream.sbb.prod;
 
+import com.bookdream.sbb.DataNotFoundException;
 import com.bookdream.sbb.prod_repo.*;
 import com.bookdream.sbb.user.SiteUser;
 import com.bookdream.sbb.user.UserRepository;
@@ -87,11 +88,13 @@ public class Prod_Service {
 	}
 	
 	// 리뷰 쓰기
-	public void Write_Review(String review, Integer book_id) {
+	public void Write_Review(String review, Integer book_id, SiteUser user) {
 		Prod_d_Review pr = new Prod_d_Review();
 		pr.setReview(review);
 		pr.setBook(book_id);
 		pr.setTime(LocalDate.now());
+		pr.setUser(user);
+		
 		this.re_repo.save(pr);
 	}
 	
@@ -102,11 +105,12 @@ public class Prod_Service {
 	}
 	
 	// 리뷰 답글 쓰기
-	public void Write_Answer(Prod_d_Review review_id, String content) {
+	public void Write_Answer(Prod_d_Review review_id, String content, SiteUser user) {
 		Prod_d_Answer pa = new Prod_d_Answer();
 		pa.setAnswer(content);
 		pa.setTime(LocalDate.now());
 		pa.setReview(review_id);
+		pa.setUser(user);
 		
 		this.ra_repo.save(pa);
 	}
@@ -116,5 +120,15 @@ public class Prod_Service {
     public List<SiteUser> getBoss_d() {
     	List<SiteUser> s_list = user_repo.findAll();
 		return s_list;
+	}
+    
+    // 두목님 유저 정보 갖고오기.
+    public SiteUser getBoss_user(String user) {
+    	Optional<SiteUser> username = user_repo.findByusername(user);
+    	if(username.isPresent()) {
+    		return username.get();
+    	} else {
+            throw new DataNotFoundException("siteuser not found!!");
+        }
 	}
 }

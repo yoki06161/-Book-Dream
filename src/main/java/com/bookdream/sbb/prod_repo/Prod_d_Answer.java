@@ -3,6 +3,8 @@ package com.bookdream.sbb.prod_repo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.bookdream.sbb.user.SiteUser;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,8 +29,8 @@ public class Prod_d_Answer {
 	private Integer id;
 	
 	// 유저 이름
-	@Column(length = 200)
-	private String user;
+	@ManyToOne
+	private SiteUser user;
 	
 	// 답변
 	@Column(columnDefinition = "TEXT")

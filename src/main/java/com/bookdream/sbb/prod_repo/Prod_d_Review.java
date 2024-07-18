@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.bookdream.sbb.user.SiteUser;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,9 +34,8 @@ public class Prod_d_Review {
 	private Integer book;
 	
 	// 유저 이름
-	// 열 길이조절
-	@Column(length = 200)
-	private String user;
+	@ManyToOne
+	private SiteUser user;
 	
 	// 리뷰내용
 	@Column(length = 2000, columnDefinition = "TEXT")

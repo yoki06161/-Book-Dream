@@ -1,6 +1,7 @@
 package com.bookdream.sbb.prod;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,6 +21,7 @@ import groovyjarjarantlr4.v4.parse.GrammarTreeVisitor.mode_return;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import com.bookdream.sbb.prod_repo.*;
+import com.bookdream.sbb.user.SiteUser;
 import com.bookdream.sbb.user.UserService;
 
 
@@ -86,17 +88,25 @@ public class Prod_Controller {
 	// 리뷰 쓰기
 	@PostMapping("/detail/write_review/{r_id}")
 	public String write_review(Model model,@PathVariable("r_id") Integer id, 
-			@RequestParam("w_content") String content) {
-		this.prodService.Write_Review(content, id);
+			@RequestParam("w_content") String content,
+			Principal pc) {
+		
+		SiteUser user = prodService.getBoss_user(pc.getName());
+		
+		this.prodService.Write_Review(content, id, user);
 		return String.format("redirect:/prod/detail/%s", id);
 	}
 	
 	// 리뷰 답글 쓰기
+	// Principal은 스프링시큐리티 쓸떄 쓰인다나. 사용자 관련인거같음
 	@PostMapping("/detail/write_answer/{b_id}/{a_id}")
 	public String write_answer(Model model, @PathVariable("b_id") Integer b_id, 
-			@PathVariable("a_id") Prod_d_Review id, @RequestParam("a_content") String content) {
-		// 답글 쓰기.()안의 값이 서비스의 ()랑 값이 같아야한다?
-		this.prodService.Write_Answer(id, content);
+			@PathVariable("a_id") Prod_d_Review id, @RequestParam("a_content") String content,
+			Principal pc) {
+		
+		SiteUser user = prodService.getBoss_user(pc.getName());
+		
+		this.prodService.Write_Answer(id, content, user);
 		return String.format("redirect:/prod/detail/%s", b_id);
 	}
 }
