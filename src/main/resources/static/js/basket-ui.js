@@ -224,6 +224,12 @@ document.addEventListener('click', function(event) {
         let index = event.target.getAttribute('data-index');
         let dataArray = JSON.parse(sessionStorage.getItem("dataArray")) || [];
         deleteItem(index, dataArray[index]);
+
+        // 모달 닫기
+        let modal = bootstrap.Modal.getInstance(document.getElementById(`deleteModal${index}`));
+        if (modal) {
+            modal.hide();
+        }
     }
 });
 
@@ -277,33 +283,3 @@ document.getElementById('order').addEventListener('click', function() {
 
 // 초기화 함수
 document.addEventListener('DOMContentLoaded', init);
-
-
-/*
-function sendDataToServer(dataArray, csrfHeader, csrfToken) {
-    // 배열을 JSON 문자열로 변환
-    let jsonData = JSON.stringify(dataArray);
-
-    fetch('/basket/delete', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            [csrfHeader]: csrfToken
-        },
-        body: jsonData  // jsonData를 전송
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Network response was not ok.');
-        }
-    })
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-*/

@@ -161,20 +161,6 @@ document.getElementById('pay').addEventListener('click', function() {
     let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
     let totalSum = parseFloat(sessionStorage.getItem('totalSum')) || 0;
 
-    // 새 창 열기
-    let resultWindow = window.open('', '_blank', 'width=500,height=600');
-
-    // 기본적인 HTML을 새 창에 삽입
-    resultWindow.document.write(`
-        <html>
-            <head><title>결제 결과</title></head>
-            <body>
-                <h1>결제 결과</h1>
-                <div id="resultMessage"></div>
-            </body>
-        </html>
-    `);
-
     // 결제모듈
     const IMP = window.IMP;
     IMP.init('imp45767108'); /* imp~ : 가맹점 식별코드 */
@@ -195,18 +181,10 @@ document.getElementById('pay').addEventListener('click', function() {
             })
             .then(response => {
                 // 성공 메시지 표시
-                let resultMessage = `
-                    <p>결제가 성공적으로 완료되었습니다.</p>
-                    <p>Payment ID: ${res.imp_uid}</p>
-                    <p>Order ID: ${res.merchant_uid}</p>
-                    <p>Payment Amount: ${res.paid_amount}</p>
-                `;
-                resultWindow.document.getElementById('resultMessage').innerHTML = resultMessage;
                 console.log("Payment success!");
             })
             .catch(error => {
-                let resultMessage = '<p>결제 검증에 실패했습니다.</p>';
-                resultWindow.document.getElementById('resultMessage').innerHTML = resultMessage;
+
                 console.error(error);
             });
         } else {

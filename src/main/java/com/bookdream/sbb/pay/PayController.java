@@ -3,6 +3,7 @@ package com.bookdream.sbb.pay;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +22,13 @@ import lombok.RequiredArgsConstructor;
 
 import com.bookdream.sbb.user.UserService;
 
-import com.siot.IamportRestClient.IamportClient; 
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.response.IamportResponse;
+import com.siot.IamportRestClient.response.Payment;
 import com.siot.IamportRestClient.*;
 
 @Controller
-@RequestMapping("/order")
 @RequiredArgsConstructor
 public class PayController {
 	
@@ -36,10 +39,10 @@ public class PayController {
 	// 결제 검증 서비스
 	private IamportClient iamportClient;
 	
-    @Value("${iamport.api.key}")
+    @Value("${imp.api.key}")
     private String apiKey;
  
-    @Value("${iamport.api.secret}")
+    @Value("${imp.api.secretkey}")
     private String secretKey;
     
     @PostConstruct
@@ -47,42 +50,7 @@ public class PayController {
         this.iamportClient = new IamportClient(apiKey, secretKey,true);
     }
 
-	
-//	@PostMapping("/pay")
-//	public String pay() {
-//		return "pay/pay";
-//	}
-//    @PostMapping("/pay")
-//	public ResponseEntity<String> paymentComplete(@RequestBody List<Map<String, Object>> selectedItems, @RequestBody String totalSum) throws IOException {
-//		// 현재 인증된 사용자의 이메일 가져오기
-//		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-//				// 로그인하지 않았다면, 세션에 저장된 장바구니 내역 출력
-////				if(email == "anonymousUser") {
-////					return "basket/list"; 
-////				} else {
-////					// 로그인했다면 DB에 저장된 장바구니 내역 불러오기
-////					//세션스토리지에 저장된 정보와 테이블에 저장된 정보를 비교하여.. 동일한 상품 id가 있을 경우 기존테이블 정보 유지
-////
-////					return "basket/list"; 
-////				}
-//		//
-//        String orderNumber = String.valueOf(selectedItems.get(0).getOrderNumber());
-//        try {
-//        	payService.savePay()
-//            ordersService.saveOrder(email, selectedItems);
-//            System.out.println("결제 성공 : 결제 번호 " + orderNumber);
-//            return ResponseEntity.ok().build();
-//        } catch (RuntimeException e) {
-//        	// 결제 취소
-//        	System.out.println("주문 상품 환불 진행 : 결제 번호 " + orderNumber);
-//            //String token = refundService.getToken(apiKey, secretKey);
-//            //refundService.refundWithToken(token, orderNumber, e.getMessage());
-//            //return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        	return null;
-//        }
-//    }
-	
-	@GetMapping("")
+	@GetMapping("/order")
 	public String order() {
 //		// 현재 인증된 사용자의 이메일 가져오기
 //		String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -99,6 +67,46 @@ public class PayController {
 		return "pay/order";
 	}
 	
+//	@PostMapping("/payment")
+//	public String pay() {
+//		return "pay/pay";
+//	}
+    @PostMapping("/payment")
+	public ResponseEntity<String> paymentComplete(@RequestBody List<Map<String, Object>> selectedItems, @RequestBody String totalSum) throws IOException {
+		// 현재 인증된 사용자의 이메일 가져오기
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+				// 로그인하지 않았다면, 세션에 저장된 장바구니 내역 출력
+//				if(email == "anonymousUser") {
+//					return "basket/list"; 
+//				} else {
+//					// 로그인했다면 DB에 저장된 장바구니 내역 불러오기
+//					//세션스토리지에 저장된 정보와 테이블에 저장된 정보를 비교하여.. 동일한 상품 id가 있을 경우 기존테이블 정보 유지
+//
+//					return "basket/list"; 
+//				}
+		//
+        //String orderNumber = String.valueOf(selectedItems.get(0).getOrderNumber());
+        try {
+//        	payService.savePay()
+//            ordersService.saveOrder(email, selectedItems);
+            System.out.println("결제 성공 : 결제 번호 ");
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+        	// 결제 취소
+        	System.out.println("주문 상품 환불 진행 : 결제 번호 ");
+            //String token = refundService.getToken(apiKey, secretKey);
+            //refundService.refundWithToken(token, orderNumber, e.getMessage());
+            //return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        	return null;
+        }
+    }
+    
+    @PostMapping("/payment/{imp_uid}")
+    public IamportResponse<Payment> validateIamport(@PathVariable String imp_uid) throws IamportResponseException, IOException {
+        IamportResponse<Payment> payment = iamportClient.paymentByImpUid(imp_uid);
+        System.out.println("결제 요청 응답. 결제 내역 - 주문 번호: {}" + payment.getResponse().getMerchantUid());
+        return payment;
+    }
 	
 	@GetMapping("/pay/success")
 	public String paySuccess() {
