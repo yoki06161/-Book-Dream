@@ -36,6 +36,7 @@ public class UserController {
     public String index(Model model) {
         model.addAttribute("loginType", "user");
         model.addAttribute("pageName", "스프링 시큐리티 로그인");
+        System.out.println("유저 컨트롤 로그인?");
 
         String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -94,6 +95,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginForm(Model model) {
+    	System.out.println("유저 컨트롤 로그인되는건가");
         return "user/loginform";
     }
 

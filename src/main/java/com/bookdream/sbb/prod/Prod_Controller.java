@@ -20,6 +20,7 @@ import groovyjarjarantlr4.v4.parse.GrammarTreeVisitor.mode_return;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import com.bookdream.sbb.prod_repo.*;
+import com.bookdream.sbb.user.UserService;
 
 
 // 스프링 실행시 로그인창 안뜨게한다
@@ -52,6 +53,9 @@ public class Prod_Controller {
 		model.addAttribute("C_Books", prodService.getSearchBooks(kw));
 		model.addAttribute("kw", kw);
 		model.addAttribute("b_genre", genre);
+		
+		// 두목님꺼 테스트
+		model.addAttribute("myboss", prodService.getBoss_d());
 		
 		// 크롤링된 데이터 그대로 출력 
 //		model.addAttribute("C_Books", book_list);

@@ -4,6 +4,10 @@
 	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	</head>
 	<body>
+		<div th:each = "boss_l : ${myboss}">
+			<div th:text="${boss_l.username}"></div>
+		</div>
+		두목님 유저이름
 		<div class="l_genre_wrap">
 			<a th:href="@{|/prod|}">모두 보기</a><br>
 			<a th:href="@{|/prod?genre=베스트셀러|}">베스트 셀러</a><br>

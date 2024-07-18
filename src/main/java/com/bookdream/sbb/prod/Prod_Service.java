@@ -1,6 +1,8 @@
 package com.bookdream.sbb.prod;
 
 import com.bookdream.sbb.prod_repo.*;
+import com.bookdream.sbb.user.SiteUser;
+import com.bookdream.sbb.user.UserRepository;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -30,6 +32,9 @@ public class Prod_Service {
 	private final Prod_BooksRepository prodRepository;
 	private final Prod_RErepository re_repo;
 	private final Prod_RArepository ra_repo;
+	
+	// 두목님꺼 테스트
+	private final UserRepository user_repo;
 	
 	// 모든 책 리스트 갖고오기. 안쓰이긴 하는데 혹시 모르니까.
 	public List<Prod_Books> getAllBooks() {
@@ -104,5 +109,12 @@ public class Prod_Service {
 		pa.setReview(review_id);
 		
 		this.ra_repo.save(pa);
+	}
+	
+	// 두목님꺼 테스트
+	// 내가 추가한 사용자 정보 갖고오기
+    public List<SiteUser> getBoss_d() {
+    	List<SiteUser> s_list = user_repo.findAll();
+		return s_list;
 	}
 }
