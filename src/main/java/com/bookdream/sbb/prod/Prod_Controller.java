@@ -90,7 +90,7 @@ public class Prod_Controller {
 	public String write_review(Model model,@PathVariable("r_id") Integer id, 
 			@RequestParam("w_content") String content,
 			Principal pc) {
-		
+		// user = 로그인할떄 친 아이디값. 즉 asdf@naver값이 들어온다.
 		SiteUser user = prodService.getBoss_user(pc.getName());
 		System.out.println("####################컨트롤러 유저 값 확인 " + user);
 		

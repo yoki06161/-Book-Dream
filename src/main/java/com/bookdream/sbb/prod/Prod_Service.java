@@ -123,7 +123,8 @@ public class Prod_Service {
     
     // 테스트 2
     public SiteUser getBoss_user(String user) {
-    	Optional<SiteUser> username = user_repo.findByUsername(user);
+    	// 로그인할떄 email값이 들어와서 email = user인 값을 db로 찾는다. where email = user 
+    	Optional<SiteUser> username = user_repo.findByEmail(user);
     	System.out.println("###########################서비스 유저 값 확인 " + user);
     	System.out.println("###########################서비스 유저 값 확인2 " + username);
     	if(username.isPresent()) {
