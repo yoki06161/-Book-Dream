@@ -35,7 +35,7 @@ public class Prod_d_Review {
 	
 	// 유저 이름
 	@ManyToOne
-	private SiteUser user;
+	private String user;
 	
 	// 리뷰내용
 	@Column(length = 2000, columnDefinition = "TEXT")

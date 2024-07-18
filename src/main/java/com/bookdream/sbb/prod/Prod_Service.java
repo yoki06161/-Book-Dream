@@ -58,6 +58,7 @@ public class Prod_Service {
 		// Optional임시 데이터 타입인듯. 무슨 데이터 타입이든 받아들이는
 		// select * from prodRepository where id = book_id라 생각하자.
 		Optional<Prod_Books> opb = this.prodRepository.findById(book_id);
+		System.out.println("##############opb는 ? " + opb);
 		return opb.get();
 	}
 	
@@ -122,15 +123,26 @@ public class Prod_Service {
 	}
     
     // 테스트 2
-    public SiteUser getBoss_user(String user) {
+    public String getBoss_user(String user) {
     	// 로그인할떄 email값이 들어와서 email = user인 값을 db로 찾는다. where email = user 
-    	Optional<SiteUser> username = user_repo.findByEmail(user);
-    	System.out.println("###########################서비스 유저 값 확인 " + user);
-    	System.out.println("###########################서비스 유저 값 확인2 " + username);
-    	if(username.isPresent()) {
-    		return username.get();
+    	Optional<SiteUser> user_email = user_repo.findByEmail(user);
+    	
+    	if(user_email.isPresent()) {
+    		// username.get()이라고만 쓰면 com.bookdream.sbb.user.SiteUser@67b61fcd식으로 경로만 뜬다.
+        	// get원하는 칼럼명()을 해야 그 칼럼의 값을 갖고옴.
+    		// 찾은 optional값을 site유저 형식으로 저장?
+    		SiteUser s_user = user_email.get();
+    		// 위의 site유저형식으로 저장한 거에서 username칼럼 갖고오기
+    	    String user_name = s_user.getUsername();
+        	    
+    	    System.out.println("###########################서비스 user값 " + user);
+    	    System.out.println("###########################서비스 s_user값 " + s_user);
+    	    System.out.println("###########################서비스 user_name값" + user_name);
+        	System.out.println("###########################서비스 user_email.get()값" + user_email.get());
+        	
+    		return user_name;
     	} else {
-    		return null;
+    		return "익명";
     	}
 	}
 }

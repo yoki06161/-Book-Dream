@@ -56,7 +56,7 @@ public class Prod_Controller {
 		model.addAttribute("kw", kw);
 		model.addAttribute("b_genre", genre);
 		
-		// 두목님꺼 테스트
+		// 두목님꺼 테스트. 걍 출력만하는거라 의미 x. 지워
 		model.addAttribute("myboss", prodService.getBoss_d());
 		
 		// 크롤링된 데이터 그대로 출력 
@@ -90,8 +90,9 @@ public class Prod_Controller {
 	public String write_review(Model model,@PathVariable("r_id") Integer id, 
 			@RequestParam("w_content") String content,
 			Principal pc) {
+		// 두목님 테스트
 		// user = 로그인할떄 친 아이디값. 즉 asdf@naver값이 들어온다.
-		SiteUser user = prodService.getBoss_user(pc.getName());
+		String user = prodService.getBoss_user(pc.getName());
 		System.out.println("####################컨트롤러 유저 값 확인 " + user);
 		
 		this.prodService.Write_Review(content, id, user);
@@ -104,7 +105,7 @@ public class Prod_Controller {
 	public String write_answer(Model model, @PathVariable("b_id") Integer b_id, 
 			@PathVariable("a_id") Prod_d_Review id, @RequestParam("a_content") String content,
 			Principal pc) {
-		
+		// 두목님 테스트
 		SiteUser user = prodService.getBoss_user(pc.getName());
 		
 		this.prodService.Write_Answer(id, content, user);
