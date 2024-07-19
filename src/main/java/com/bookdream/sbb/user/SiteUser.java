@@ -1,7 +1,5 @@
 package com.bookdream.sbb.user;
-
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,20 +14,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SiteUser {
-
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String username;
-
     private String password;
-
     @Column(unique = true)
     private String email;
-
     private String role;
-
     {
         this.role = "User";
     }
@@ -40,7 +32,11 @@ public class SiteUser {
     public void prePersist() {
         this.create_date = LocalDateTime.now();
     }
-    
+
     @Column(name = "last_name_change_date")
     private LocalDateTime lastNameChangeDate;
+
+    private String provider;
+    {this.provider="site";}
+
 }

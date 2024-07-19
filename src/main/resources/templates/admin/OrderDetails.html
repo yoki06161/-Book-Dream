@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>주문결제내역</title>
+<link href="Content/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
 	<!-- Orders 테이블 -->
-	<table border="1" class="table">
+	<table border="1" class="table table-bordered table-comdensed">
 		<tr>
 			<td>
 				주문 번호:
 			</td>
 			<td>
-				<input type="text" name="name" value="" />
+				<input type="text" name="name" value="1234" />
 			</td>
 			<td>
 				주문자:
@@ -51,7 +52,7 @@
 		</tr>
 		<tr>
 			<td>
-				수분일시:
+				주문일시:
 			</td>
 			<td>
 				<textarea cols="20" rows></textarea>
@@ -64,14 +65,24 @@
 			</td>
 		</tr>
 	</table>
-	<br />
 	<input type="button" name="btnOrder" value="주문추가" />
-	<br />
+	<br /><br />
 	<!-- OrderDeta 테이블 -->
-	<table>
+	<table border="1" class="table table-bordered table-condensed">
 		<tr>
 			<td>
 				제품명
+			</td>
+			<td>
+				수량
+			</td>
+		</tr>
+		<tr>
+			<td>
+				좋은 제품
+			</td>
+			<td>
+				23
 			</td>
 		</tr>
 	</table>

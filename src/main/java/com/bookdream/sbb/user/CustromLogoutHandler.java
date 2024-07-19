@@ -21,4 +21,4 @@ public class CustomLogoutHandler implements LogoutHandler {
             response.setHeader("Location", "/");
             response.setStatus(HttpServletResponse.SC_FOUND); // 302 Redirect
         }
-}
+}                              
