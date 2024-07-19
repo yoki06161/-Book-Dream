@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
                     XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
             .formLogin((formLogin) -> formLogin
-                .loginPage("/user/loginform")
+                .loginPage("/user/login")
                 .loginProcessingUrl("/user/login") 
                 .failureUrl("/user/login?error=true")
                 .defaultSuccessUrl("/"))
