@@ -104,6 +104,7 @@ public class UserController {
     public String loginForm(Model model) {
         return "user/loginform";
     }
+   
     
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/userinfo")
@@ -283,40 +284,109 @@ public class UserController {
     
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modifypwform")
-    public String modifypwform(UserModifyPwForm userModifyForm) {
+    public String modifypwform(UserModifyPwForm userModifyForm, Principal principal, Model model) {
+        SiteUser user = null;
+        Member member = null;
+        boolean isSocialLogin = false;
+
+        // 소셜 로그인 사용자를 찾기 위한 처리
+        try {
+            user = this.userService.getUserByEmail(principal.getName());
+            // user가 존재하면 소셜 로그인으로 간주
+            isSocialLogin = false;
+        } catch (DataNotFoundException e) {
+            // user가 없으면 일반 로그인 여부를 확인하기 위해 계속 진행
+        }
+
+        // 일반 로그인 사용자를 찾기 위한 처리
+        try {
+            member = this.memberService.getLoginMemberByLoginId(principal.getName());
+            if (member != null) {
+                isSocialLogin = true;
+            }
+        } catch (DataNotFoundException e) {
+            // member가 없으면 무시
+        }
+
+        // 두 테이블 중 하나라도 데이터가 있는지 확인
+        if (user == null && member == null) {
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        // isSocialLogin 모델에 추가
+        model.addAttribute("isSocialLogin", isSocialLogin);
+        model.addAttribute("userModifyPwForm", userModifyForm);
+
         return "user/modifypwform";
     }
+
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modifypwform")
     public String modifypwform(@Valid UserModifyPwForm userModifyPwForm, BindingResult bindingResult, Principal principal, Model model) {
-        SiteUser user = this.userService.getUser(principal.getName());
-    	
-    	if (bindingResult.hasErrors()) {
+        SiteUser user = null;
+        Member member = null;
+        boolean isSocialLogin = false;
+
+        // 소셜 로그인 사용자를 위한 예외 처리
+        try {
+            user = this.userService.getUserByEmail(principal.getName());
+            isSocialLogin = false;
+        } catch (DataNotFoundException e) {
+            // user가 없으면 일반 로그인 여부를 확인하기 위해 계속 진행
+        }
+
+        // 일반 로그인 사용자를 위한 예외 처리
+        try {
+            member = this.memberService.getLoginMemberByLoginId(principal.getName());
+            if (member != null) {
+                isSocialLogin = true;
+            }
+        } catch (DataNotFoundException e) {
+            // member가 없으면 무시
+        }
+
+        // 두 테이블 중 하나라도 데이터가 있는지 확인
+        if (user == null && member == null) {
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        // 소셜 로그인 사용자일 경우 비밀번호 변경을 허용하지 않음
+        if (isSocialLogin) {
+            bindingResult.reject("modifyPasswordFailed", "소셜 로그인 사용자는 비밀번호 변경이 불가합니다.");
+            model.addAttribute("isSocialLogin", isSocialLogin);
             return "user/modifypwform";
         }
 
-    	if (!this.userService.isSamePassword(user, userModifyPwForm.getCurrentPassword())) {
-            bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다. ");
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isSocialLogin", isSocialLogin);
             return "user/modifypwform";
         }
-    	
-    	if (!userModifyPwForm.getNewPassword1().equals(userModifyPwForm.getNewPassword2())) {
+
+        if (!this.userService.isSamePassword(user, userModifyPwForm.getCurrentPassword())) {
+            bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
+            model.addAttribute("isSocialLogin", isSocialLogin);
+            return "user/modifypwform";
+        }
+
+        if (!userModifyPwForm.getNewPassword1().equals(userModifyPwForm.getNewPassword2())) {
             bindingResult.rejectValue("newPassword2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
+            model.addAttribute("isSocialLogin", isSocialLogin);
             return "user/modifypwform";
         }
-    	
-    	try {
+
+        try {
             userService.modifyPassword(user, userModifyPwForm.getNewPassword1());
         } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("modifyPasswordFailed", e.getMessage());
+            model.addAttribute("isSocialLogin", isSocialLogin);
             return "user/modifypwform";
         }
 
         return "redirect:/";
     }
-    
+
 
     
 

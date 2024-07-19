@@ -5,29 +5,35 @@
         <nav th:replace="~{user/mynav :: headerfragment}"></nav>
     </div>
     <div class="main-content" style="width:700px;padding-left:50px">
-	    <h2>비밀번호 변경</h2>
-	    <hr>
-        <form th:action="@{|/user/modifypwform|}" method="post" th:object="${userModifyPwForm}">
-            <div class="mb-3">
-                <label for="currentPassword" class="form-label">현재 비밀번호</label>
-                <input type="password" th:field="*{currentPassword}" class="form-control">
-                <!-- 이전 비밀번호 에러 메시지 -->
-                <small class="text-danger" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></small>
-            </div>
-            <div class="mb-3">
-                <label for="newPassword1" class="form-label">변경할 비밀번호</label>
-                <input type="password" th:field="*{newPassword1}" class="form-control">
-                <!-- 변경할 비밀번호 에러 메시지 -->
-                <small class="text-danger" th:if="${#fields.hasErrors('newPassword1')}" th:errors="*{newPassword1}"></small>
-            </div>
-            <div class="mb-3">
-                <label for="newPassword2" class="form-label">비밀번호 확인</label>
-                <input type="password" th:field="*{newPassword2}" class="form-control">
-                <!-- 비밀번호 확인 에러 메시지 -->
-                <small class="text-danger" th:if="${#fields.hasErrors('newPassword2')}" th:errors="*{newPassword2}"></small>
-            </div>
-            <button type="submit" class="btn btn-primary">변경하기</button>
-        </form>
+        <h2>비밀번호 변경</h2>
+        <hr>
+
+        <!-- 소셜 로그인 사용자는 폼을 보지 못하고 메시지만 봅니다 -->
+        <div th:if="${!isSocialLogin}">
+            <form th:action="@{|/user/modifypwform|}" method="post" th:object="${userModifyPwForm}">
+                <div class="mb-3">
+                    <label for="currentPassword" class="form-label">현재 비밀번호</label>
+                    <input type="password" th:field="*{currentPassword}" class="form-control">
+                    <small class="text-danger" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></small>
+                </div>
+                <div class="mb-3">
+                    <label for="newPassword1" class="form-label">변경할 비밀번호</label>
+                    <input type="password" th:field="*{newPassword1}" class="form-control">
+                    <small class="text-danger" th:if="${#fields.hasErrors('newPassword1')}" th:errors="*{newPassword1}"></small>
+                </div>
+                <div class="mb-3">
+                    <label for="newPassword2" class="form-label">비밀번호 확인</label>
+                    <input type="password" th:field="*{newPassword2}" class="form-control">
+                    <small class="text-danger" th:if="${#fields.hasErrors('newPassword2')}" th:errors="*{newPassword2}"></small>
+                </div>
+                <button type="submit" class="btn btn-primary">변경하기</button>
+            </form>
+        </div>
+
+        <!-- 소셜 로그인 사용자는 이 메시지를 봅니다 -->
+        <div th:if="${isSocialLogin}">
+            <h3>소셜 로그인은 비밀번호 변경이 불가합니다.</h3>
+        </div>
     </div>
 </div>
 </html>
