@@ -1,4 +1,4 @@
-package com.bookdream.sbb.OrderController;
+package com.bookdream.sbb.order;
 
 import java.security.Principal;
 import java.util.Optional;

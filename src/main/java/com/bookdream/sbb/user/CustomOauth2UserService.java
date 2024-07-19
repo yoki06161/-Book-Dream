@@ -32,7 +32,14 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         }
 
         String providerId = oAuth2UserInfo.getProviderId();
-        @@ public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2Authentic
+        String email = oAuth2UserInfo.getEmail();
+        String loginId = provider + "_" + providerId;
+        String name = oAuth2UserInfo.getName();
+        Member findMember = memberRepository.findByLoginId(loginId);
+        Member member;
+        if (findMember == null) {
+            member = Member.builder()
+                    .loginId(loginId)
                     .name(name)
                     .provider(provider)
                     .providerId(providerId)
@@ -45,4 +52,4 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         }
         return new CustomOauth2UserDetails(member, oAuth2User.getAttributes());
     }
-}
+} 

@@ -1,12 +1,10 @@
-package com.bookdream.sbb.OrderService;
+package com.bookdream.sbb.order;
 
 import java.util.List;
 
 import org.hibernate.query.Page;
 import org.springframework.stereotype.Service;
 
-import com.bookdream.sbb.order.ItemImgRepository;
-import com.bookdream.sbb.order.OrderRepository;
 import com.bookdream.sbb.user.MemberRepository;
 
 import jakarta.persistence.criteria.Order;
