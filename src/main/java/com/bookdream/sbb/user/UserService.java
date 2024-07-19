@@ -1,13 +1,12 @@
 package com.bookdream.sbb.user;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bookdream.sbb.DataNotFoundException;
 
@@ -17,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     
     public SiteUser create(Map<String, String> map) {
@@ -74,6 +74,14 @@ public class UserService {
     	user.setPassword(passwordEncoder.encode(password));
         this.userRepository.save(user);
     }
+    
+    public void modifySiteName(SiteUser user, String name) {
+        user.setUsername(name);
+        user.setLastNameChangeDate(LocalDateTime.now()); // 이름 변경 일시 설정
+        this.userRepository.save(user);
+    }
+
+
 
     public boolean isSamePassword(SiteUser user, String password){
         return passwordEncoder.matches(password, user.getPassword());
@@ -83,6 +91,11 @@ public class UserService {
     public void deleteUser(SiteUser user) {
         this.userRepository.delete(user);
     }
+    
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+    
 
     
 }

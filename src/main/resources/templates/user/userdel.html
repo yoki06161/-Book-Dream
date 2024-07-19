@@ -5,6 +5,8 @@
         <nav th:replace="~{user/mynav :: headerfragment}"></nav>
     </div>
 	<div class="main-content" style="width:700px;padding-left:50px">
+		<h2>회원 탈퇴</h2>
+		<hr>
         <form th:action="@{|/user/userdel|}" method="post" th:object="${userDelForm}">
             <div class="mb-3">
                 <label for="currentPassword" class="form-label">현재 비밀번호</label>

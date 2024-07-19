@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3" style="display:flex">
+    <div style="width:230px;padding:0 10px">
+        <nav th:replace="~{user/mynav :: headerfragment}"></nav>
+    </div>
+    <div class="main-content" style="width:700px;padding-left:50px">
+	    <h2>사용자 이름 변경</h2>
+	    <hr>
+        <form th:action="@{|/user/modifynameform|}" method="post" th:object="${userModifyNameForm}">
+		    <div class="mb-3">
+		        <label for="newName" class="form-label">변경할 이름</label>
+		        <input type="text" th:field="*{newName}" class="form-control">
+			    <!-- 오류 메시지 표시 -->
+			    <small class="text-danger" th:izf="${#fields.hasErrors('nameChangeLimit')}" th:errors="*{nameChangeLimit}"></small>
+		        <!-- 이름 에러 메시지 -->
+		        <small class="text-danger" th:if="${#fields.hasErrors('newName')}" th:errors="*{newName}"></small>
+		    </div>
+		    <button type="submit" class="btn btn-primary">변경하기</button>
+		</form>
+    </div>
+</div>
+</html>

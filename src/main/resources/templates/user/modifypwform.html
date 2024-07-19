@@ -5,12 +5,14 @@
         <nav th:replace="~{user/mynav :: headerfragment}"></nav>
     </div>
     <div class="main-content" style="width:700px;padding-left:50px">
-        <form th:action="@{|/user/modifyform|}" method="post" th:object="${userModifyForm}">
+	    <h2>비밀번호 변경</h2>
+	    <hr>
+        <form th:action="@{|/user/modifypwform|}" method="post" th:object="${userModifyPwForm}">
             <div class="mb-3">
-                <label for="beforePassword" class="form-label">현재 비밀번호</label>
-                <input type="password" th:field="*{beforePassword}" class="form-control">
+                <label for="currentPassword" class="form-label">현재 비밀번호</label>
+                <input type="password" th:field="*{currentPassword}" class="form-control">
                 <!-- 이전 비밀번호 에러 메시지 -->
-                <small class="text-danger" th:if="${#fields.hasErrors('beforePassword')}" th:errors="*{beforePassword}"></small>
+                <small class="text-danger" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></small>
             </div>
             <div class="mb-3">
                 <label for="newPassword1" class="form-label">변경할 비밀번호</label>
