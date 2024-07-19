@@ -1,6 +1,8 @@
 package com.bookdream.sbb.prod;
 
 import com.bookdream.sbb.prod_repo.*;
+import com.bookdream.sbb.user.Member;
+import com.bookdream.sbb.user.MemberRepository;
 import com.bookdream.sbb.user.SiteUser;
 import com.bookdream.sbb.user.UserRepository;
 
@@ -33,8 +35,9 @@ public class Prod_Service {
 	private final Prod_RErepository re_repo;
 	private final Prod_RArepository ra_repo;
 	
-	// 두목님꺼 테스트
+	// 두목님꺼. 일반로그인
 	private final UserRepository user_repo;
+	private final MemberRepository mem_repo;
 	
 	// 모든 책 리스트 갖고오기. 안쓰이긴 하는데 혹시 모르니까.
 	public List<Prod_Books> getAllBooks() {
@@ -119,19 +122,31 @@ public class Prod_Service {
     public String getUserName(String user) {
     	// 로그인할떄 email값이 들어와서 email = user인 값을 db로 찾는다. where email = user 
     	Optional<SiteUser> user_email = user_repo.findByEmail(user);
+    	// 위의건 그냥 로그인. 밑의건 구글, 카카오 로그인.
+    	Member mem_email = mem_repo.findByLoginId(user);
+//    	System.out.println("###########################서비스 user값 " + user);
+//    	System.out.println("###########################서비스 mem_email값 " + mem_email);
     	
+    	// ispresent는 optional에서만 되서 mem_email은 못씀.
     	if(user_email.isPresent()) {
     		// username.get()이라고만 쓰면 com.bookdream.sbb.user.SiteUser@67b61fcd식으로 경로만 뜬다.
         	// .get()모두.get원하는 칼럼명(). get원하는 칼럼명()을 해야 그 칼럼의 값을 갖고옴.
     		// SiteUser의 username칼럼 자체가 string 형태라 stieuser user_name = 으로 못불러온다.
     		String user_name = user_email.get().getUsername();
 
-    	    System.out.println("###########################서비스 user값 " + user);
-    	    System.out.println("###########################서비스 user_name값" + user_name);
-        	System.out.println("###########################서비스 user_email.get()값" + user_email.get());
+//    	    System.out.println("###########################서비스 user_name값" + user_name);
+//        	System.out.println("###########################서비스 user_email.get()값" + user_email.get());
         	
     		return user_name;
+    		
+    	} else if(mem_email != null) {
+    		String mem_name = mem_email.getName();
+//    		System.out.println("###########################서비스 mem_name값" + mem_name);
+    		
+    		return mem_name;
+    		
     	} else {
+    		// 이제 나올리 없음.
     		return "익명";
     	}
 	}
