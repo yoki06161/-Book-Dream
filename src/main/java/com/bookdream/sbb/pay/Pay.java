@@ -23,13 +23,13 @@ public class Pay {
 	private String name;
 	
 	@Column(length = 11, nullable = false)
-	private int phone;
+	private String phone;
 	
 	@Column(length = 8)
 	private String pw;
 	
 	@Column(length = 5, nullable = false)
-	private int post_code;
+	private String post_code;
 	
 	@Column(length = 20, nullable = false)
 	private String address;

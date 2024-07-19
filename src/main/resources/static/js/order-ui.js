@@ -160,6 +160,16 @@ document.getElementById('pay').addEventListener('click', function() {
     // list 페이지에서 체크된 항목들의 데이터가 담긴 배열+총가격 가져오기
     let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
     let totalSum = parseFloat(sessionStorage.getItem('totalSum')) || 0;
+	// order 페이지에서 데이터 받아오기
+	let name = document.getElementById('name').value;
+	let phone = document.getElementById('phone').value;
+	let pw = document.getElementById('pw').value || 0;
+	let post_code = document.getElementById('sample6_postcode').value;
+	let address = document.getElementById('sample6_address').value;
+	let detail_address = document.getElementById('sample6_detailAddress').value;
+	let full_addr = address + " " + detail_address;
+	let options = document.getElementById('options').value;
+	let customInput = document.getElementById('customInput').value;
 
     // 결제모듈
     const IMP = window.IMP;
@@ -172,20 +182,63 @@ document.getElementById('pay').addEventListener('click', function() {
         name: "서적", // 상품명
         amount: 100,   // 결제 가격 (테스트용)
         // amount: totalSum,  // 실제 결제 가격
+		buyer_name: name,
+		buyer_tel: phone,
+		buyer_postcode: post_code,
+		buyer_addr: full_addr,
         merchant_uid: 'merchant_' + new Date().getTime(), // 임의 주문번호 부여
     }, function(res) {
         if (res.success) {
             axios({
                 method: "post",
-                url: `/payment/validation/${res.imp_uid}`
+                url: `/payment/validation/${res.imp_uid}`,
+				headers: {
+					'Content-Type': 'application/json',
+					[csrfHeader]: csrfToken
+				},
             })
             .then(response => {
-                // 성공 메시지 표시
-                console.log("Payment success!");
+				// 폼의 action을 결제 완료 페이지로 설정
+				const form = document.getElementById('orderForm');
+				form.action = '/order/success';
+				
+				// 기존의 입력 필드를 모두 폼에 추가
+				const inputFields = {
+				    name: name,
+				    phone: phone,
+				    pw: pw,
+				    post_code: post_code,
+				    address: address,
+				    detail_address: detail_address,
+				    options: options,
+				    total_sum: totalSum
+				};
+
+				// 폼에 입력 필드 추가
+				Object.keys(inputFields).forEach(key => {
+				    let input = document.createElement('input');
+				    input.type = 'hidden';
+				    input.name = key;
+				    input.value = inputFields[key];
+				    form.appendChild(input);
+				});		
+						
+				// 폼 제출
+				form.submit();
+				console.log(response.data);
+                //console.log("Payment success!");
             })
             .catch(error => {
-
-                console.error(error);
+				if (error.response) {
+				    // 서버 응답이 있을 경우
+				    console.error('서버 응답 오류:', error.response.data);
+				} else if (error.request) {
+				    // 요청이 전송되지 않았을 경우
+				    console.error('요청이 전송되지 않음:', error.request);
+				} else {
+				    // 요청 설정 중 오류가 발생했을 경우
+				    console.error('요청 설정 중 오류 발생:', error.message);
+				}
             });
         } else {
             // 실패 메시지 표시
