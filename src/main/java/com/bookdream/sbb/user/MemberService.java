@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -60,5 +61,11 @@ public class MemberService {
         if (loginId == null) return null;
 
         return memberRepository.findByLoginId(loginId);
+    }
+    
+    public void modifySocialName(Member member, String name) {
+    	member.setName(name);
+    	member.setLastNameChangeDate(LocalDateTime.now()); // 이름 변경 일시 설정
+    	this.memberRepository.save(member);
     }
 }

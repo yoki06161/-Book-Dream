@@ -43,4 +43,8 @@ public class SiteUser {
     
     @Column(name = "last_name_change_date")
     private LocalDateTime lastNameChangeDate;
+    
+    private String provider;
+    {this.provider="site";}
+
 }

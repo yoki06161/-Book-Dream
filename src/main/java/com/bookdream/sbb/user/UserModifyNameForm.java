@@ -10,9 +10,6 @@ import lombok.Setter;
 @Setter
 public class UserModifyNameForm {
 
-    @NotEmpty(message = "현재 비밀번호는 필수항목입니다.")
-    private String currentPassword;
-    
     @NotEmpty(message = "이름은 필수항목입니다.")
     private String newName;
     

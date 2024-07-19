@@ -104,6 +104,7 @@ public class UserController {
     public String loginForm(Model model) {
         return "user/loginform";
     }
+    
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/userinfo")
     public String userinfo(Model model, Principal principal) {
@@ -133,20 +134,151 @@ public class UserController {
         // 사용자 정보를 모델에 추가
         if (member != null && user == null) {
             model.addAttribute("name", member.getName());
-            model.addAttribute("email", member.getProvider());
+            model.addAttribute("email", member.getEmail());
+            if(member.getProvider().equals("kakao")) {
+            	model.addAttribute("provider", "카카오");
+            }else if(member.getProvider().equals("google")) {
+            	model.addAttribute("provider", "구글");
+            }
         } else if (user != null && member == null) {
             model.addAttribute("name", user.getUsername());
             model.addAttribute("email", user.getEmail());
+            model.addAttribute("provider", "사이트");
         } else if (member != null && user != null) {
             // 사용자 정보가 둘 다 있는 경우, 우선순위에 따라 하나를 선택
             model.addAttribute("name", user.getUsername());
             model.addAttribute("email", user.getEmail());
+            model.addAttribute("provider", "사이트");
         }
 
         model.addAttribute("loginType", "user");
 
         return "user/userinfo";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modifynameform")
+    public String modifynameform(UserModifyNameForm userModifyNameForm, Model model, Principal principal) {
+        SiteUser user = null;
+        Member member = null;
+
+        // 소셜 로그인 사용자를 위한 예외 처리
+        try {
+            user = this.userService.getUserByEmail(principal.getName());
+        } catch (DataNotFoundException e) {
+            // user가 없으면 무시하고 member를 찾기 위해 진행
+        }
+
+        // 일반 로그인 사용자를 위한 예외 처리
+        try {
+            member = this.memberService.getLoginMemberByLoginId(principal.getName());
+        } catch (DataNotFoundException e) {
+            // member가 없으면 무시하고 user를 찾기 위해 진행
+        }
+
+        // 두 테이블 중 하나라도 데이터가 있는지 확인
+        if (user == null && member == null) {
+            // 사용자 정보가 둘 다 없는 경우에 대한 처리
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        // 사용자 정보를 모델에 추가
+        if (member != null && user == null) {
+            model.addAttribute("name", member.getName());
+        } else if (user != null && member == null) {
+            model.addAttribute("name", user.getUsername());
+        } else if (member != null && user != null) {
+            // 사용자 정보가 둘 다 있는 경우, 우선순위에 따라 하나를 선택
+            model.addAttribute("name", user.getUsername());
+        }
+
+        return "user/modifynameform";
+    }
+
+    
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modifynameform")
+    public String modifynameform(@Valid UserModifyNameForm userModifyNameForm, BindingResult bindingResult, Principal principal, Model model) {
+        SiteUser user = null;
+        Member member = null;
+
+        // 소셜 로그인 사용자를 위한 예외 처리
+        try {
+            user = this.userService.getUserByEmail(principal.getName());
+        } catch (DataNotFoundException e) {
+            // user가 없으면 무시하고 member를 찾기 위해 진행
+        }
+
+        // 일반 로그인 사용자를 위한 예외 처리
+        try {
+            member = this.memberService.getLoginMemberByLoginId(principal.getName());
+        } catch (DataNotFoundException e) {
+            // member가 없으면 무시하고 user를 찾기 위해 진행
+        }
+
+        // 두 테이블 중 하나라도 데이터가 있는지 확인
+        if (user == null && member == null) {
+            // 사용자 정보가 둘 다 없는 경우에 대한 처리
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        // 현재 이름을 모델에 추가
+        if (member != null && user == null) {
+            model.addAttribute("name", member.getName());
+        } else if (user != null && member == null) {
+            model.addAttribute("name", user.getUsername());
+        } else if (member != null && user != null) {
+            // 사용자 정보가 둘 다 있는 경우, 우선순위에 따라 하나를 선택
+            model.addAttribute("name", user.getUsername());
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "user/modifynameform";
+        }
+
+        if (user != null && user.getLastNameChangeDate() != null) {
+            if (LocalDateTime.now().isBefore(user.getLastNameChangeDate().plusDays(14))) {
+                bindingResult.rejectValue("nameChangeLimit", "beforeNameChangeLimit", "이름을 변경한 지 14일이 지나지 않았습니다.");
+                return "user/modifynameform";
+            }
+        }
+
+        if (member != null && member.getLastNameChangeDate() != null) {
+            if (LocalDateTime.now().isBefore(member.getLastNameChangeDate().plusDays(14))) {
+                bindingResult.rejectValue("nameChangeLimit", "beforeNameChangeLimit", "이름을 변경한 지 14일이 지나지 않았습니다.");
+                return "user/modifynameform";
+            }
+        }
+
+        if (user != null && userModifyNameForm.getNewName().equals(user.getUsername())) {
+            bindingResult.rejectValue("newName", "sameAsCurrentName", "현재 이름과 같습니다.");
+            return "user/modifynameform";
+        }
+
+        if (member != null && userModifyNameForm.getNewName().equals(member.getName())) {
+            bindingResult.rejectValue("newName", "sameAsCurrentName", "현재 이름과 같습니다.");
+            return "user/modifynameform";
+        }
+
+        try {
+            // 사용자 정보를 모델에 추가
+            if (member != null && user == null) {
+                memberService.modifySocialName(member, userModifyNameForm.getNewName());
+            } else if (user != null && member == null) {
+                userService.modifySiteName(user, userModifyNameForm.getNewName());
+            } else if (member != null && user != null) {
+                // 사용자 정보가 둘 다 있는 경우, 우선순위에 따라 하나를 선택
+                userService.modifySiteName(user, userModifyNameForm.getNewName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            bindingResult.reject("modifyNameFailed", e.getMessage());
+            return "user/modifynameform";
+        }
+
+        return "redirect:/";
+    }
+
 
     
     @PreAuthorize("isAuthenticated()")
@@ -185,43 +317,6 @@ public class UserController {
         return "redirect:/";
     }
     
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/modifynameform")
-    public String modifynameform(UserModifyNameForm userModifyNameForm) {
-    	return "user/modifynameform";
-    }
-    
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modifynameform")
-    public String modifynameform(@Valid UserModifyNameForm userModifyNameForm, BindingResult bindingResult, Principal principal, Model model) {
-        SiteUser user = this.userService.getUser(principal.getName());
-        
-        if (bindingResult.hasErrors()) {
-            return "user/modifynameform";
-        }
-        
-        if (user.getLastNameChangeDate() != null) {
-        	if (LocalDateTime.now().isBefore(user.getLastNameChangeDate().plusDays(14))) {
-        		bindingResult.rejectValue("nameChangeLimit","beforeNameChangeLimit", "이름을 변경한 지 14일이 지나지 않았습니다.");
-        		return "user/modifynameform";
-        	}
-        }
-        
-        if (userModifyNameForm.getNewName().equals(user.getUsername())) {
-            bindingResult.rejectValue("newName", "sameAsCurrentName", "현재 이름과 같습니다.");
-            return "user/modifynameform";
-        }
-        	
-        try {
-            userService.modifyName(user, userModifyNameForm.getNewName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            bindingResult.reject("modifyNameFailed", e.getMessage());
-            return "user/modifynameform";
-        }
-        
-        return "redirect:/";
-    }
 
     
 
