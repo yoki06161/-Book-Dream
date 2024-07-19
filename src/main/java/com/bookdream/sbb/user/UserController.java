@@ -12,14 +12,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import com.bookdream.sbb.DataNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,9 @@ public class UserController {
 
 	@Autowired
     private UserService userService;
+
+	@Autowired
+	private MemberService memberService;
 	
 	@GetMapping("/")
     public String index(Model model) {
@@ -95,6 +101,50 @@ public class UserController {
     @GetMapping("/login")
     public String loginForm(Model model) {
         return "user/loginform";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/userinfo")
+    public String userinfo(Model model, Principal principal) {
+        SiteUser user = null;
+        Member member = null;
+
+        // 소셜 로그인 사용자를 위한 예외 처리
+        try {
+            user = this.userService.getUserByEmail(principal.getName());
+        } catch (DataNotFoundException e) {
+            // user가 없으면 무시하고 member를 찾기 위해 진행
+        }
+
+        // 일반 로그인 사용자를 위한 예외 처리
+        try {
+            member = this.memberService.getLoginMemberByLoginId(principal.getName());
+        } catch (DataNotFoundException e) {
+            // member가 없으면 무시하고 user를 찾기 위해 진행
+        }
+
+        // 두 테이블 중 하나라도 데이터가 있는지 확인
+        if (user == null && member == null) {
+            // 사용자 정보가 둘 다 없는 경우에 대한 처리
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        // 사용자 정보를 모델에 추가
+        if (member != null && user == null) {
+            model.addAttribute("name", member.getName());
+            model.addAttribute("email", member.getProvider());
+        } else if (user != null && member == null) {
+            model.addAttribute("name", user.getUsername());
+            model.addAttribute("email", user.getEmail());
+        } else if (member != null && user != null) {
+            // 사용자 정보가 둘 다 있는 경우, 우선순위에 따라 하나를 선택
+            model.addAttribute("name", user.getUsername());
+            model.addAttribute("email", user.getEmail());
+        }
+
+        model.addAttribute("loginType", "user");
+
+        return "user/userinfo";
     }
 
     
@@ -217,6 +267,5 @@ public class UserController {
     public String userbuy() {
         return "user/userbuy";
     }
-    
 
 }
