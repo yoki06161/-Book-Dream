@@ -198,35 +198,9 @@ document.getElementById('pay').addEventListener('click', function() {
 				},
             })
             .then(response => {
-				// 폼의 action을 결제 완료 페이지로 설정
-				const form = document.getElementById('orderForm');
-				form.action = '/order/success';
-				
-				// 기존의 입력 필드를 모두 폼에 추가
-				const inputFields = {
-				    name: name,
-				    phone: phone,
-				    pw: pw,
-				    post_code: post_code,
-				    address: address,
-				    detail_address: detail_address,
-				    options: options,
-				    total_sum: totalSum
-				};
-
-				// 폼에 입력 필드 추가
-				Object.keys(inputFields).forEach(key => {
-				    let input = document.createElement('input');
-				    input.type = 'hidden';
-				    input.name = key;
-				    input.value = inputFields[key];
-				    form.appendChild(input);
-				});		
-						
-				// 폼 제출
-				form.submit();
+				// 결제성공시 alert창 
 				console.log(response.data);
-                //console.log("Payment success!");
+                alert("Payment success!");
             })
             .catch(error => {
 				if (error.response) {
