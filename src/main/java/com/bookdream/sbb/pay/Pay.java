@@ -38,7 +38,7 @@ public class Pay {
 	@Column(length = 40, nullable = false)
 	private String address;
 	
-	@Column(length = 20)
+	@Column(length = 40)
 	private String request;
 	
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

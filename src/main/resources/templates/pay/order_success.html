@@ -10,7 +10,7 @@
 
       <div class="card mb-3">
         <div class="card-body">
-          <h4 class="mb-3">주문 상품(주문번호: n{pay테이블 idx})</h4>
+          <h4 class="mb-3">주문 상품(주문번호 <span th:text="${pay.pay_id}"></span>)</h4>
           <table  id="dataArrayList" class="table table-borderless align-middle text-center">
             <tr>
             </tr>
@@ -22,19 +22,18 @@
           <div class="col">
             <div class="card-body">
               <h4 class="mb-3">주문자 정보</h4>
-              <p>이름: <span id="name"></span></p>
-              <p>휴대폰 번호: <span id="phone"></span></p>
+              <p>이름: <span id="name" th:text="${pay.name}"></span></p>
+              <p>휴대폰 번호: <span id="phone" th:text="${pay.phone}"></span></p>
               <!-- 주문조회용 비밀번호는 로그인하지 않았을 때만 출력 -->
-              <p>주문 조회용 비밀번호: <span id="pw"></span></p>
+              <p>주문 조회용 비밀번호: <span id="pw" th:text="${pay.pw}"></span></p>
             </div>
           </div>
           <div class="col">
             <div class="card-body">
               <h4 class="mb-3">배송 정보</h4>
-              <p>{postcode}</p>
-              <p>{배송지 주소 address}</p>
-              <p>{상세주소 detailAddress}</p>
-              <p>{배송 시 택배기사에게 요청사항}</p>
+              <p>우편번호: <span th:text="${pay.post_code}"></span></p>
+              <p>배송주소: <span th:text="${pay.address}"></span></p>
+              <p>배송요청사항: <span th:text="${pay.request}"></span></p>
             </div>
           </div>
         </div>

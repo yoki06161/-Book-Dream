@@ -41,4 +41,10 @@ public class PayService {
 			System.out.println("Pay ID not found: " + pay_id);
 		}
 	}
+
+	public Object getPaysById(String pay_id) {
+		Optional<Pay> optionalPay = payRepository.findById(pay_id);
+		
+		return optionalPay;
+	}
 }

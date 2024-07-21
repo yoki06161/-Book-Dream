@@ -12,7 +12,8 @@ import lombok.Setter;
 @Entity
 public class Orders {
 	@Id
-	private String order_id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)    // auto_increment
+	private Integer order_id;
 	
 	@Column
 	private int count;
@@ -24,5 +25,5 @@ public class Orders {
 	private Integer book_id;
 	
 	@Column
-	private Integer pay_id;
+	private String pay_id;
 }
