@@ -1,6 +1,4 @@
 function init() {
-	//페이지에 넘어오자마자 입력했던 데이터 DB에 등록하도록 통신
-	
 	// 주문 완료 데이터 출력
 	displayFormData();	
 }
@@ -10,7 +8,11 @@ function displayFormData() {
     let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
     let totalSum = parseFloat(sessionStorage.getItem('totalSum')) || 0;
 	let dataArrayList = document.getElementById('dataArrayList');
-
+	
+	//order페이지에서 pay_id, pw, 배송요청사항 가져오기...
+	let payData = JSON.parse(sessionStorage.getItem('payData'));
+	console.log(payData);
+	
 	let totalSumElement = document.getElementById('totalSum');
 	if (totalSumElement) {
 	    totalSumElement.textContent = totalSum.toLocaleString() + '원';

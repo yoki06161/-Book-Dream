@@ -13,7 +13,7 @@ function init() {
     const inputs = form.querySelectorAll('input[type="text"], input[type="number"], input[type="password"]');
     const pwError = document.getElementById('pwError');
     const pwFormatError = document.getElementById('pwFormatError');
-    const customInput = document.getElementById('customInput');
+    //const customInput = document.getElementById('customInput');
 
     // 필수 입력 필드 검사
     const checkInputs = () => {
@@ -67,15 +67,15 @@ function init() {
         }
     });
 
-    document.getElementById('options').addEventListener('change', () => {
-        const selectBox = document.getElementById('options');
-        if (selectBox.value === 'directInput') {
-            customInput.style.display = 'block';
-        } else {
-            customInput.style.display = 'none';
-        }
-        validateForm();
-    });
+   // document.getElementById('options').addEventListener('change', () => {
+  //      const selectBox = document.getElementById('options');
+  //      if (selectBox.value === 'directInput') {
+  //          customInput.style.display = 'block';
+  //      } else {
+   //         customInput.style.display = 'none';
+   //     }
+  //      validateForm();
+  //  });
 
     validateForm();
 
@@ -159,7 +159,7 @@ function displayFormData() {
 document.getElementById('pay').addEventListener('click', function() {
     // list 페이지에서 체크된 항목들의 데이터가 담긴 배열+총가격 가져오기
     let selectedItems = JSON.parse(sessionStorage.getItem('selectedItems')) || [];
-    let totalSum = parseFloat(sessionStorage.getItem('totalSum')) || 0;
+    let totalSum = parseFloat(sessionStorage.getItem('totalSum'));
 	// order 페이지에서 데이터 받아오기
 	let name = document.getElementById('name').value;
 	let phone = document.getElementById('phone').value;
@@ -169,8 +169,8 @@ document.getElementById('pay').addEventListener('click', function() {
 	let detail_address = document.getElementById('sample6_detailAddress').value;
 	let full_addr = address + " " + detail_address;
 	let options = document.getElementById('options').value;
-	let customInput = document.getElementById('customInput').value;
-
+	//let customInput = document.getElementById('customInput').value;
+	
     // 결제모듈
     const IMP = window.IMP;
     IMP.init('imp45767108'); /* imp~ : 가맹점 식별코드 */
@@ -180,13 +180,17 @@ document.getElementById('pay').addEventListener('click', function() {
         pg: "nice",   // PG사 설정
         pay_method: "card",   // 결제 방법
         name: "서적", // 상품명
+		buyer_name: name,
         amount: 100,   // 결제 가격 (테스트용)
         // amount: totalSum,  // 실제 결제 가격
 		buyer_name: name,
+		pw: pw,
 		buyer_tel: phone,
 		buyer_postcode: post_code,
 		buyer_addr: full_addr,
-        merchant_uid: 'merchant_' + new Date().getTime(), // 임의 주문번호 부여
+        merchant_uid: new Date().getTime(), // 임의 주문번호 부여
+		options: options,
+		
     }, function(res) {
         if (res.success) {
             axios({
@@ -201,6 +205,44 @@ document.getElementById('pay').addEventListener('click', function() {
 				// 결제성공시 alert창 
 				console.log(response.data);
                 alert("Payment success!");
+				
+				// 결제성공시 imp_uid, 주문조회pw, 배송요청사항을 post요청 
+				let payData = {
+					imp_uid:res.imp_uid,
+					pw: pw,
+					options: options
+				}
+				console.log("imp_uid, pw, 주문요청사항: ",payData);
+
+				axios({
+					method: "post",
+					url: '/payment/updatePay',
+					headers: {
+						'Content-Type': 'application/json',
+						[csrfHeader]: csrfToken
+					},
+					data: {
+						imp_uid:res.imp_uid,
+						pw: pw,
+						options: options
+					}
+				})
+				.then(response => {
+				    console.log("Payment update response:", response.data);
+				})
+				.catch(error => {
+				    if (error.response) {
+				        // 서버 응답이 있을 경우
+				        console.error('서버 응답 오류:', error.response.data);
+				    } else if (error.request) {
+				        // 요청이 전송되지 않았을 경우
+				        console.error('요청이 전송되지 않음:', error.request);
+				    } else {
+				        // 요청 설정 중 오류가 발생했을 경우
+				        console.error('요청 설정 중 오류 발생:', error.message);
+				    }
+				});
+				//location.href="order/success";				
             })
             .catch(error => {
 				if (error.response) {
