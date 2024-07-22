@@ -1,14 +1,170 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>레이아웃</title>
-</head>
-<body>
-책 제목 : <br>
-<span th:text="${session.s_title}"></span><br>
-<img th:src="${session.s_img}" />
-<a th:href="@{/session}">섹션테스트 이동</a>
-<a href="#">바로구매</a>
-</body>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+	<title>레이아웃</title>
+	<style>
+		a {
+			text-decoration: none;
+		}
+		
+		.flex_wrap {
+			display: flex;
+			gap: 50px;
+		}
+		
+		.txt_wrap {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
+		
+		.title {
+			font-size: 30px;
+			font-style: bold;
+		}
+		
+		.bcount {
+			height: 46px;
+			width: 66px;
+			border: 1px solid #cdcdcd;
+			outline: none;
+		}
+	
+		/*카운트 옆 화살표 지우기*/	
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+		  -webkit-appearance: none;
+		  margin: 0;
+		}
+		
+		input[type='number'] {
+		  -moz-appearance: textfield;
+		}
+		
+		.c_wrap {
+			display: flex;
+		}
+		
+		.cb_wrap > button {
+			display: block;
+			border: none;
+		}
+		
+		.b_wrap {
+			display: flex;
+			gap: 30px;
+		}
+		
+		.basket {
+			padding: 10px;
+			color: #fff;
+			background: #0d6efd;
+			border-radius: 10px;
+		}
+		
+		.buy {
+			padding: 10px;
+			color: #fff;
+			background: #d63384;
+			border-radius: 10px;
+		}
+		
+	</style>
+	<body>
+		<div class="flex_wrap">
+			<input type="hidden" class="book_id" th:value="${book.book_id}">
+			<img th:src="${book.book_img}" />
+			<div class="txt_wrap">
+				<span th:text="${book.book_title}" class="title"></span>
+				<span th:text="${book.book_writer}" class="writer"></span>
+				<div class="s_wrap">
+					<span>판매가</span> <span th:text="${book.book_price}" class="price"></span>
+				</div>
+				<div class="c_wrap">
+					<!--class로하면 js설정하기 귀찮아서 아이디로함-->
+					<input type="number" min="1" max="500" class="bcount" value="1"/>
+					<div class="cb_wrap">
+						<button onclick="add()">증가</button>
+						<button onclick="min()">감소</button>
+					</div>
+					<span>총가격 </span> <span class="result"></span><span>원</span>
+				</div>
+				<div class="b_wrap">
+					<!--session으로 장바구니 여부봐야겠지-->
+					<a href="#" onclick="aa()" class="basket">장바구니</a>
+					<a href="#" class="buy">바로구매</a>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<h3>책소개</h3>
+		<p th:text="${book.book_intro}"></p>
+		<hr>
+		<h3>리뷰</h3>
+		<!--#lists.sizes는 길이반환하는 메소드. th:if는 조건-->
+		<!--th:if는 조건. p_list가 없을경우(댓글이 없을경우) 실행되면 없는걸 가져오려해서 오류뜸.-->
+		<h5 th:if="${p_list != null}" th:text="|${#lists.size(p_list)}개의 리뷰|"></h5>
+		<h5 th:if="${p_list == null}" th:text="|0개의 리뷰|"></h5>
+		
+		<form th:action="@{|write_review/${book.book_id}|}" method="post">
+			<textarea name="w_content"></textarea>
+			<input type="submit" value="리뷰달기" />
+		</form>
+		
+		<ul th:each="pl:${p_list}">
+			<li th:text="'아이디 : ' + ${pl.id}"></li>
+			<li th:text="'리뷰 : ' + ${pl.review}"></li>
+			<li th:text="'시간 : ' + ${pl.time}"></li>
+			<li th:text="'사용자 닉네임 : ' + ${pl.user}"></li>
+		</ul>
+		
+		
+	</body>
+
+	<script th:inline="javascript" type="text/javascript"  th:src="@{/js/common-ui.js}"></script>
+	<script th:inline="javascript">
+
+	   // book.book_price를 js 변수로 변환. /*는 주석이 아니라 /*.[[로 th템플릿 속성이랜다.
+	    var price = /*[[${book.book_price}]]*/ '0'; // 초기값 '0' 설정
+	    
+	    // ,제거 후 실수로 변환. ,가 찾을 문자. g는 전역 검색을 뜻. 모든 ','을 ''로 바꾸겠단 뜻
+	    price = parseFloat(price.replace(/,/g, ''));
+	    
+	    let click = false;
+	    let input = document.querySelector('.bcount');
+	    let result = document.querySelector('.result');
+	    let count = 1;
+
+
+	    function add() {
+	        if (count < 500) {
+	            count = count + 1;
+	            input.value = count;
+	            updateResult();
+	        }
+	    }
+
+	    function min() {
+	        if (count > 1) {
+	            count = count - 1;
+	            input.value = count;
+	            updateResult();
+	        }
+	    }
+
+	    function updateResult() {
+	      let inputValue = parseInt(input.value); // 입력값을 정수형으로 변환
+	            if (inputValue < 1) inputValue = 1; // 최소값 이하로 내려가지 않도록 보정
+	            if (inputValue > 500) inputValue = 500; // 최대값 이상으로 올라가지 않도록 보정
+	            input.value = inputValue; // 보정된 값을 다시 input에 설정
+	            
+	            let total = inputValue * price;
+	            result.textContent = total.toLocaleString();
+	    }
+
+	    // 페이지 로드 시 초기 결과값 설정
+	   // 없는게 나은거같다
+	    updateResult();
+	</script>
+
+</div>
 </html>

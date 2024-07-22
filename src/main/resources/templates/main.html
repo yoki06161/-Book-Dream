@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>온라인 서점</title>
+</head>
+<body>
+        <div layout:fragment="content" class="container mt-4">
+            <h1>도서 추가</h1>
+            <form th:action="@{/mainpage/main/create}" th:object="${main}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="mb-3">
+                    <label for="title" class="form-label">제목:</label>
+                    <input type="text" id="title" class="form-control" th:field="*{title}" required />
+                </div>
+                <div class="mb-3">
+                    <label for="author" class="form-label">저자:</label>
+                    <input type="text" id="author" class="form-control" th:field="*{author}" required />
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">가격:</label>
+                    <input type="number" id="price" class="form-control" th:field="*{price}" required />
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">도서 추가</button>
+                </div>
+            </form>
+
+            <h2>도서 목록</h2>
+            <ul>
+                <li th:each="main : ${mains}">
+                    <span th:text="'제목: ' + ${main.title}"></span>,
+                    <span th:text="'저자: ' + ${main.author}"></span>,
+                    <span th:text="'가격: ' + ${main.price}"></span>
+                </li>
+            </ul>
+        </div>
+</body>
+</html>

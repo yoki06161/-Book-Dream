@@ -23,8 +23,32 @@
                     <a class="nav-link" th:href="@{|/trade/chat|}">채팅(아이콘)</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/basket|}">장바구니(아이콘)</a>
-                </li>
+                <a
+                  class="nav-link position-relative me-auto"
+                  style="
+                    background: url(/image/shopping-cart-2-line.png) no-repeat center
+                      center;
+                    width: 40px;
+                    height: 40px;
+                  "
+                  th:href="@{|/basket|}"
+                >
+                  <!-- 로그인 시 세션에 저장된 상품 수가 해당 회원의 장바구니 상품 수에 추가 -->
+                  <span
+                    class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
+                  id="badge" sec:authorize="isAnonymous()">
+                    0
+                    <span class="visually-hidden">장바구니에 담은 상품 수</span>
+                  </span>
+                  <span
+                    class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
+                  id="badge" sec:authorize="isAuthenticated()"  th:text="${basketNumber}">
+                    0
+                    <span class="visually-hidden">장바구니에 담은 상품 수</span>
+                  </span>
+                </a>
+              </li>
+              &nbsp;&nbsp;
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/login|}">로그인</a>
                 </li>
