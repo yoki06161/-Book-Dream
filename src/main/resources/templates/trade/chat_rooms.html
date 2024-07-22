@@ -82,41 +82,47 @@
             stompClientChatRooms.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
                 stompClientChatRooms.subscribe('/topic/chatRoomsUpdate', function (messageOutput) {
-                    var chatRoom = JSON.parse(messageOutput.body);
-                    console.log('Received message: ', chatRoom);
-                    setTimeout(function () {
-                        updateChatRoomList(chatRoom);
-                    });
+                    var message = JSON.parse(messageOutput.body);
+                    console.log('Received message: ', message);
+                    if (message.hasOwnProperty('tradeIdx')) {
+                        updateChatRoomList(message);
+                    } else {
+                        console.log('Ignoring non-chatRoom update message');
+                    }
                 });
             });
         }
 
         function updateChatRoomList(chatRoom) {
-            console.log('Updating chat room: ', chatRoom.id); // 디버깅 로그 추가
-            var chatRoomElement = document.querySelector('li[data-chat-room-id="' + chatRoom.id + '"]');
-            console.log('Found chat room element: ', chatRoomElement); // 디버깅 로그 추가
+            // Check if the received message is a ChatRoom update
+            if (chatRoom.hasOwnProperty('tradeIdx')) {
+                var chatRoomElement = document.querySelector('li[data-chat-room-id="' + chatRoom.id + '"]');
 
-            if (chatRoomElement) {
-                chatRoomElement.querySelector('.last-message').textContent = chatRoom.lastMessage;
-                chatRoomElement.querySelector('.message-time').textContent = new Date(chatRoom.lastMessageTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+                if (chatRoomElement) {
+                    chatRoomElement.querySelector('.last-message').textContent = chatRoom.lastMessage;
+                    chatRoomElement.querySelector('.message-time').textContent = new Date(chatRoom.lastMessageTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
 
-                var badgeElement = chatRoomElement.querySelector('.chat_badge');
-                var newMessagesCount = (userId === chatRoom.receiverId) ? chatRoom.newMessagesCountForReceiver : chatRoom.newMessagesCountForSender;
+                    var badgeElement = chatRoomElement.querySelector('.chat_badge');
+                    var newMessagesCount = (userId === chatRoom.receiverId) ? chatRoom.newMessagesCountForReceiver : chatRoom.newMessagesCountForSender;
 
-                if (newMessagesCount > 0) {
-                    if (!badgeElement) {
-                        badgeElement = document.createElement('span');
-                        badgeElement.classList.add('chat_badge');
-                        chatRoomElement.appendChild(badgeElement);
+                    if (newMessagesCount > 0) {
+                        if (!badgeElement) {
+                            badgeElement = document.createElement('span');
+                            badgeElement.classList.add('chat_badge');
+                            chatRoomElement.appendChild(badgeElement);
+                        }
+                        badgeElement.textContent = newMessagesCount;
+                    } else if (badgeElement) {
+                        badgeElement.remove();
                     }
-                    badgeElement.textContent = newMessagesCount;
-                } else if (badgeElement) {
-                    badgeElement.remove();
+                } else {
+                    console.warn('Chat room element not found for id: ', chatRoom.id);
                 }
             } else {
-                console.warn('Chat room element not found for id: ', chatRoom.id);
+                console.log('Received message is not a chatRoom update, ignoring.');
             }
         }
+
     </script>
 </head>
 <body>
