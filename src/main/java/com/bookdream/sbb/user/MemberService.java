@@ -36,19 +36,6 @@ public class MemberService {
         memberRepository.save(joinRequest.toEntity());
     }
 
-    public Member login(LoginRequest loginRequest) {
-        Member findMember = memberRepository.findByLoginId(loginRequest.getLoginId());
-
-        if (findMember == null) {
-            return null;
-        }
-
-        if (!passwordEncoder.matches(loginRequest.getPassword(), findMember.getPassword())) {
-            return null;
-        }
-
-        return findMember;
-    }
 
     public Member getLoginMemberById(Long memberId) {
         if (memberId == null) return null;
@@ -67,5 +54,10 @@ public class MemberService {
     	member.setName(name);
     	member.setLastNameChangeDate(LocalDateTime.now()); // 이름 변경 일시 설정
     	this.memberRepository.save(member);
+    }
+    
+    // 사용자 삭제 메서드
+    public void deleteUser(Member member) {
+        this.memberRepository.delete(member);
     }
 }

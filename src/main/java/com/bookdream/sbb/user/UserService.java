@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     
     public SiteUser create(Map<String, String> map) {

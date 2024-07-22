@@ -387,46 +387,99 @@ public class UserController {
         return "redirect:/";
     }
 
-
-    
-
-
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/userdel")
-    public String userdel(UserDelForm userDelForm) {
+    public String userdel(UserDelForm userDelForm, Principal principal, Model model) {
+        SiteUser user = null;
+        Member member = null;
+        boolean isSocialLogin = false;
+
+        try {
+            user = this.userService.getUserByEmail(principal.getName());
+        } catch (DataNotFoundException e) {
+            // user가 없으면 계속 진행
+        }
+
+        try {
+            member = this.memberService.getLoginMemberByLoginId(principal.getName());
+            if (member != null) {
+                isSocialLogin = true;
+            }
+        } catch (DataNotFoundException e) {
+            // member가 없으면 무시
+        }
+
+        if (user == null && member == null) {
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        model.addAttribute("isSocialLogin", isSocialLogin);
+        model.addAttribute("userDelForm", userDelForm);
         return "user/userdel";
     }
-    
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/userdel")
     public String userdel(@Valid UserDelForm userDelForm, BindingResult bindingResult, Principal principal, Model model, HttpSession session) {
-        SiteUser user = this.userService.getUser(principal.getName());
-        
-        if (bindingResult.hasErrors()) {
-            return "user/userdel";
+        SiteUser user = null;
+        Member member = null;
+        boolean isSocialLogin = false;
+
+        try {
+            user = this.userService.getUserByEmail(principal.getName());
+        } catch (DataNotFoundException e) {
+            // user가 없으면 계속 진행
         }
 
-        if (!this.userService.isSamePassword(user, userDelForm.getCurrentPassword())) {
-            bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
-            return "user/userdel";
-        }
-        
         try {
-            userService.deleteUser(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            bindingResult.reject("deleteUserFailed", e.getMessage());
-            return "user/userdel";
+            member = this.memberService.getLoginMemberByLoginId(principal.getName());
+            if (member != null) {
+                isSocialLogin = true;
+            }
+        } catch (DataNotFoundException e) {
+            // member가 없으면 무시
         }
+
+        if (user == null && member == null) {
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        model.addAttribute("isSocialLogin", isSocialLogin);
+        model.addAttribute("userDelForm", userDelForm);
         
-     // 로그아웃 처리
-        session.invalidate(); // 세션 무효화
-        SecurityContextHolder.clearContext(); // Spring Security 세션 초기화
+        if (!isSocialLogin) {
+	        if (bindingResult.hasErrors()) {
+	            return "user/userdel";
+	        }
+        }
+
+        if (!isSocialLogin) {
+            if (!this.userService.isSamePassword(user, userDelForm.getCurrentPassword())) {
+                bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
+                return "user/userdel";
+            }
+            
+            try {
+                userService.deleteUser(user);
+            } catch (Exception e) {
+                e.printStackTrace();
+                bindingResult.reject("deleteUserFailed", e.getMessage());
+                return "user/userdel";
+            }
+        } else {
+            try {
+                memberService.deleteUser(member);
+            } catch (Exception e) {
+                e.printStackTrace();
+                bindingResult.reject("deleteUserFailed", e.getMessage());
+                return "user/userdel";
+            }
+        }
+
+        session.invalidate();
+        SecurityContextHolder.clearContext();
         return "redirect:/";
     }
-
-    
     
     
     @GetMapping("/userbuy")
