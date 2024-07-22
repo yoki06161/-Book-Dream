@@ -1,8 +1,4 @@
 <html layout:decorate="~{layout}">
-<!-- 스크립트 블록을 정의 -->
-<th:block layout:fragment="script">
-    <script type="text/javascript" th:src="@{/js/order-success-ui.js}"></script>
-</th:block>
     <main layout:fragment="content" class="container" id="container">
       <h2 class="fw-bold text-center">결제 완료</h2>
       <br />
@@ -11,9 +7,19 @@
       <div class="card mb-3">
         <div class="card-body">
           <h4 class="mb-3">주문 상품(주문번호 <span th:text="${pay.pay_id}"></span>)</h4>
-          <table  id="dataArrayList" class="table table-borderless align-middle text-center">
-            <tr>
-            </tr>
+          <table class="table table-borderless align-middle text-center">
+          	<tbody th:each="orders : ${orders}">
+	            <tr th:each="book : ${books}" th:if="${book.book_id == orders.book_id}">
+			        <td><img th:src="${book.book_img}" alt="상품사진" style="width: 82px; height: 118.34px;"></td>
+			        <td class="text-start">
+			        	<p class="fs-5 fw-bold" th:text="${book.book_title}"></p>
+			        	<p class="fs-6" style="color:gray;" th:text="${book.book_writer}"></p>
+			            <p class="fs-5" th:text="${book.book_price}"></p>
+			         </td>
+			        <td><span th:text="${orders.count}"></span>권</td>
+			        <td th:text="${orders.count_price}"></td>
+	            </tr>
+          	</tbody>
           </table>
         </div>
       </div>
@@ -41,7 +47,7 @@
       <div class="card mb-3">
         <div class="card-body mx-auto" style="width: 1256px !important">
           <div class="d-flex justify-content-between">
-            <h4>총 가격: <span id="totalSum">0</span></h4>
+            <h4>총 가격: <span th:text="${pay.total_price}">0</span></h4>
           </div>
         </div>
       </div>

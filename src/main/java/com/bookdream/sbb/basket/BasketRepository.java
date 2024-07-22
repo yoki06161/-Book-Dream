@@ -14,7 +14,4 @@ import java.util.Optional;
 public interface BasketRepository extends JpaRepository<Basket, Long> {
 	@Query("SELECT b FROM Basket b WHERE b.book_id = :book_id AND b.email = :email")
 	Optional<Basket> findByBookIdAndEmail(@Param("book_id") Integer book_id, @Param("email") String email);
-	
-//	 @Transactional
-//	 void deleteByBookIdAndEmail(Integer book_id, String email);
 }

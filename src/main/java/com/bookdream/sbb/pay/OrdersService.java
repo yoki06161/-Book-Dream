@@ -30,4 +30,8 @@ public class OrdersService {
 
 	    ordersRepository.saveAll(ordersToSave);
 	}
+
+	public List<Orders> getOrdersById(String pay_id) {
+		return ordersRepository.findByPayId(pay_id);
+	}
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.bookdream.sbb.prod.Prod_Service;
+import com.bookdream.sbb.prod_repo.Prod_Books;
+
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -26,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderController {
 	@Autowired
 	private final PayService payService;
+	private final Prod_Service prodService;
 	private final OrdersService ordersService;
 
 	@GetMapping("")
@@ -73,14 +78,23 @@ public class OrderController {
 
 	@GetMapping("/success/{imp_uid}")
 	public String paySuccess(Model model, @PathVariable("imp_uid") String pay_id) {
-		System.out.println(pay_id);
-		Optional<Pay> optionalPay = (Optional<Pay>) payService.getPaysById(pay_id);
-		if (optionalPay.isPresent()) {
-			model.addAttribute("pay", optionalPay.get());
-		} else {
-			// 예외 처리 또는 에러 메시지 처리
-			model.addAttribute("error", "Payment not found");
-		}
-		return "pay/order_success";
+	    Optional<Pay> optionalPay = (Optional<Pay>) payService.getPaysById(pay_id);
+	    
+	    if (optionalPay.isPresent()) {
+	        model.addAttribute("pay", optionalPay.get());
+
+	        List<Orders> orders = ordersService.getOrdersById(pay_id);
+	        model.addAttribute("orders", orders);
+
+	        List<Prod_Books> books = orders.stream()
+	                .map(order -> prodService.getProdBooks(order.getBook_id()))
+	                .collect(Collectors.toList());
+
+	        model.addAttribute("books", books);
+	    } else {
+	        // 예외 처리 또는 에러 메시지 처리
+	        model.addAttribute("error", "Payment not found");
+	    }
+	    return "pay/order_success";
 	}
 }
