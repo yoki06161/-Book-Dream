@@ -197,7 +197,8 @@ document.getElementById('pay').addEventListener('click', function() {
                 method: "post",
                 url: `/payment/validation/${res.imp_uid}`,
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					[csrfHeader]: csrfToken
 				},
             })
             .then(response => {
@@ -206,7 +207,8 @@ document.getElementById('pay').addEventListener('click', function() {
 					method: "post",
 					url: '/payment/updatePay',
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						[csrfHeader]: csrfToken
 					},
 					data: {
 						imp_uid:res.imp_uid,
@@ -229,7 +231,8 @@ document.getElementById('pay').addEventListener('click', function() {
 						method: "post",
 						url: '/order/addProducts',
 						headers: {
-							'Content-Type': 'application/json'
+							'Content-Type': 'application/json',
+							[csrfHeader]: csrfToken
 						},
 						// 배열 selectedItems를 JSON 문자열로 변환
 						data: JSON.stringify(selectedItems)
@@ -237,7 +240,7 @@ document.getElementById('pay').addEventListener('click', function() {
 					.then(response => {
 						console.log("orders update response:", response.data);
 
-						//location.href=`/order/success/${res.imp_uid}`;
+						location.href=`/order/success/${res.imp_uid}`;
 					})
 					.catch(error => {
 						if (error.response) {
