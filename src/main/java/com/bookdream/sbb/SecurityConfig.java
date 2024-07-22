@@ -48,8 +48,7 @@ public class SecurityConfig {
                 .loginPage("/oauth-login/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/user/login")
-                .permitAll())
-            .csrf((csrf) -> csrf.disable());
+                .permitAll());
 
         return http.build();
     }
