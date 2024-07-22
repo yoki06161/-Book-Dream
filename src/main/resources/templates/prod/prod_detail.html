@@ -32,6 +32,14 @@
 		<h3>책소개</h3>
 		<p th:text="${book.book_intro}"></p>
 		<hr>
+		<!--별점 테스트-->
+		<p th:text="${book.book_id}"></p>
+		<a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+            th:data-uri="@{|/prod/score/${book.book_id}|}">
+            추천
+		<span class="badge rounded-pill bg-success" th:text="${#lists.size(book.voter)}"></span>
+        </a>
+		<hr>
 		<h3>리뷰</h3>
 		<form th:action="@{|write_review/${book.book_id}|}" method="post">
 			<textarea name="w_content" placeholder="지나친 욕설은 자제해주세요." class="w_review"></textarea>
@@ -138,6 +146,15 @@
 		    }
 		}
 
+		// 별점 테스트
+		const recommend_elements = document.getElementsByClassName("recommend");
+		Array.from(recommend_elements).forEach(function(element) {
+		    element.addEventListener('click', function() {
+		        if(confirm("정말로 추천하시겠습니까?")) {
+		            location.href = this.dataset.uri;
+		        };
+		    });
+		});
 
 	    // 페이지 로드 시 초기 결과값 설정
 	   // 없는게 나은거같다

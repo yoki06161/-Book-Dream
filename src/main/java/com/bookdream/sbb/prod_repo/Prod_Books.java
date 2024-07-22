@@ -4,7 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+
+import java.util.Set;
+
+import com.bookdream.sbb.user.SiteUser;
+
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,4 +63,7 @@ public class Prod_Books {
 	// 책 장르
 	@Column(length = 100)
 	private String book_genre;
+	
+	@ManyToMany
+    Set<SiteUser> voter;
 }

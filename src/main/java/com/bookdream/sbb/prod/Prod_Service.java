@@ -65,7 +65,6 @@ public class Prod_Service {
 		return opb.get();
 	}
 	
-
 	// 검색
 	// Specification은 요구사항을 명확히 설정?
 	private Specification<Prod_Books> search(String kw) {
@@ -81,6 +80,13 @@ public class Prod_Service {
 		}
 	};
 	}
+	
+	// 별점 테스트
+	 public void score_vote(Prod_Books books, SiteUser user) {
+		 // 포터 값을 불러와서 거기에 유저 명을 입력하는듯.
+		books.getVoter().add(user);
+        prodRepository.save(books);
+    }
 	
 	
 	// ###################리뷰
@@ -149,5 +155,16 @@ public class Prod_Service {
     		// 이제 나올리 없음.
     		return "익명";
     	}
+	}
+    
+    // 별점 테스트 이메일 불러오기
+    public SiteUser getUser(String user) {
+		System.out.println("!!!!!!!!!!!!!!!아마도 유저 이메일 " + user);
+		Optional<SiteUser> siteUser = user_repo.findByEmail(user);
+		System.out.println("!!!!!!!!!!!!!!!아마도 유저 이메일2 " + siteUser);
+		if(siteUser.isPresent()) {
+			return siteUser.get();
+		}
+		return null;
 	}
 }

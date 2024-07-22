@@ -67,7 +67,7 @@ public class Prod_Controller {
 	// 제품 상세보기.
 	// @PathVariable은 url에 있는 변수 인식하는거.
 	@GetMapping("/detail/{book_id}")
-	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) throws IOException{
+	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) {
 		// 책아이디 건네주기
 		Prod_Books book = prodService.getProdBooks(book_id);
 		model.addAttribute("book", book);
@@ -82,6 +82,19 @@ public class Prod_Controller {
 		
 		return "prod/prod_detail";
 	}
+	
+	// 별점 테스트
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/score/{book_id}")
+	public String getMethodName(Model model, @PathVariable("book_id") Integer book_id, Principal pc) {
+		// 책아이디 건네주기
+		Prod_Books book = prodService.getProdBooks(book_id);
+//        String user = prodService.getUserName(pc.getName());
+        SiteUser s_user = prodService.getUser(pc.getName());
+        prodService.score_vote(book, s_user);
+		return String.format("redirect:/prod/detail/%s", book_id);
+	}
+	
 	
 	// 리뷰 쓰기
 	// PreAuthorize는 로그인 여부 확인. 로그인 해야만 사용할 수 있음.
