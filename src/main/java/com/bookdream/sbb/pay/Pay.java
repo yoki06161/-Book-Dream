@@ -35,10 +35,10 @@ public class Pay {
 	@Column(length = 5, nullable = false)
 	private String post_code;
 	
-	@Column(length = 40, nullable = false)
+	@Column(length = 200, nullable = false)
 	private String address;
 	
-	@Column(length = 40)
+	@Column(length = 200)
 	private String request;
 	
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
