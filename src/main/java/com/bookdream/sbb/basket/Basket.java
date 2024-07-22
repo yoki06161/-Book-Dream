@@ -5,11 +5,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+
+@Table (name = "basket")
 @Getter
 @Setter
 @Entity
+@Table (name = "basket")
 public class Basket {
 	public Basket() {
 		this.created_at = LocalDateTime.now();
@@ -24,16 +28,8 @@ public class Basket {
 	private LocalDateTime created_at;
 	@Column(length=2)
 	private Integer count;
-
 	@Column(length=50)
-
 	private String count_price;
-
-
-
-
 	@Column
-
 	private Integer book_id;
-
 }

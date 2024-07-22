@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+    <title>Freeboard List</title>
+</head>
+<body>
+    <h1>Freeboard List</h1>
+    <a th:href="@{/freeboard/new}">Create New Freeboard</a>
+    <ul>
+        <li th:each="freeboard : ${freeboards}">
+            <a th:href="@{/freeboard/{id}(id=${freeboard.id})}" th:text="${freeboard.title}">Freeboard Title</a>
+        </li>
+    </ul>
+</body>
+</html>
+	<p>list 입니다</p>
