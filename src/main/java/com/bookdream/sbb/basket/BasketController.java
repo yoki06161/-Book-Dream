@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.bookdream.sbb.prod.Prod_Service;
 import com.bookdream.sbb.user.UserService;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpSession;
