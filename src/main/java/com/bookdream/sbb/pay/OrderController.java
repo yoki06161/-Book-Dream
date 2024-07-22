@@ -44,10 +44,6 @@ public class OrderController {
 		return "pay/order";
 	}
 
-	//	@GetMapping("/success")
-	//	public String paySuccess() {
-	//		return "pay/order_success";
-	//	}
 	@PostMapping("/addProducts")
 	public ResponseEntity<String> addProducts(@RequestBody List<Map<String, Object>> selectedItems) {
 	    try {
