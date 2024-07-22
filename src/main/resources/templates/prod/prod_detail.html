@@ -1,87 +1,25 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
 	<title>레이아웃</title>
-	<style>
-		a {
-			text-decoration: none;
-		}
-		
-		.flex_wrap {
-			display: flex;
-			gap: 50px;
-		}
-		
-		.txt_wrap {
-			display: flex;
-			flex-direction: column;
-			gap: 20px;
-		}
-		
-		.title {
-			font-size: 30px;
-			font-style: bold;
-		}
-		
-		.bcount {
-			height: 46px;
-			width: 66px;
-			border: 1px solid #cdcdcd;
-			outline: none;
-		}
-	
-		/*카운트 옆 화살표 지우기*/	
-		input::-webkit-outer-spin-button,
-		input::-webkit-inner-spin-button {
-		  -webkit-appearance: none;
-		  margin: 0;
-		}
-		
-		input[type='number'] {
-		  -moz-appearance: textfield;
-		}
-		
-		.c_wrap {
-			display: flex;
-		}
-		
-		.cb_wrap > button {
-			display: block;
-			border: none;
-		}
-		
-		.b_wrap {
-			display: flex;
-			gap: 30px;
-		}
-		
-		.basket {
-			padding: 10px;
-			color: #fff;
-			background: #0d6efd;
-			border-radius: 10px;
-		}
-		
-		.buy {
-			padding: 10px;
-			color: #fff;
-			background: #d63384;
-			border-radius: 10px;
-		}
-		
-	</style>
+	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	<body>
 		<div class="flex_wrap">
 			<input type="hidden" class="book_id" th:value="${book.book_id}">
 			<img th:src="${book.book_img}" />
-			<div class="txt_wrap">
+			<div class="d_txt_wrap">
 				<span th:text="${book.book_title}" class="title"></span>
 				<span th:text="${book.book_writer}" class="writer"></span>
 				<div class="s_wrap">
+<<<<<<< HEAD
 					<span>판매가</span> <span th:text="${book.book_price}" class="price"></span>
+=======
+					<span>판매가</span><span th:text="${book.book_price}" class="count"></span>
+>>>>>>> refs/heads/hwhw
 				</div>
 				<div class="c_wrap">
 					<!--class로하면 js설정하기 귀찮아서 아이디로함-->
-					<input type="number" min="1" max="500" class="bcount" value="1"/>
+					<!--oninput는 수정 이벤트 인식하는거. 키보드 위아래 입력이 인식되도 updateResult함수가 실행됨-->
+					<input type="number" min="1" max="500" class="bcount" value="1" oninput="updateResult()" />
 					<div class="cb_wrap">
 						<button onclick="add()">증가</button>
 						<button onclick="min()">감소</button>
@@ -99,24 +37,55 @@
 		<h3>책소개</h3>
 		<p th:text="${book.book_intro}"></p>
 		<hr>
+		<!--별점 테스트-->
+		<p th:text="${book.book_id}"></p>
+		<a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+            th:data-uri="@{|/prod/score/${book.book_id}|}">
+            추천
+		<span class="badge rounded-pill bg-success" th:text="${#lists.size(book.voter)}"></span>
+        </a>
+		<hr>
 		<h3>리뷰</h3>
-		<!--#lists.sizes는 길이반환하는 메소드. th:if는 조건-->
-		<!--th:if는 조건. p_list가 없을경우(댓글이 없을경우) 실행되면 없는걸 가져오려해서 오류뜸.-->
-		<h5 th:if="${p_list != null}" th:text="|${#lists.size(p_list)}개의 리뷰|"></h5>
-		<h5 th:if="${p_list == null}" th:text="|0개의 리뷰|"></h5>
-		
 		<form th:action="@{|write_review/${book.book_id}|}" method="post">
-			<textarea name="w_content"></textarea>
+			<textarea name="w_content" placeholder="지나친 욕설은 자제해주세요." class="w_review"></textarea>
 			<input type="submit" value="리뷰달기" />
 		</form>
-		
-		<ul th:each="pl:${p_list}">
-			<li th:text="'아이디 : ' + ${pl.id}"></li>
-			<li th:text="'리뷰 : ' + ${pl.review}"></li>
-			<li th:text="'시간 : ' + ${pl.time}"></li>
-			<li th:text="'사용자 닉네임 : ' + ${pl.user}"></li>
-		</ul>
-		
+		<br>
+		<hr>
+		<br>
+		<!--#lists.sizes는 길이반환하는 메소드.-->
+		<!--th:if는 조건. p_list가 없을경우(댓글이 없을경우) 실행되면 없는걸 가져오려해서 오류뜸.-->
+		<h5 th:if="${r_list != null}" th:text="|${#lists.size(r_list)}개의 리뷰|"></h5>
+		<h5 th:if="${r_list == null}" th:text="|0개의 리뷰|"></h5>
+		<div th:each="rl:${r_list}">
+			<span th:text="${rl.user}"></span> | 
+			<span th:text="${rl.time}"></span><br>
+			<pre th:text="${rl.review}" class="review_cont"></pre><br>
+			<!--this는 현재 실행중인 함수가 속한 객체?-->
+			<button onclick="show_answer(this)">답글보기</button>
+			<br>
+			<div class="answer_wrap">
+				<form th:action="@{|write_answer/${book.book_id}/${rl.id}|}" method="post">
+					<textarea name="a_content"></textarea>
+					<input type="submit" value="답글달기">
+				</form>
+				<br>
+				<!--리스트는 전부 불러오는건데 if로 답변 리뷰 id값과 리뷰 id값이 같은 것만을 출력하게함.-->
+				<div th:each="al : ${a_list}" th:if="${al.review.id == rl.id}">
+					<div tH:text="${al.user}"></div>
+					<!--{답변테이블.리뷰.리뷰테이블의 속성}으로 하면 리뷰테이블 속성불러오기 가능. 연결돼있으니까.-->
+					<pre tH:text="${al.answer}"></pre>
+					<hr>
+				</div>
+			</div>
+			<br>
+			<hr>
+		</div>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
 		
 	</body>
 
@@ -124,42 +93,74 @@
 	<script th:inline="javascript">
 
 	   // book.book_price를 js 변수로 변환. /*는 주석이 아니라 /*.[[로 th템플릿 속성이랜다.
-	    var price = /*[[${book.book_price}]]*/ '0'; // 초기값 '0' 설정
+	    let price = /*[[${book.book_price}]]*/ '0'; // 초기값 '0' 설정
 	    
 	    // ,제거 후 실수로 변환. ,가 찾을 문자. g는 전역 검색을 뜻. 모든 ','을 ''로 바꾸겠단 뜻
 	    price = parseFloat(price.replace(/,/g, ''));
 	    
-	    let click = false;
+		// 인풋값
 	    let input = document.querySelector('.bcount');
+		// 총가격
 	    let result = document.querySelector('.result');
-	    let count = 1;
-
 
 	    function add() {
-	        if (count < 500) {
-	            count = count + 1;
-	            input.value = count;
-	            updateResult();
-	        }
+			// input.value값 숫자로. 원본은 문자형식임.
+			input.value = parseInt(input.value) + 1;
+			
+			// input값이 nan인 경우
+			let inputValue = parseInt(input.value);
+			// input.value는 문자형이라 숫자만 비교하는 nan으로 쓰면 실행 안됨.
+			if(isNaN(inputValue)) {
+				input.value = 1;
+			}
+			
+	        updateResult();
 	    }
 
 	    function min() {
-	        if (count > 1) {
-	            count = count - 1;
-	            input.value = count;
-	            updateResult();
-	        }
+			input.value = parseInt(input.value) - 1;
+	        updateResult();
 	    }
 
 	    function updateResult() {
 	      let inputValue = parseInt(input.value); // 입력값을 정수형으로 변환
-	            if (inputValue < 1) inputValue = 1; // 최소값 이하로 내려가지 않도록 보정
-	            if (inputValue > 500) inputValue = 500; // 최대값 이상으로 올라가지 않도록 보정
-	            input.value = inputValue; // 보정된 값을 다시 input에 설정
-	            
-	            let total = inputValue * price;
-	            result.textContent = total.toLocaleString();
+		  	// min과 max로는 버튼 이벤트가 안막힌다.
+		  	if (inputValue < 1) inputValue = 1; // 최소값 이하로 내려가지 않도록 보정
+          	if (inputValue > 500) inputValue = 500; // 최대값 이상으로 올라가지 않도록 보정
+            input.value = inputValue; // 보정된 값을 다시 input에 설정
+	        
+	        let total = parseInt(input.value) * price;
+	        result.textContent = total.toLocaleString();
+			
+			// 인풋값에 아무것도 없으면 NAN이 떠서 아무것도 안뜨게 만드는 용.
+			if(isNaN(total)) {
+				result.textContent = "";
+			} else {
+			    result.textContent = total.toLocaleString();
+			}
 	    }
+		
+		function show_answer(button) {
+			// parentElement는 직계 부모 요소. 버튼의 바로 위 부모 요소
+			// 부모요소를 찾고 부모요소에 속한 answer_wrap을 찾음. 즉 div th:each="rl:${r_list}" > .answer_wrap임 
+		    let a_wrap = button.parentElement.querySelector('.answer_wrap');
+			
+		    if (a_wrap.style.display === 'block') {
+		        a_wrap.style.display = 'none'; // 보이는 상태면 숨기기
+		    } else {
+		        a_wrap.style.display = 'block'; // 숨겨진 상태면 보이기
+		    }
+		}
+
+		// 별점 테스트
+		const recommend_elements = document.getElementsByClassName("recommend");
+		Array.from(recommend_elements).forEach(function(element) {
+		    element.addEventListener('click', function() {
+		        if(confirm("정말로 추천하시겠습니까?")) {
+		            location.href = this.dataset.uri;
+		        };
+		    });
+		});
 
 	    // 페이지 로드 시 초기 결과값 설정
 	   // 없는게 나은거같다

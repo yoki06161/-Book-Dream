@@ -1,10 +1,12 @@
 package com.bookdream.sbb.prod;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.Mapping;
@@ -20,6 +22,8 @@ import groovyjarjarantlr4.v4.parse.GrammarTreeVisitor.mode_return;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import com.bookdream.sbb.prod_repo.*;
+import com.bookdream.sbb.user.SiteUser;
+import com.bookdream.sbb.user.UserService;
 
 
 // 스프링 실행시 로그인창 안뜨게한다
@@ -34,22 +38,26 @@ public class Prod_Controller {
 	// @Autowired 이미 생성된 빈을 가져온단 뜻
 	@Autowired
 	private final Prod_Service prodService;
-//	private final review_repository re_repo;
 	
-	// 리스트
+	// 제품 리스트
 	// prod로 들어오는 주소 여기로
 	@GetMapping("")
 	// 자바에서 html로 데이터 전달할때 쓰는게 model
-	public String prod_list(Model model) throws IOException {
-		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값(데이터 지우신듯
+	// defaultValue는 kw값이 없을 경우 오류 안뜨게.
+	public String prod_list(Model model, @RequestParam(value = "kw", defaultValue = "") String kw, 
+			@RequestParam(value = "genre", defaultValue = "") String genre) throws IOException {
 		
 //		List<Prod_Books> book_list = Prod_Crawling.getc_Datas();
-//		// 크롤링된 데이터를 데이터베이스에 저장합니다.
-//      prodService.saveBooks(book_list);
+////		 크롤링된 데이터를 데이터베이스에 저장합니다.
+//		prodService.saveBooks(book_list);
 
-      // 데이터베이스에서 저장된 데이터를 가져와서 모델에 추가합니다.
-      model.addAttribute("C_Books", prodService.getAllBooks());
-      // 크롤링된 데이터 그대로 출력 
+		// 키밸류라 생각하면 된다. 여기서 설정한 Prod_Books가 html에서 불리는용, book_list는 여기의 값(데이터 지우신듯
+//		model.addAttribute("C_Books", prodService.getAllBooks());
+		model.addAttribute("C_Books", prodService.getSearchBooks(kw));
+		model.addAttribute("kw", kw);
+		model.addAttribute("b_genre", genre);
+		
+		// 크롤링된 데이터 그대로 출력 
 //		model.addAttribute("C_Books", book_list);
 //		System.out.println("모델값");
 //		System.out.println(model);
@@ -59,55 +67,61 @@ public class Prod_Controller {
 	// 제품 상세보기.
 	// @PathVariable은 url에 있는 변수 인식하는거.
 	@GetMapping("/detail/{book_id}")
-	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) throws IOException{
+	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) {
+		// 책아이디 건네주기
 		Prod_Books book = prodService.getProdBooks(book_id);
 		model.addAttribute("book", book);
 		
 		// 리뷰 보여주기
-		List<Prod_d_Review> p_list = this.prodService.getReview_List(book_id);
-		model.addAttribute("p_list", p_list);
+//		List<Prod_d_Review> r_list = prodService.getReview_List(book_id);
+//		model.addAttribute("r_list", r_list);
+		model.addAttribute("r_list", prodService.getReview_List(book_id));
+		
+		// 답글 보여주기
+		model.addAttribute("a_list", prodService.getAnswer_List());
 		
 		return "prod/prod_detail";
 	}
 	
+	// 별점 테스트
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/score/{book_id}")
+	public String getMethodName(Model model, @PathVariable("book_id") Integer book_id, Principal pc) {
+		// 책아이디 건네주기
+		Prod_Books book = prodService.getProdBooks(book_id);
+//        String user = prodService.getUserName(pc.getName());
+        SiteUser s_user = prodService.getUser(pc.getName());
+        prodService.score_vote(book, s_user);
+		return String.format("redirect:/prod/detail/%s", book_id);
+	}
+	
+	
 	// 리뷰 쓰기
+	// PreAuthorize는 로그인 여부 확인. 로그인 해야만 사용할 수 있음.
+	// authenticated는 인증 된 사용자란다.
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/detail/write_review/{r_id}")
-	public String write_review(Model model,@PathVariable("r_id") Integer id, @RequestParam("w_content") String content) {
-		this.prodService.Write_Review(content, id);
+	// Principal은 스프링시큐리티 쓸떄 쓰인다나. 사용자 관련인거같음
+	public String write_review(Model model,@PathVariable("r_id") Integer id, 
+			@RequestParam("w_content") String content,
+			Principal pc) {
+		// 리뷰에 유저 명 넣기
+		// user = 로그인할떄 친 아이디값. 즉 asdf@naver값이 들어온다.
+		String user = prodService.getUserName(pc.getName());
+		System.out.println("####################컨트롤러 유저 값 확인 " + user);
+		prodService.Write_Review(content, id, user);
 		return String.format("redirect:/prod/detail/%s", id);
 	}
 	
-	
-	// db리스트 테스트 !!!!!!!!!!!내꺼
-	// 그냥 테스트 리스트로 보내는거.
-//	@GetMapping("/list_test")
-//	public String list_t(Model model) {
-//		List<Prod_d_Review> p_list = this.prodService.get_t_list();
-//		model.addAttribute("p_list", p_list);
-//		return "prod/list_test";
-//	}
-	
-	// 테스트 리스트에서 상세보기로
-	// 질문 상세보기
-	@GetMapping("/test_detail/{t_id}")
-	public String t_detail(Model model, @PathVariable("t_id") Integer id) throws DataNotFound {
-		Prod_d_Review pr = this.prodService.get_t_detail(id);
-		model.addAttribute("pr", pr);
-		return "prod/test_detail";
+	// 리뷰 답글 쓰기
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("/detail/write_answer/{b_id}/{a_id}")
+	public String write_answer(Model model, @PathVariable("b_id") Integer b_id, 
+			@PathVariable("a_id") Prod_d_Review id, @RequestParam("a_content") String content,
+			Principal pc) {
+		// 답글에 유저 명 넣기
+		String user = prodService.getUserName(pc.getName());
+		prodService.Write_Answer(id, content, user);
+		return String.format("redirect:/prod/detail/%s", b_id);
 	}
-	
-	// 답변하기
-	@PostMapping("/test_detail/answer/c/{tt_id}")
-	// 리퀘스트 파람은 name값이랑 똑같이.
-	public String t_answer(Model model, @PathVariable("tt_id") Integer id, @RequestParam("t_content") String t_con) throws DataNotFound {
-		Prod_d_Review pr = this.prodService.get_t_detail(id);
-		this.prodService.create(pr, t_con);
-		// 앞에 /prod를 안해서 이상하게 됐었다...
-		return String.format("redirect:/prod/test_detail/%s", id);
-	}
-	
-	
-	
-		
-	
 }
