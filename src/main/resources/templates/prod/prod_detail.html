@@ -33,6 +33,12 @@
 		<p th:text="${book.book_intro}"></p>
 		<hr>
 		<!--별점 테스트-->
+		<form th:action="@{|/prod/detail/score/${book.book_id}|}" method="post">
+			<input name="i_score" type="number"/>
+			<input type="submit" value="별점남기기"/>
+		</form>
+		<hr>
+		<!--
 		<p th:text="${book.book_id}"></p>
 		<a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
             th:data-uri="@{|/prod/score/${book.book_id}|}">
@@ -40,6 +46,7 @@
 		<span class="badge rounded-pill bg-success" th:text="${#lists.size(book.voter)}"></span>
         </a>
 		<hr>
+		-->
 		<h3>리뷰</h3>
 		<form th:action="@{|write_review/${book.book_id}|}" method="post">
 			<textarea name="w_content" placeholder="지나친 욕설은 자제해주세요." class="w_review"></textarea>

@@ -1,6 +1,19 @@
 package com.bookdream.sbb.prod;
 
-import com.bookdream.sbb.prod_repo.*;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import com.bookdream.sbb.prod_repo.Prod_Books;
+import com.bookdream.sbb.prod_repo.Prod_BooksRepository;
+import com.bookdream.sbb.prod_repo.Prod_RArepository;
+import com.bookdream.sbb.prod_repo.Prod_RErepository;
+import com.bookdream.sbb.prod_repo.Prod_d_Answer;
+import com.bookdream.sbb.prod_repo.Prod_d_Review;
 import com.bookdream.sbb.user.Member;
 import com.bookdream.sbb.user.MemberRepository;
 import com.bookdream.sbb.user.SiteUser;
@@ -8,22 +21,8 @@ import com.bookdream.sbb.user.UserRepository;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import javassist.SerialVersionUID;
-
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 
 // final쓸때 씀
@@ -81,12 +80,12 @@ public class Prod_Service {
 	};
 	}
 	
-	// 별점 테스트
-	 public void score_vote(Prod_Books books, SiteUser user) {
-		 // 포터 값을 불러와서 거기에 유저 명을 입력하는듯.
-		books.getVoter().add(user);
-        prodRepository.save(books);
-    }
+//	// 별점 테스트
+//	 public void score_vote(Prod_Books books, SiteUser user) {
+//		 // 포터 값을 불러와서 거기에 유저 명을 입력하는듯.
+//		books.getVoter().add(user);
+//        prodRepository.save(books);
+//    }
 	
 	
 	// ###################리뷰
@@ -158,13 +157,48 @@ public class Prod_Service {
 	}
     
     // 별점 테스트 이메일 불러오기
-    public SiteUser getUser(String user) {
+    public String getUser(String user) {
 		System.out.println("!!!!!!!!!!!!!!!아마도 유저 이메일 " + user);
+		
 		Optional<SiteUser> siteUser = user_repo.findByEmail(user);
-		System.out.println("!!!!!!!!!!!!!!!아마도 유저 이메일2 " + siteUser);
+		Member mem_email = mem_repo.findByLoginId(user);
+		
+		System.out.println("!!!!!!!!!!!!!!!일반 유저 이메일 " + siteUser);
+		System.out.println("!!!!!!!!!!!!!!!카카오 유저 이메일 " + mem_email);
+		
 		if(siteUser.isPresent()) {
-			return siteUser.get();
-		}
-		return null;
+			
+			String user_name = siteUser.get().getEmail();
+
+			System.out.println("!!!!!!!!!!!!!!!리턴 일반 유저 이메일 " + user_name);
+			
+    		return user_name;
+    		
+		} else if(mem_email != null) {
+			
+    		String mem_name = mem_email.getLoginId();
+
+    		System.out.println("!!!!!!!!!!!!!!!리턴 카카오 유저 이메일 " + mem_name);
+    		
+    		return mem_name;
+    		
+    	} else {
+    		// 이제 나올리 없음.
+    		return "익명";
+    	}
 	}
+    
+    // 별점 넣기
+//    public void score(Integer book, String user, Integer score) {
+//    	System.out.println("스코어 연결");
+//    	Prod_Score sc = new Prod_Score();
+//    	sc.setBook(book);
+//    	sc.setUser(user);
+//    	sc.setScore(score);
+//	}
+    
+    
+    
+    
+    
 }

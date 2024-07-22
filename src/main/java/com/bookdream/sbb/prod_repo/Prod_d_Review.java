@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table (name = "prod_d_review")
+@Table(name="prod_d_review")
 @Getter
 @Setter
 @Entity

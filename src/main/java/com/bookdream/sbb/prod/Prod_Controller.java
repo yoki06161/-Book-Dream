@@ -2,28 +2,23 @@ package com.bookdream.sbb.prod;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import groovyjarjarantlr4.v4.parse.GrammarTreeVisitor.mode_return;
-import jakarta.servlet.http.HttpSession;
+import com.bookdream.sbb.prod_repo.Prod_Books;
+import com.bookdream.sbb.prod_repo.Prod_d_Review;
+
 import lombok.RequiredArgsConstructor;
-import com.bookdream.sbb.prod_repo.*;
-import com.bookdream.sbb.user.SiteUser;
-import com.bookdream.sbb.user.UserService;
 
 
 // 스프링 실행시 로그인창 안뜨게한다
@@ -70,7 +65,9 @@ public class Prod_Controller {
 	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) {
 		// 책아이디 건네주기
 		Prod_Books book = prodService.getProdBooks(book_id);
+		System.out.println("book 값 ########## " + book);
 		model.addAttribute("book", book);
+		
 		
 		// 리뷰 보여주기
 //		List<Prod_d_Review> r_list = prodService.getReview_List(book_id);
@@ -84,17 +81,58 @@ public class Prod_Controller {
 	}
 	
 	// 별점 테스트
+//	@PreAuthorize("isAuthenticated()")
+//	@GetMapping("/score/{book_id}")
+//	public String getMethodName(Model model, @PathVariable("book_id") Integer book_id, Principal pc) {
+//		// 책아이디 건네주기
+//		Prod_Books book = prodService.getProdBooks(book_id);
+////        String user = prodService.getUserName(pc.getName());
+//        SiteUser s_user = prodService.getUser(pc.getName());
+//        prodService.score_vote(book, s_user);
+//		return String.format("redirect:/prod/detail/%s", book_id);
+//	}
+//	
+	
+	// 별점 테스트2
 	@PreAuthorize("isAuthenticated()")
-	@GetMapping("/score/{book_id}")
-	public String getMethodName(Model model, @PathVariable("book_id") Integer book_id, Principal pc) {
-		// 책아이디 건네주기
-		Prod_Books book = prodService.getProdBooks(book_id);
-//        String user = prodService.getUserName(pc.getName());
-        SiteUser s_user = prodService.getUser(pc.getName());
-        prodService.score_vote(book, s_user);
-		return String.format("redirect:/prod/detail/%s", book_id);
+	@PostMapping("/detail3/score/{b_id}")
+	private String book_score(@PathVariable("b_id") Integer id, Principal pc,
+			@RequestParam("i_score") Integer score) {
+		System.out.println("+++++++++++++++++++++");
+		System.out.println("별점 값 " + score);
+		System.out.println("책 아이디 " + id);
+		
+		Prod_Books book = prodService.getProdBooks(id);
+		
+		System.out.println("book 값 " + book);
+		System.out.println("pc 값 " + pc.getName());
+		
+		String user = prodService.getUser(pc.getName());
+		System.out.println("user 값 " + user);
+		
+		
+		return String.format("redirect:/prod/detail/%s", id);
 	}
 	
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("/detail/score/{b_id}")
+	public String prod_book2(@PathVariable("b_id") Integer id, Principal pc, 
+			@RequestParam("i_score") Integer score) {
+		System.out.println("+++++++++++++++++++++");
+		System.out.println("별점 값 " + score);
+		System.out.println("책 아이디 " + id);
+		
+		Prod_Books book = prodService.getProdBooks(id);
+		
+		System.out.println("book 값 " + book);
+		System.out.println("pc 값 " + pc.getName());
+		
+		String user = prodService.getUser(pc.getName());
+		System.out.println("user 값 " + user);
+		
+		
+		return String.format("redirect:/prod/detail/%s", id);
+	}
 	
 	// 리뷰 쓰기
 	// PreAuthorize는 로그인 여부 확인. 로그인 해야만 사용할 수 있음.
