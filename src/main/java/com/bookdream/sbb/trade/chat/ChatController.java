@@ -107,6 +107,8 @@ public class ChatController {
             String currentUserId = principal.getName();
             if (!currentUserId.equals(chatMessage.getSenderId())) {
                 chatService.incrementNewMessagesCount(chatMessage.getChatRoomId(), chatMessage.getSenderId(), currentUserId);
+                chatService.sendNewMessagesCount(chatMessage.getSenderId());
+                chatService.sendNewMessagesCount(currentUserId);
             }
         }
 
@@ -121,5 +123,17 @@ public class ChatController {
     public Chat addUser(Chat chatMessage, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSenderId());
         return chatMessage;
+    }
+
+    @GetMapping("/newMessagesCount")
+    @ResponseBody
+    public ResponseEntity<Integer> getNewMessagesCount(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(403).build();
+        }
+
+        String userId = principal.getName();
+        int newMessagesCount = chatService.getTotalNewMessagesCount(userId);
+        return ResponseEntity.ok(newMessagesCount);
     }
 }

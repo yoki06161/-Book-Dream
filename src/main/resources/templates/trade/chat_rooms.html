@@ -62,11 +62,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script>
-        var stompClient = null;
+        var stompClientChatRooms = null;
         var userId = '[[${userId}]]';
 
         document.addEventListener('DOMContentLoaded', function () {
-            connect();
+            connectChatRooms();
             setTimeout(function() {
                 var chatRoomElements = document.querySelectorAll('li[data-chat-room-id]');
                 console.log('Loaded chat rooms:', chatRoomElements);
@@ -76,12 +76,12 @@
             });
         });
 
-        function connect() {
+        function connectChatRooms() {
             var socket = new SockJS('/ws');
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, function (frame) {
+            stompClientChatRooms = Stomp.over(socket);
+            stompClientChatRooms.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/chatRoomsUpdate', function (messageOutput) {
+                stompClientChatRooms.subscribe('/topic/chatRoomsUpdate', function (messageOutput) {
                     var chatRoom = JSON.parse(messageOutput.body);
                     console.log('Received message: ', chatRoom);
                     setTimeout(function () {

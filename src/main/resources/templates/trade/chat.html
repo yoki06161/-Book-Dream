@@ -125,18 +125,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
     <script type="text/javascript">
-        var stompClient = null;
+        var stompClientChat = null;
         var senderId = '[[${senderId}]]';
         var chatRoomId = '[[${chatRoomId}]]';
         var lastMessageDate = null;
         var imageFile = null;
 
-        function connect() {
+        function connectChat() {
             var socket = new SockJS('/ws');
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, function (frame) {
+            stompClientChat = Stomp.over(socket);
+            stompClientChat.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/public', function (messageOutput) {
+                stompClientChat.subscribe('/topic/public', function (messageOutput) {
                     var message = JSON.parse(messageOutput.body);
                     if (message.senderId !== senderId) {
                         setTimeout(function () {
@@ -152,16 +152,16 @@
 
         function sendMessage() {
             var messageContent = document.getElementById('chat-outgoing-msg').value.trim();
-            if (messageContent && stompClient) {
+            if (messageContent && stompClientChat) {
                 var chatMessage = {
                     senderId: senderId,
                     message: messageContent,
                     chatRoomId: chatRoomId,
                     type: 'CHAT'
                 };
-                stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+                stompClientChat.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
                 document.getElementById('chat-outgoing-msg').value = '';
-            } else if (imageFile && stompClient) {
+            } else if (imageFile && stompClientChat) {
                 var reader = new FileReader();
                 reader.onload = function(event) {
                     var chatMessage = {
@@ -170,7 +170,7 @@
                         chatRoomId: chatRoomId,
                         type: 'IMAGE'
                     };
-                    stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+                    stompClientChat.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
                     resetImagePreview();
                     setTimeout(fetchChatHistory);
                 };
@@ -250,7 +250,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            connect();
+            connectChat();
 
             const chatOutgoingButton = document.getElementById('chat-outgoing-button');
             const chatOutgoingMsg = document.getElementById('chat-outgoing-msg');
@@ -319,11 +319,6 @@
             });
         }
     </script>
-
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
-        integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div layout:fragment="content" class="container my-3">

@@ -144,4 +144,11 @@ public class ChatService {
                         .sum();
     }
 
+    
+    public void sendNewMessagesCount(String userId) {
+        int totalNewMessagesCount = getTotalNewMessagesCount(userId);
+        messagingTemplate.convertAndSendToUser(userId, "/queue/newMessagesCount", totalNewMessagesCount);
+    }
+    
+    
 }
