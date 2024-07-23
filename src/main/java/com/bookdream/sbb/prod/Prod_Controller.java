@@ -69,7 +69,7 @@ public class Prod_Controller {
 		System.out.println("book 값 ########## " + book);
 		model.addAttribute("book", book);
 		
-		// 평균 별점 구하기
+		// 평균 별점 보여주기
 	    model.addAttribute("score_avg", prodService.getAvgScoreByBookId(book_id));
 	    
 		// 리뷰 보여주기

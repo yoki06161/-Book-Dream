@@ -15,5 +15,4 @@ public interface Prod_ScoreRepository extends JpaRepository<Prod_Score, Integer>
 	// AvgScore은 형태명. integer같은.
     @Query(value = "SELECT AVG(score) FROM prod_score WHERE book = :b_id", nativeQuery = true)
     Double findAvgScoreBybook(@Param("b_id") Integer id);
-
 }

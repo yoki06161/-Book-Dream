@@ -184,8 +184,12 @@ public class Prod_Service {
 	}
     
     // 책에 따른 별점 갖고오기.
-    public Double getAvgScoreByBookId(Integer book_id) {
-        return sco_repo.findAvgScoreBybook(book_id);
+    public String getAvgScoreByBookId(Integer book_id) {
+    	Double score_avg = sco_repo.findAvgScoreBybook(book_id);
+    	// 소수점 한자리수까지 출력.
+    	String score = String.format("%.1f", score_avg);
+
+        return score;
     }
     
 }
