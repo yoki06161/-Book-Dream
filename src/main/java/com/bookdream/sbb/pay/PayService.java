@@ -53,4 +53,8 @@ public class PayService {
 		
 		return optionalPay;
 	}
+	
+	public void deletePayByPayId(String pay_id) {
+		payRepository.deleteById(pay_id);
+	}
 }
