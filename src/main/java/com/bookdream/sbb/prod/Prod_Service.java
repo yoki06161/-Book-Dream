@@ -183,15 +183,9 @@ public class Prod_Service {
     	sco_repo.save(sc);
 	}
     
- // book_id 값에 해당하는 데이터들의 평균 구하기
+    // 책에 따른 별점 갖고오기.
     public Double getAvgScoreByBookId(Integer book_id) {
         return sco_repo.findAvgScoreBybook(book_id);
     }
-    
-//    // 책의 별점 평균 조회
-//    public Double get_scoreAvg(Integer id) {
-//    	System.out.println("++++++++++++++avg되냐");
-//        return sco_repo.findAvgScoreByBook(id);
-//    }
     
 }

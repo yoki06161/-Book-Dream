@@ -69,9 +69,8 @@ public class Prod_Controller {
 		System.out.println("book 값 ########## " + book);
 		model.addAttribute("book", book);
 		
-	 // book_id 값에 해당하는 데이터들의 평균 별점을 가져와서 모델에 추가
-	    Double avgScoreForBookId = prodService.getAvgScoreByBookId(book_id);
-	    model.addAttribute("avgScoreForBookId", avgScoreForBookId);
+		// 평균 별점 구하기
+	    model.addAttribute("score_avg", prodService.getAvgScoreByBookId(book_id));
 	    
 		// 리뷰 보여주기
 //		List<Prod_d_Review> r_list = prodService.getReview_List(book_id);
@@ -84,30 +83,12 @@ public class Prod_Controller {
 		return "prod/prod_detail";
 	}
 	
-	// 별점 테스트
-//	@PreAuthorize("isAuthenticated()")
-//	@GetMapping("/score/{book_id}")
-//	public String getMethodName(Model model, @PathVariable("book_id") Integer book_id, Principal pc) {
-//		// 책아이디 건네주기
-//		Prod_Books book = prodService.getProdBooks(book_id);
-////        String user = prodService.getUserName(pc.getName());
-//        SiteUser s_user = prodService.getUser(pc.getName());
-//        prodService.score_vote(book, s_user);
-//		return String.format("redirect:/prod/detail/%s", book_id);
-//	}
-//	
-	
-	// 별점 테스트2
+	// 별점 넣기
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/detail/score/{b_id}")
 	public String prod_book2(@PathVariable("b_id") Integer id, Principal pc, 
 			@RequestParam("i_score") Integer score) {
-		System.out.println("+++++++++++++++++++++");
-		System.out.println("별점 값 " + score);
-		System.out.println("책 아이디 " + id);
-		System.out.println("pc 값 " + pc.getName());
 		String user = prodService.getUser(pc.getName());
-		System.out.println("user 값 " + user);
 		prodService.set_score(id, user, score);
 		return String.format("redirect:/prod/detail/%s", id);
 	}
