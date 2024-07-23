@@ -16,16 +16,16 @@ public class Orders {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)    // auto_increment
 	private Integer order_id;
-	
+
 	@Column
 	private int count;
-	
+
 	@Column(length=50)
 	private String count_price;
-	
+
 	@Column
 	private Integer book_id;
-	
+
 	@Column
 	private String pay_id;
 }
