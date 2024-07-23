@@ -49,6 +49,7 @@ public class Prod_Service {
 	
 	// 검색된 책들만 갖고 오기
 	public List<Prod_Books> getSearchBooks(String kw) {
+		// 밑의 search메소드에 kw값 넣고 꺼내기
 		Specification<Prod_Books> spec = search(kw);
 		return prodRepository.findAll(spec);
 	}
@@ -82,14 +83,6 @@ public class Prod_Service {
 		}
 	};
 	}
-	
-//	// 별점 테스트
-//	 public void score_vote(Prod_Books books, SiteUser user) {
-//		 // 포터 값을 불러와서 거기에 유저 명을 입력하는듯.
-//		books.getVoter().add(user);
-//        prodRepository.save(books);
-//    }
-	
 	
 	// ###################리뷰
 	// 리뷰 리스트 갖고오기. 책에 맞는 리뷰갖고오기
@@ -159,7 +152,7 @@ public class Prod_Service {
     	}
 	}
     
-    // 별점 테스트 이메일 불러오기
+    // 별점 넣기 위한 이메일 불러오기
     public String getUser(String user) {
 		Optional<SiteUser> siteUser = user_repo.findByEmail(user);
 		Member mem_email = mem_repo.findByLoginId(user);
@@ -182,7 +175,6 @@ public class Prod_Service {
     
     // 별점 넣기
     public void set_score(Integer book, String user, Integer score) {
-    	System.out.println("스코어 연결");
     	Prod_Score sc = new Prod_Score();
     	sc.setBook(book);
     	sc.setUser(user);
@@ -191,8 +183,15 @@ public class Prod_Service {
     	sco_repo.save(sc);
 	}
     
+ // book_id 값에 해당하는 데이터들의 평균 구하기
+    public Double getAvgScoreByBookId(Integer book_id) {
+        return sco_repo.findAvgScoreBybook(book_id);
+    }
     
-    
-    
+//    // 책의 별점 평균 조회
+//    public Double get_scoreAvg(Integer id) {
+//    	System.out.println("++++++++++++++avg되냐");
+//        return sco_repo.findAvgScoreByBook(id);
+//    }
     
 }

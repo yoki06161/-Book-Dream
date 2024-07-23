@@ -37,6 +37,12 @@
 			<input name="i_score" type="number"/>
 			<input type="submit" value="별점남기기"/>
 		</form>
+		
+		<!--됨!!!!!!!!!!!!-->
+		<div class="average-score-for-book">
+		    <h3>Book ID 값 {{book.book_id}} 에 대한 평균 별점</h3>
+		    <p th:text="${avgScoreForBookId}"></p>
+		</div>
 		<hr>
 		<!--
 		<p th:text="${book.book_id}"></p>

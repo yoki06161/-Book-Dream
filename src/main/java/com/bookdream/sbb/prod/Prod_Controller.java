@@ -2,6 +2,7 @@ package com.bookdream.sbb.prod;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -68,7 +69,10 @@ public class Prod_Controller {
 		System.out.println("book 값 ########## " + book);
 		model.addAttribute("book", book);
 		
-		
+	 // book_id 값에 해당하는 데이터들의 평균 별점을 가져와서 모델에 추가
+	    Double avgScoreForBookId = prodService.getAvgScoreByBookId(book_id);
+	    model.addAttribute("avgScoreForBookId", avgScoreForBookId);
+	    
 		// 리뷰 보여주기
 //		List<Prod_d_Review> r_list = prodService.getReview_List(book_id);
 //		model.addAttribute("r_list", r_list);
