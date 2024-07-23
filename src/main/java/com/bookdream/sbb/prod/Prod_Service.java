@@ -12,6 +12,8 @@ import com.bookdream.sbb.prod_repo.Prod_Books;
 import com.bookdream.sbb.prod_repo.Prod_BooksRepository;
 import com.bookdream.sbb.prod_repo.Prod_RArepository;
 import com.bookdream.sbb.prod_repo.Prod_RErepository;
+import com.bookdream.sbb.prod_repo.Prod_Score;
+import com.bookdream.sbb.prod_repo.Prod_ScoreRepository;
 import com.bookdream.sbb.prod_repo.Prod_d_Answer;
 import com.bookdream.sbb.prod_repo.Prod_d_Review;
 import com.bookdream.sbb.user.Member;
@@ -33,7 +35,8 @@ public class Prod_Service {
 	private final Prod_BooksRepository prodRepository;
 	private final Prod_RErepository re_repo;
 	private final Prod_RArepository ra_repo;
-	
+	private final Prod_ScoreRepository sco_repo;
+		
 	// 두목님꺼. 일반로그인
 	private final UserRepository user_repo;
 	private final MemberRepository mem_repo;
@@ -158,30 +161,19 @@ public class Prod_Service {
     
     // 별점 테스트 이메일 불러오기
     public String getUser(String user) {
-		System.out.println("!!!!!!!!!!!!!!!아마도 유저 이메일 " + user);
-		
 		Optional<SiteUser> siteUser = user_repo.findByEmail(user);
 		Member mem_email = mem_repo.findByLoginId(user);
-		
-		System.out.println("!!!!!!!!!!!!!!!일반 유저 이메일 " + siteUser);
-		System.out.println("!!!!!!!!!!!!!!!카카오 유저 이메일 " + mem_email);
+//		System.out.println("!!!!!!!!!!!!!!!일반 유저 이메일 " + siteUser);
+//		System.out.println("!!!!!!!!!!!!!!!카카오 유저 이메일 " + mem_email);
 		
 		if(siteUser.isPresent()) {
-			
 			String user_name = siteUser.get().getEmail();
-
-			System.out.println("!!!!!!!!!!!!!!!리턴 일반 유저 이메일 " + user_name);
-			
+//			System.out.println("!!!!!!!!!!!!!!!리턴 일반 유저 이메일 " + user_name);
     		return user_name;
-    		
 		} else if(mem_email != null) {
-			
     		String mem_name = mem_email.getLoginId();
-
-    		System.out.println("!!!!!!!!!!!!!!!리턴 카카오 유저 이메일 " + mem_name);
-    		
+//    		System.out.println("!!!!!!!!!!!!!!!리턴 카카오 유저 이메일 " + mem_name);
     		return mem_name;
-    		
     	} else {
     		// 이제 나올리 없음.
     		return "익명";
@@ -189,13 +181,15 @@ public class Prod_Service {
 	}
     
     // 별점 넣기
-//    public void score(Integer book, String user, Integer score) {
-//    	System.out.println("스코어 연결");
-//    	Prod_Score sc = new Prod_Score();
-//    	sc.setBook(book);
-//    	sc.setUser(user);
-//    	sc.setScore(score);
-//	}
+    public void set_score(Integer book, String user, Integer score) {
+    	System.out.println("스코어 연결");
+    	Prod_Score sc = new Prod_Score();
+    	sc.setBook(book);
+    	sc.setUser(user);
+    	sc.setScore(score);
+    	
+    	sco_repo.save(sc);
+	}
     
     
     

@@ -95,42 +95,16 @@ public class Prod_Controller {
 	
 	// 별점 테스트2
 	@PreAuthorize("isAuthenticated()")
-	@PostMapping("/detail3/score/{b_id}")
-	private String book_score(@PathVariable("b_id") Integer id, Principal pc,
-			@RequestParam("i_score") Integer score) {
-		System.out.println("+++++++++++++++++++++");
-		System.out.println("별점 값 " + score);
-		System.out.println("책 아이디 " + id);
-		
-		Prod_Books book = prodService.getProdBooks(id);
-		
-		System.out.println("book 값 " + book);
-		System.out.println("pc 값 " + pc.getName());
-		
-		String user = prodService.getUser(pc.getName());
-		System.out.println("user 값 " + user);
-		
-		
-		return String.format("redirect:/prod/detail/%s", id);
-	}
-	
-	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/detail/score/{b_id}")
 	public String prod_book2(@PathVariable("b_id") Integer id, Principal pc, 
 			@RequestParam("i_score") Integer score) {
 		System.out.println("+++++++++++++++++++++");
 		System.out.println("별점 값 " + score);
 		System.out.println("책 아이디 " + id);
-		
-		Prod_Books book = prodService.getProdBooks(id);
-		
-		System.out.println("book 값 " + book);
 		System.out.println("pc 값 " + pc.getName());
-		
 		String user = prodService.getUser(pc.getName());
 		System.out.println("user 값 " + user);
-		
-		
+		prodService.set_score(id, user, score);
 		return String.format("redirect:/prod/detail/%s", id);
 	}
 	
