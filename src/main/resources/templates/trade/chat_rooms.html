@@ -94,7 +94,6 @@
         }
 
         function updateChatRoomList(chatRoom) {
-            // Check if the received message is a ChatRoom update
             if (chatRoom.hasOwnProperty('tradeIdx')) {
                 var chatRoomElement = document.querySelector('li[data-chat-room-id="' + chatRoom.id + '"]');
 

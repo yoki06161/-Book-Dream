@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/trade/chat")
@@ -100,6 +102,7 @@ public class ChatController {
         }
 
         chatMessage.setCreatedAt(LocalDateTime.now());
+        chatMessage.setUnreadCount(1);  // 메시지가 생성될 때 unreadCount를 1로 설정
         chatService.saveChat(chatMessage);
 
         // 새로운 메시지 수 증가
@@ -125,6 +128,24 @@ public class ChatController {
         return chatMessage;
     }
 
+    @MessageMapping("/chat.userJoined")
+    public void userJoined(@RequestBody Map<String, String> payload) {
+        Long chatRoomId = Long.parseLong(payload.get("chatRoomId"));
+        String userId = payload.get("userId");
+        chatService.userJoined(chatRoomId, userId);
+
+        // 해당 채팅방의 메시지들에 대해 읽음 처리
+        chatService.markMessagesAsRead(chatRoomId, userId);
+        messagingTemplate.convertAndSend("/topic/chatRoomsUpdate", payload);
+    }
+
+    @MessageMapping("/chat.userLeft")
+    public void userLeft(@RequestBody Map<String, String> payload) {
+        Long chatRoomId = Long.parseLong(payload.get("chatRoomId"));
+        String userId = payload.get("userId");
+        chatService.userLeft(chatRoomId, userId);
+    }
+
     @GetMapping("/newMessagesCount")
     @ResponseBody
     public ResponseEntity<Integer> getNewMessagesCount(Principal principal) {
@@ -135,5 +156,21 @@ public class ChatController {
         String userId = principal.getName();
         int newMessagesCount = chatService.getTotalNewMessagesCount(userId);
         return ResponseEntity.ok(newMessagesCount);
+    }
+
+    @MessageMapping("/chat.readMessage")
+    @SendTo("/topic/public")
+    public Chat readMessage(@RequestBody Map<String, String> payload) {
+        Long messageId = Long.parseLong(payload.get("id"));
+        String readerId = payload.get("senderId");
+        chatService.markMessageAsRead(messageId, readerId);
+        return new Chat(); // 반환값으로 인해 예외 발생하지 않도록 수정
+    }
+    
+    @MessageMapping("/chat.userActive")
+    public void userActive(@RequestBody Map<String, String> payload) {
+        Long chatRoomId = Long.parseLong(payload.get("chatRoomId"));
+        String userId = payload.get("userId");
+        chatService.markMessagesAsRead(chatRoomId, userId);
     }
 }

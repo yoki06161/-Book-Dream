@@ -23,7 +23,8 @@ public class Chat {
     private LocalDateTime createdAt;
     private Long chatRoomId;
     private MessageType type;
-
+    private int unreadCount;
+    
     public enum MessageType {
         CHAT,
         IMAGE,
