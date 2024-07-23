@@ -187,7 +187,7 @@ public class Prod_Service {
     public String getAvgScoreByBookId(Integer book_id) {
     	Double score_avg = sco_repo.findAvgScoreBybook(book_id);
     	// 소수점 한자리수까지 출력.
-    	String score = String.format("%.1f", score_avg);
+    	String score = String.format("%.2f", score_avg);
 
         return score;
     }

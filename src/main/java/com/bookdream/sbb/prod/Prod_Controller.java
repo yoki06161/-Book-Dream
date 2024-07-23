@@ -86,7 +86,7 @@ public class Prod_Controller {
 	// 별점 넣기
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/detail/score/{b_id}")
-	public String prod_book2(@PathVariable("b_id") Integer id, Principal pc, 
+	public String setScore(@PathVariable("b_id") Integer id, Principal pc, 
 			@RequestParam("i_score") Integer score) {
 		String user = prodService.getUser(pc.getName());
 		prodService.set_score(id, user, score);

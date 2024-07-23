@@ -14,7 +14,7 @@
 				<div class="c_wrap">
 					<!--class로하면 js설정하기 귀찮아서 아이디로함-->
 					<!--oninput는 수정 이벤트 인식하는거. 키보드 위아래 입력이 인식되도 updateResult함수가 실행됨-->
-					<input type="number" min="1" max="500" class="bcount" value="1" oninput="updateResult()" />
+					<input type="number" min="1" max="10" class="bcount" value="1" oninput="updateResult()" />
 					<div class="cb_wrap">
 						<button onclick="add()">증가</button>
 						<button onclick="min()">감소</button>
@@ -33,23 +33,24 @@
 		<p th:text="${book.book_intro}"></p>
 		<hr>
 		<!--별점 테스트-->
+	    <h3>평균 별점</h3>
+	    <p th:text="${score_avg}" id="score_result"></p>
+		
 		<form th:action="@{|/prod/detail/score/${book.book_id}|}" method="post">
-			<input name="i_score" type="number"/>
+			<input name="i_score" id="i_score" />
+			
+			<div class="star_rating" name="t_score">
+		        <span class="star" data-value="1">★</span>
+		        <span class="star" data-value="2">★</span>
+		        <span class="star" data-value="3">★</span>
+		        <span class="star" data-value="4">★</span>
+		        <span class="star" data-value="5">★</span>
+		    </div>
+			
 			<input type="submit" value="별점남기기"/>
 		</form>
 		
-		    <h3>평균 별점</h3>
-		    <p th:text="${score_avg}"></p>
 		<hr>
-		<!--
-		<p th:text="${book.book_id}"></p>
-		<a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
-            th:data-uri="@{|/prod/score/${book.book_id}|}">
-            추천
-		<span class="badge rounded-pill bg-success" th:text="${#lists.size(book.voter)}"></span>
-        </a>
-		<hr>
-		-->
 		<h3>리뷰</h3>
 		<form th:action="@{|write_review/${book.book_id}|}" method="post">
 			<textarea name="w_content" placeholder="지나친 욕설은 자제해주세요." class="w_review"></textarea>
@@ -130,7 +131,7 @@
 	      let inputValue = parseInt(input.value); // 입력값을 정수형으로 변환
 		  	// min과 max로는 버튼 이벤트가 안막힌다.
 		  	if (inputValue < 1) inputValue = 1; // 최소값 이하로 내려가지 않도록 보정
-          	if (inputValue > 500) inputValue = 500; // 최대값 이상으로 올라가지 않도록 보정
+          	if (inputValue > 10) inputValue = 10; // 최대값 이상으로 올라가지 않도록 보정
             input.value = inputValue; // 보정된 값을 다시 input에 설정
 	        
 	        let total = parseInt(input.value) * price;
@@ -156,16 +157,23 @@
 		    }
 		}
 
-		// 별점 테스트
-		const recommend_elements = document.getElementsByClassName("recommend");
-		Array.from(recommend_elements).forEach(function(element) {
-		    element.addEventListener('click', function() {
-		        if(confirm("정말로 추천하시겠습니까?")) {
-		            location.href = this.dataset.uri;
-		        };
-		    });
-		});
+		// 테스트 별점 넣기
+		document.querySelectorAll('.star_rating .star').forEach(star => {
+	        star.addEventListener('click', function() {
+	            // 모든 별표시를 초기화합니다
+	            document.querySelectorAll('.star_rating .star').forEach(star => {
+	                star.classList.remove('on');
+	            });
 
+	            // 클릭된 별표시에 'on' 클래스를 추가합니다
+	            this.classList.add('on');
+
+	            // 숨겨진 필드에 별점 값을 설정합니다
+	            let value = this.getAttribute('data-value');
+	            document.getElementById('i_score').value = value;
+	        });
+	    });
+		
 	    // 페이지 로드 시 초기 결과값 설정
 	   // 없는게 나은거같다
 	    updateResult();
