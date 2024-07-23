@@ -20,7 +20,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.bookdream.sbb.DataNotFoundException;
+
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +30,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
+
 	@Autowired
     private UserService userService;
 	
+
 	@Autowired
 	private MemberService memberService;
-	
+
 	@GetMapping("/")
     public String index(Model model) {
         model.addAttribute("loginType", "user");
@@ -89,8 +93,9 @@ public class UserController {
     public String loginForm(Model model) {
         return "user/loginform";
     }
-   
-    
+
+
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/userinfo")
     public String userinfo(Model model, Principal principal) {
@@ -329,21 +334,17 @@ public class UserController {
         }
         return "redirect:/";
     }
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/userdel")
     public String userdel(UserDelForm userDelForm, Principal principal, Model model) {
         SiteUser user = null;
         Member member = null;
         boolean isSocialLogin = false;
-
-
         try {
             user = this.userService.getUserByEmail(principal.getName());
         } catch (DataNotFoundException e) {
             // user가 없으면 계속 진행
         }
-
         try {
             member = this.memberService.getLoginMemberByLoginId(principal.getName());
             if (member != null) {
@@ -352,48 +353,25 @@ public class UserController {
         } catch (DataNotFoundException e) {
             // member가 없으면 무시
         }
-
         if (user == null && member == null) {
             throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
         }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/userdel")
-    public String userdel(UserDelForm userDelForm) {
         model.addAttribute("isSocialLogin", isSocialLogin);
         model.addAttribute("userDelForm", userDelForm);
         return "user/userdel";
     }
-    
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/userdel")
     public String userdel(@Valid UserDelForm userDelForm, BindingResult bindingResult, Principal principal, Model model, HttpSession session) {
-        SiteUser user = this.userService.getUser(principal.getName());
-
-        if (bindingResult.hasErrors()) {
-            return "user/userdel";
-        }
         SiteUser user = null;
         Member member = null;
         boolean isSocialLogin = false;
-
-        if (!this.userService.isSamePassword(user, userDelForm.getCurrentPassword())) {
-            bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
-            return "user/userdel";
         try {
             user = this.userService.getUserByEmail(principal.getName());
         } catch (DataNotFoundException e) {
             // user가 없으면 계속 진행
         }
-        
-
         try {
-            userService.deleteUser(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            bindingResult.reject("deleteUserFailed", e.getMessage());
-            return "user/userdel";
             member = this.memberService.getLoginMemberByLoginId(principal.getName());
             if (member != null) {
                 isSocialLogin = true;
@@ -401,33 +379,27 @@ public class UserController {
         } catch (DataNotFoundException e) {
             // member가 없으면 무시
         }
-
         if (user == null && member == null) {
             throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
         }
-
         model.addAttribute("isSocialLogin", isSocialLogin);
         model.addAttribute("userDelForm", userDelForm);
-
-     // 로그아웃 처리
-        session.invalidate(); // 세션 무효화
-        SecurityContextHolder.clearContext(); // Spring Security 세션 초기화
+        
         if (!isSocialLogin) {
 	        if (bindingResult.hasErrors()) {
 	            return "user/userdel";
 	        }
         }
-
         if (!isSocialLogin) {
             if (!this.userService.isSamePassword(user, userDelForm.getCurrentPassword())) {
                 bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
                 return "user/userdel";
             }
-
+            
             try {
                 userService.deleteUser(user);
             } catch (Exception e) {
-                e.printStackTrace();
+            	e.printStackTrace();
                 bindingResult.reject("deleteUserFailed", e.getMessage());
                 return "user/userdel";
             }
@@ -440,18 +412,17 @@ public class UserController {
                 return "user/userdel";
             }
         }
-
         session.invalidate();
         SecurityContextHolder.clearContext();
         return "redirect:/";
     }
-
-
-
-
+    
+    
     @GetMapping("/userbuy")
     public String userbuy() {
         return "user/userbuy";
     }
-    
+
+
+
 }

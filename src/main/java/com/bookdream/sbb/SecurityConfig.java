@@ -12,13 +12,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.bookdream.sbb.user.CustomLogoutHandler;
-
 @EnableWebSecurity
 // prod. 로그인안했을시 리뷰 막기용으로 씀.
 @EnableMethodSecurity(prePostEnabled = true)
 @Configuration
 public class SecurityConfig {
-
     private final CustomLogoutHandler customLogoutHandler;
     public SecurityConfig(CustomLogoutHandler customLogoutHandler) {
         this.customLogoutHandler = customLogoutHandler;
@@ -32,7 +30,6 @@ public class SecurityConfig {
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
                     XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
             .formLogin((formLogin) -> formLogin
-                .loginPage("/user/loginform")
                 .loginPage("/user/login")
                 .loginProcessingUrl("/user/login") 
                 .failureUrl("/user/login?error=true")
@@ -45,8 +42,7 @@ public class SecurityConfig {
                 .loginPage("/oauth-login/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/user/login")
-                .permitAll())
-            .csrf((csrf) -> csrf.disable());
+                .permitAll());
         return http.build();
     }
     @Bean

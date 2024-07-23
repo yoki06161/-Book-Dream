@@ -1,7 +1,4 @@
-package com.bookdream.sbb.basket;
-
-import java.time.LocalDateTime;
-
+package com.bookdream.sbb.pay;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,37 +8,24 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+@Table (name = "orders")
 @Getter
 @Setter
 @Entity
-@Table (name = "basket")
-public class Basket {
-	public Basket() {
-		this.created_at = LocalDateTime.now();
-	}
-	
+public class Orders {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)    // auto_increment
-	private Long idx;
-
-	@Column(length = 20)
-	private String email;
-
-	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
-	private LocalDateTime created_at;
-
-	@Column(length=2)
-	private Integer count;
-
-	@Column(length=50)
-
-	private String count_price;
-
-
-
-
+	private Integer order_id;
+	
 	@Column
-
+	private int count;
+	
+	@Column(length=50)
+	private String count_price;
+	
+	@Column
 	private Integer book_id;
-
+	
+	@Column
+	private String pay_id;
 }

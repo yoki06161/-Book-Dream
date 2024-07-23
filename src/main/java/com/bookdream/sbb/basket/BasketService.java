@@ -1,15 +1,19 @@
 package com.bookdream.sbb.basket;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Optional;
+
 @Service
 public class BasketService {
     @Autowired
     private BasketRepository basketRepository;
+
     @Transactional
     public void saveBasketItems(List<Map<String, Object>> sessionData, String email) {
         List<Basket> basketsToSave = sessionData.stream()
@@ -29,11 +33,12 @@ public class BasketService {
                 })
                 .filter(basket -> basket != null) // null 값을 제외
                 .collect(Collectors.toList());
+
         if (!basketsToSave.isEmpty()) {
             basketRepository.saveAll(basketsToSave);
         }
     }
-
+    
 //    @Transactional
 //    public void deleteBasketItems(List<Map<String, Object>> dataArray, String email) {
 //        for (Map<String, Object> data : dataArray) {

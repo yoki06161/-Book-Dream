@@ -158,8 +158,6 @@ document.getElementById('pay').addEventListener('click', function() {
         pay_method: "card",   // 결제 방법
         name: "서적", // 상품명
 		buyer_name: name,
-        amount: 100,   // 결제 가격 (테스트용)
-        // amount: totalSum,  // 실제 결제 가격
         //amount: 100,   // 결제 가격 (테스트용)
         amount: totalSum,  // 실제 결제 가격
 		buyer_name: name,
@@ -176,28 +174,18 @@ document.getElementById('pay').addEventListener('click', function() {
                 method: "post",
                 url: `/payment/validation/${res.imp_uid}`,
 				headers: {
+					'Content-Type': 'application/json'
 					'Content-Type': 'application/json',
 					[csrfHeader]: csrfToken
 				},
             })
             .then(response => {
-				// 결제성공시 alert창 
-				console.log(response.data);
-                alert("Payment success!");
-
-				// 결제성공시 imp_uid, 주문조회pw, 배송요청사항을 post요청 
-				let payData = {
-					imp_uid:res.imp_uid,
-					pw: pw,
-					options: options
-				}
-				console.log("imp_uid, pw, 주문요청사항: ",payData);
-
 				// 결제성공시 imp_uid, 주문조회pw, 배송요청사항을 post요청해서 pay테이블 update
 				axios({
 					method: "post",
 					url: '/payment/updatePay',
 					headers: {
+						'Content-Type': 'application/json'
 						'Content-Type': 'application/json',
 						[csrfHeader]: csrfToken
 					},
@@ -208,21 +196,19 @@ document.getElementById('pay').addEventListener('click', function() {
 					}
 				})
 				.then(response => {
-				    console.log("Payment update response:", response.data);
 					// pay테이블 update 성공시, 세션스토리지 내역 업데이트
 					// 배열의 각 항목에 pay_id 속성 추가
 					selectedItems.forEach(item => {
 					    item.pay_id = res.imp_uid; 
 					});
-
 					// 변경된 배열을 세션 스토리지에 저장(되는 것 확인함)
 					sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-
 					// pay테이블 update 성공시, orders테이블에 세션스토리지 내역 저장
 					axios({
 						method: "post",
 						url: '/order/addProducts',
 						headers: {
+							'Content-Type': 'application/json'
 							'Content-Type': 'application/json',
 							[csrfHeader]: csrfToken
 						},
@@ -232,6 +218,7 @@ document.getElementById('pay').addEventListener('click', function() {
 					.then(response => {
 						console.log("orders update response:", response.data);
 
+						//location.href=`/order/success/${res.imp_uid}`;
 						location.href=`/order/success/${res.imp_uid}`;
 					})
 					.catch(error => {
@@ -258,8 +245,6 @@ document.getElementById('pay').addEventListener('click', function() {
 				        // 요청 설정 중 오류가 발생했을 경우
 				        console.error('요청 설정 중 오류 발생:', error.message);
 				    }
-				});
-				//location.href="order/success";				
 				});			
             })
             .catch(error => {
