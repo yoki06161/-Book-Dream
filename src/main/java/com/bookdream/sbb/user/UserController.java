@@ -22,9 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.bookdream.sbb.DataNotFoundException;
-
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +34,7 @@ public class UserController {
 
 	@Autowired
     private UserService userService;
-	
+
 	@Autowired
 	private MemberService memberService;
 	
@@ -104,6 +102,7 @@ public class UserController {
     public String loginForm(Model model) {
         return "user/loginform";
     }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/userinfo")
     public String userinfo(Model model, Principal principal) {
@@ -268,7 +267,5 @@ public class UserController {
     public String userbuy() {
         return "user/userbuy";
     }
-
-    
 
 }

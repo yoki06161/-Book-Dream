@@ -1,0 +1,141 @@
+/* 상세보기 페이지*/
+	a {
+		text-decoration: none;
+	}
+	
+	.flex_wrap {
+		display: flex;
+		gap: 50px;
+	}
+	
+	.l_genre_wrap {
+		position: fixed;
+		left: 100px;
+		padding: 10px;
+		background: #fff;
+		border: 1px solid #ddd;
+		border-radius: 10px;
+	}
+	
+	.l_intro_wrap {
+		display: -webkit-box;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    -webkit-box-orient: vertical;
+	    -webkit-line-clamp: 2;
+	}
+	
+	.d_txt_wrap {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+	
+	.title {
+		font-size: 30px;
+		font-style: bold;
+	}
+	
+	.bcount {
+		height: 46px;
+		width: 66px;
+		border: 1px solid #cdcdcd;
+		outline: none;
+	}
+
+	/*카운트 옆 화살표 지우기*/	
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+	  -webkit-appearance: none;
+	  margin: 0;
+	}
+	
+	input[type='number'] {
+	  -moz-appearance: textfield;
+	}
+	
+	.c_wrap {
+		display: flex;
+	}
+	
+	.cb_wrap > button {
+		display: block;
+		border: none;
+	}
+	
+	.b_wrap {
+		display: flex;
+		gap: 30px;
+	}
+	
+	.basket {
+		padding: 10px;
+		color: #fff;
+		background: #0d6efd;
+		border-radius: 10px;
+	}
+	
+	.buy {
+		padding: 10px;
+		color: #fff;
+		background: #d63384;
+		border-radius: 10px;
+	}
+	
+	textarea:focus {
+		outline: none;
+ 	}
+	
+	textarea {
+		width: 100%;
+		height: 100px;
+		resize: none;
+	}
+	
+	.w_review {
+		border-radius: 6px;
+		padding: 11px 14px;
+	}
+	
+	.review_cont {
+		font-size: 20px;
+	}
+	
+	button {
+		border: 1px solid #ddd;
+	}
+	
+	.answer_wrap {
+		display: none;
+	}
+	
+	/* 테스트 별점 용*/
+	.star_rating {
+	  width: 100%; 
+	  box-sizing: border-box; 
+	  display: inline-flex; 
+	  float: left;
+	  flex-direction: row; 
+	  justify-content: flex-start;
+	}
+	.star_rating .star {
+	  width: 25px; 
+	  height: 25px; 
+	  margin-right: 10px;
+	  display: inline-block; 
+	  background: #ddd; 
+	  background-size: 100%; 
+	  box-sizing: border-box; 
+	}
+	.star_rating .star.on {
+	  width: 25px; 
+	  height: 25px;
+	  margin-right: 10px;
+	  display: inline-block; 
+	  background: yellow;
+	  background-size: 100%; 
+	  box-sizing: border-box; 
+	}
+	
+	
+	
