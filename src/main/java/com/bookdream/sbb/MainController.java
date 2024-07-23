@@ -17,7 +17,7 @@ public class MainController {
 //    private BookRepository bookRepository;
 
     // 메인 페이지로 이동, 책 목록을 보여줌
-    @GetMapping("/")
+    @GetMapping("")
     public String mainPage() {
    
         return "main"; // main.html Thymeleaf 템플릿을 반환

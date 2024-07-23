@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .loginPage("/user/loginform")
                 .loginProcessingUrl("/user/login") 
                 .failureUrl("/user/login?error=true")
-                .defaultSuccessUrl("/"))
+                .defaultSuccessUrl("/main"))
             .logout((logout) -> logout
             	    .logoutUrl("/user/logout")
             	    .logoutSuccessUrl("/") // 예시로 /home 으로 설정

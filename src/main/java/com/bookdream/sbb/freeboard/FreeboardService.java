@@ -4,39 +4,70 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bookdream.sbb.DataNotFoundException;
-import com.bookdream.sbb.event.EventRepository;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 public class FreeboardService {
-	
-	private final FreeboardRepository freeboardRepository;
-	
+
+    private final FreeboardRepository freeboardRepository;
+    private Map<Long, Map<String, Boolean>> viewTracker = new HashMap<>();
+
     @Autowired
     public FreeboardService(FreeboardRepository freeboardRepository) {
         this.freeboardRepository = freeboardRepository;
     }
 
-    
-    public List<Freeboard> findAll() {
-        return freeboardRepository.findAll();
+    public Page<Freeboard> findAll(Pageable pageable) {
+        return freeboardRepository.findAll(pageable);
+    }
+
+    public Page<Freeboard> searchByTitle(String title, Pageable pageable) {
+        return freeboardRepository.findByTitleContaining(title, pageable);
     }
 
     public Freeboard findById(Long id) {
         return freeboardRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public Freeboard save(Freeboard freeboard) {
-        freeboard.setCreatedAt(LocalDateTime.now());
+        if (freeboard.getCreatedAt() == null) {
+            freeboard.setCreatedAt(LocalDateTime.now());
+        }
         freeboard.setUpdatedAt(LocalDateTime.now());
-        return freeboardRepository.save(freeboard);
+
+        try {
+            Freeboard savedFreeboard = freeboardRepository.save(freeboard);
+            System.out.println("Freeboard saved successfully: " + savedFreeboard);
+            return savedFreeboard;
+        } catch (Exception e) {
+            System.out.println("Error while saving Freeboard: " + e.getMessage());
+            throw e;
+        }
     }
 
+    @Transactional
     public void deleteById(Long id) {
-        freeboardRepository.deleteById(id);
+        try {
+            freeboardRepository.deleteById(id);
+            System.out.println("Freeboard deleted successfully: " + id);
+        } catch (Exception e) {
+            System.out.println("Error while deleting Freeboard: " + e.getMessage());
+            throw e;
+        }
+    }
+    @Transactional
+    public void incrementViews(Freeboard freeboard, String username) {
+        Map<String, Boolean> userViews = viewTracker.computeIfAbsent(freeboard.getId(), k -> new HashMap<>());
+        if (!userViews.getOrDefault(username, false)) {
+            userViews.put(username, true);
+            freeboard.setViews(freeboard.getViews() + 1);
+            freeboardRepository.save(freeboard);
+        }
     }
 }
