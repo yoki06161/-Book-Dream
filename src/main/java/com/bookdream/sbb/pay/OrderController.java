@@ -54,17 +54,11 @@ public class OrderController {
 	        // 사용자 정보를 모델에 추가
 	        if (member != null && user == null) {
 	            model.addAttribute("name", member.getName());
-	            model.addAttribute("email", member.getEmail());
-	            model.addAttribute("pw", member.getPassword());
 	        } else if (user != null && member == null) {
 	            model.addAttribute("name", user.getUsername());
-	            model.addAttribute("email", user.getEmail());
-	            model.addAttribute("pw", user.getPassword());
 	        } else if (member != null && user != null) {
 	            // 사용자 정보가 둘 다 있는 경우, 우선순위에 따라 하나를 선택
 	            model.addAttribute("name", user.getUsername());
-	            model.addAttribute("email", user.getEmail());
-	            model.addAttribute("pw", user.getPassword());
 	        }
 		} 
 		return "pay/order";
@@ -100,10 +94,7 @@ public class OrderController {
 	@GetMapping("/success/{imp_uid}")
 	public String paySuccess(Model model, @PathVariable("imp_uid") String pay_id, Principal principal) {
 		Optional<Pay> optionalPay = (Optional<Pay>) payService.getPaysById(pay_id);
-
-		// 현재 인증된 사용자의 이메일 가져오기
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		
+	
 		if (optionalPay.isPresent()) {
 			model.addAttribute("pay", optionalPay.get());
 

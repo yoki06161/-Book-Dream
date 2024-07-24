@@ -21,6 +21,6 @@ public interface BasketRepository extends JpaRepository<Basket, Long> {
 	@Query("DELETE FROM Basket b WHERE b.book_id = :book_id AND b.email = :email")
 	void deleteByBookIdAndEmail(@Param("book_id") Integer book_id, @Param("email") String email);
 
-	@Query("SELECT b FROM Basket b WHERE b.email = :email")
-	List<Basket> getItemsByEmail(@Param("email") String email);
+//	@Query("SELECT b FROM Basket b WHERE b.email = :email")
+//	List<Basket> getItemsByEmail(@Param("email") String email);
 }

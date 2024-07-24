@@ -44,8 +44,8 @@ public class BasketService {
         basketRepository.deleteByBookIdAndEmail(book_id, email);
     }
 
-	public List<Basket> getItemsByEmail(String email) {
-		return basketRepository.getItemsByEmail(email);
-	}
+//	public List<Basket> getItemsByEmail(String email) {
+//		return basketRepository.getItemsByEmail(email);
+//	}
 }
 
