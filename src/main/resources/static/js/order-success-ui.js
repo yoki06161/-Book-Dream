@@ -14,7 +14,6 @@ function init() {
 			axios({
 				url: "/payment/getToken",
 			    method: "post", 
-			    // "Content-Type": "application/json"
 			    headers: { 
 					"Content-Type": "application/json",
 					[csrfHeader]: csrfToken
@@ -28,7 +27,6 @@ function init() {
 			})
 			.then(response => {
 				console.log(response.data);
-				//alert('주문/결제 취소 완료');
 				
 				// 주문/결제 취소 요청
 				axios({

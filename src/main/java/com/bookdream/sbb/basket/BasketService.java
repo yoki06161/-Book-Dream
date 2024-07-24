@@ -41,7 +41,11 @@ public class BasketService {
     
     @Transactional
     public void deleteBasketItems(Integer book_id, String email) {
-            basketRepository.deleteByBookIdAndEmail(book_id, email);
+        basketRepository.deleteByBookIdAndEmail(book_id, email);
     }
+
+	public List<Basket> getItemsByEmail(String email) {
+		return basketRepository.getItemsByEmail(email);
+	}
 }
 

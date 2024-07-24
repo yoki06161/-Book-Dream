@@ -47,6 +47,15 @@
                   name="name"
                   id="name"
                   placeholder="이름을 입력해주세요."
+                  sec:authorize="isAnonymous()"
+                />
+                <input
+                  type="text"
+                  class="form-control mb-2"
+                  name="name"
+                  id="name"
+                  th:value="${name}"
+                  sec:authorize="isAuthenticated()"
                 />
                 
                 <input

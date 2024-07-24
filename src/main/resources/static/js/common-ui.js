@@ -1,46 +1,45 @@
-	function sendDataToServer(dataArray, csrfHeader, csrfToken) {
-	    // 배열을 JSON 문자열로 변환
-	    let jsonData = JSON.stringify(dataArray);
+function sendDataToServer(dataArray, csrfHeader, csrfToken) {
+	// 배열을 JSON 문자열로 변환
+	let jsonData = JSON.stringify(dataArray);
 
-	    fetch('/basket/add', {
-	        method: 'POST',
-	        headers: {
-	            'Content-Type': 'application/json',
-	            [csrfHeader]: csrfToken
-	        },
-	        body: jsonData  // jsonData를 전송
-	    })
-	    .then(response => {
-	        if (response.ok) {
-				//alert("response success");
-	            return response.json();
-	        } else {
-	            throw new Error('Network response was not ok.');
-	        }
-	    })
-	    .then(data => {
-	        console.log('Success:', data);
-	    })
-	    .catch(error => {
-	        console.error('Error:', error);
-	    });
-	}
+	fetch('/basket/add', {
+		method: 'POST',
+	    headers: {
+	        'Content-Type': 'application/json',
+	        [csrfHeader]: csrfToken
+	    },
+	    body: jsonData  // jsonData를 전송
+	})
+	.then(response => {
+		if (response.ok) {
+			return response.json();
+	    } else {
+	        throw new Error('Network response was not ok.');
+	    }
+	})
+	.then(data => {
+	    console.log('Success:', data);
+	})
+	.catch(error => {
+	    console.error('Error:', error);
+	});
+}
 
 function init() {
 	// 세션 스토리지 전체 삭제(저장이 잘못되었을때 주석풀고 사용)
 	//sessionStorage.clear();
 	
-	    // 세션 스토리지에서 장바구니 내역 배열을 불러오기 (없으면 빈 배열로 초기화)
-	    let dataArray = JSON.parse(sessionStorage.getItem("dataArray")) || [];
+	// 세션 스토리지에서 장바구니 내역 배열을 불러오기 (없으면 빈 배열로 초기화)
+	let dataArray = JSON.parse(sessionStorage.getItem("dataArray")) || [];
 
-	    // 장바구니 배열 길이 가져오기
-	    let badgeCount = dataArray.length;
+	// 장바구니 배열 길이 가져오기
+	let badgeCount = dataArray.length;
 
-	    // sessionStorage에 badgeCount 저장
-	    sessionStorage.setItem('badgeCount', badgeCount);
+	// sessionStorage에 badgeCount 저장
+	sessionStorage.setItem('badgeCount', badgeCount);
 
-	    // 뱃지 숫자 설정
-	    document.getElementById('badge').textContent = badgeCount;
+	// 뱃지 숫자 설정
+	document.getElementById('badge').textContent = badgeCount;
 }
 
 // DOMContentLoaded 이벤트 리스너를 사용하여 문서가 완전히 로드된 후 실행하는 함수 호출

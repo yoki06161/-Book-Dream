@@ -319,7 +319,5 @@ document.getElementById('order').addEventListener('click', function() {
     sessionStorage.setItem('totalSum', totalSum); // totalSum을 숫자 값으로 저장
 });
 
-
-
 // 초기화 함수
 document.addEventListener('DOMContentLoaded', init);

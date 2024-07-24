@@ -2,6 +2,7 @@ package com.bookdream.sbb.basket;
 
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
+import com.bookdream.sbb.pay.Orders;
 import com.bookdream.sbb.prod.Prod_Service;
 import com.bookdream.sbb.user.UserService;
 import com.google.gson.Gson;
@@ -38,14 +40,21 @@ public class BasketController {
 	public String list(Model model, HttpSession session) {
 		// 현재 인증된 사용자의 이메일 가져오기
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
+		
 		// 로그인하지 않았다면, 세션에 저장된 장바구니 내역 출력
 		if(email == "anonymousUser") {
 			return "basket/list"; 
 		} else {
 			// 로그인했다면 DB에 저장된 장바구니 내역 불러오기
 			//세션스토리지에 저장된 정보와 테이블에 저장된 정보를 비교하여.. 동일한 상품 id가 있을 경우 기존테이블 정보 유지
-
+//			List<Basket> baskets = basketService.getItemsByEmail(email);
+//	        model.addAttribute("baskets", baskets);
+//	        
+//	        List<Prod_Books> books = baskets.stream()
+//	                .map(basket -> prodService.getProdBooks(basket.getBook_id()))
+//	                .collect(Collectors.toList());
+//
+//	        model.addAttribute("books", books);
 			return "basket/list"; 
 		}
 	}
