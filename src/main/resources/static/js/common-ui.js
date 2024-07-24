@@ -78,6 +78,7 @@ function aa() {
 	    document.getElementById('badge').textContent = newBadgeCount;
 	    sessionStorage.setItem('badgeCount', newBadgeCount);
 
+		// 로그인했다면 장바구니 DB에 추가
 	    if (isAuthenticated) {
 	    	sendDataToServer(dataArray, csrfHeader, csrfToken);
 	    }

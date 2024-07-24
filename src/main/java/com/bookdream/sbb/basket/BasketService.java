@@ -39,12 +39,9 @@ public class BasketService {
         }
     }
     
-//    @Transactional
-//    public void deleteBasketItems(List<Map<String, Object>> dataArray, String email) {
-//        for (Map<String, Object> data : dataArray) {
-//            Integer book_id = Integer.valueOf(data.get("book_id").toString());
-//            basketRepository.deleteByBookIdAndEmail(book_id, email);
-//        }
-//    }
+    @Transactional
+    public void deleteBasketItems(Integer book_id, String email) {
+            basketRepository.deleteByBookIdAndEmail(book_id, email);
+    }
 }
 

@@ -81,14 +81,15 @@ public class BasketController {
 		return ResponseEntity.ok("Session data saved successfully");
 	}
 
-	//	@DeleteMapping("/delete")
-	//	public ResponseEntity<String> deleteBasketItems(@RequestBody List<Map<String, Object>> dataArray) {
-	//		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-	//
-	//		if (!"anonymousUser".equals(email)) {
-	//			basketService.deleteBasketItems(dataArray, email);
-	//		}
-	//
-	//		return ResponseEntity.ok("Items deleted successfully");
-	//	}
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteBasketItems(@RequestBody Map<String, Object> request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (!"anonymousUser".equals(email)) {
+            Integer book_id = (Integer) request.get("book_id");
+            basketService.deleteBasketItems(book_id, email);
+        }
+
+        return ResponseEntity.ok("Item deleted successfully");
+    }
 }
