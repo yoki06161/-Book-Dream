@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bookdream.sbb.trade.TradeService;
+import com.bookdream.sbb.user.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
@@ -23,6 +25,9 @@ public class ChatService {
 
     @Autowired
     private TradeService tradeService;
+    
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -71,9 +76,19 @@ public class ChatService {
     }
 
     public List<ChatRoom> getChatRooms(String userId) {
-        return chatRoomRepository.findBySenderIdOrReceiverId(userId, userId);
+        List<ChatRoom> chatRooms = chatRoomRepository.findBySenderIdOrReceiverId(userId, userId);
+        
+        // 상대방의 username을 추가
+        return chatRooms.stream().map(chatRoom -> {
+            String opponentId = chatRoom.getOpponentId(userId);
+            String opponentUsername = userService.getUser(opponentId).getUsername();
+            chatRoom.setOpponentUsername(opponentUsername);
+            return chatRoom;
+        }).collect(Collectors.toList());
     }
 
+    
+    
     public ChatRoom createChatRoom(String senderId, String receiverId, int tradeIdx) {
         String bookTitle = tradeService.getTradeById(tradeIdx).getTitle();
 

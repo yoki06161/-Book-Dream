@@ -10,11 +10,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bookdream.sbb.DataNotFoundException;
+import com.bookdream.sbb.user.SiteUser;
+import com.bookdream.sbb.user.UserRepository;
+
 @Service
 public class TradeService {
 
     @Autowired
     private TradeRepository tradeRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     public Page<Trade> getList(int page, String kw) {
         Pageable pageable = PageRequest.of(page, 10);
@@ -30,6 +37,15 @@ public class TradeService {
         return trade.orElse(null);
     }
 
+    public String getUsername(String email) {
+        Optional<SiteUser> siteUser = this.userRepository.findByEmail(email);
+        if (siteUser.isPresent()) {
+            return siteUser.get().getUsername();
+        } else {
+            throw new DataNotFoundException("siteuser not found!!");
+        }
+    }
+    
     @Transactional
     public void createTrade(Trade trade) {
         if (trade.getPostdate() == null) {

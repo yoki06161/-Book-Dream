@@ -91,8 +91,8 @@
                         <p class="card-text"><span th:text="${#temporals.format(trade.postdate, 'yyyy-MM-dd HH:mm')}"></span></p>
                         <p class="card-text">정가: <span th:text="${trade.originalPrice}"></span>원</p>
                         <p class="card-text">판매가: <span th:text="${trade.price}"></span>원</p>
-                        <p class="card-text">작성자: <span th:text="${trade.id}"></span></p>
-                        <p class="card-text">상태: <span th:text="${trade.status}"></span></p>
+                        <p class="card-text">작성자: <span th:text="${Writer}"></span></p>
+                        <p class="card-text"><span th:text="${trade.status}"></span></p>
 
                         <!-- 수정, 삭제, 상태변경 버튼: 작성자만 보이도록 설정 -->
                         <div th:if="${username == trade.id}" class="form-group status-form">

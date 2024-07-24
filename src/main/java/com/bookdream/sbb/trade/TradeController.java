@@ -46,7 +46,10 @@ public class TradeController {
             String username = principal.getName();
             model.addAttribute("username", username);
         }
-
+        
+        String authorEmail = trade.getId();
+        String Writer = tradeService.getUsername(authorEmail);
+        model.addAttribute("Writer", Writer);
         return "trade/detail";
     }
 

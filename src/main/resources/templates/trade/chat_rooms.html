@@ -131,7 +131,7 @@
             <li th:each="chatRoom : ${chatRooms}" th:attr="data-chat-room-id=${chatRoom.id}">
                 <div class="chat-room-info">
                     <a th:href="@{/trade/chat/start(tradeIdx=${chatRoom.tradeIdx}, chatRoomId=${chatRoom.id})}"
-                       th:text="${chatRoom.senderId} + ' (' + ${chatRoom.bookTitle} + ')'"></a>
+                       th:text="${chatRoom.opponentUsername + ' (' + chatRoom.bookTitle + ')'}"></a>
                     <div class="last-message" th:text="${chatRoom.lastMessage}"></div>
                 </div>
                 <div class="message-time" th:text="${chatRoom.getFormattedLastMessageTime()}"></div>
@@ -141,7 +141,5 @@
             </li>
         </ul>
     </div>
-
-    
 </body>
 </html>

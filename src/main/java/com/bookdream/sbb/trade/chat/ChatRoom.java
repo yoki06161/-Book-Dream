@@ -28,6 +28,8 @@ public class ChatRoom {
 
     @Column(nullable = false, columnDefinition = "int default 0")
     private int newMessagesCountForReceiver = 0;
+    
+    private String opponentUsername;
 
     private String lastMessageSenderId;
 
@@ -65,5 +67,9 @@ public class ChatRoom {
     
     public String getFormattedLastMessageTime() {
         return DateUtils.formatDateTime(lastMessageTime);
+    }
+    
+    public String getOpponentId(String userId) {
+        return userId.equals(this.senderId) ? this.receiverId : this.senderId;
     }
 }
