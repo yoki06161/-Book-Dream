@@ -9,6 +9,9 @@ import com.bookdream.sbb.trade.TradeService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ChatService {
@@ -24,28 +27,48 @@ public class ChatService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    private Map<Long, Set<String>> activeUsers = new ConcurrentHashMap<>();
+
+    public void userJoined(Long chatRoomId, String userId) {
+        activeUsers.computeIfAbsent(chatRoomId, k -> ConcurrentHashMap.newKeySet()).add(userId);
+    }
+
+    public void userLeft(Long chatRoomId, String userId) {
+        Set<String> users = activeUsers.get(chatRoomId);
+        if (users != null) {
+            users.remove(userId);
+            if (users.isEmpty()) {
+                activeUsers.remove(chatRoomId);
+            }
+        }
+    }
+
     public List<Chat> getChatHistory(Long chatRoomId) {
         return chatRepository.findByChatRoomId(chatRoomId);
     }
 
     public Chat saveChat(Chat chat) {
         chat.setCreatedAt(LocalDateTime.now());
+        chat.setUnreadCount(1);  // 메시지가 생성될 때 unreadCount를 1로 설정
         Chat savedChat = chatRepository.save(chat);
 
-        // 새로운 메시지가 저장될 때 새로운 메시지 카운트를 업데이트합니다.
         updateNewMessagesCount(chat.getChatRoomId(), chat.getSenderId());
 
-        // 채팅방의 마지막 메시지와 시간을 업데이트합니다.
         chatRoomRepository.findById(chat.getChatRoomId()).ifPresent(chatRoom -> {
-            chatRoom.setLastMessage(chat.getMessage());
+            if (chat.getType() == Chat.MessageType.IMAGE) {
+                chatRoom.setLastMessage("사진을 보냈습니다.");
+            } else {
+                chatRoom.setLastMessage(chat.getMessage());
+            }
             chatRoom.setLastMessageTime(chat.getCreatedAt());
             chatRoom.setLastMessageSenderId(chat.getSenderId());
             chatRoomRepository.save(chatRoom);
+
+            messagingTemplate.convertAndSend("/topic/chatRoomsUpdate", chatRoom);
         });
 
         return savedChat;
     }
-
 
     public List<ChatRoom> getChatRooms(String userId) {
         return chatRoomRepository.findBySenderIdOrReceiverId(userId, userId);
@@ -96,14 +119,16 @@ public class ChatService {
                 chatRepository.deleteByChatRoomId(chatRoomId);
                 chatRoomRepository.delete(chatRoom);
             }
+
+            userLeft(chatRoomId, userId);
         });
     }
 
     public void incrementNewMessagesCount(Long chatRoomId, String senderId, String currentUserId) {
         chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
-            if (currentUserId.equals(chatRoom.getSenderId())) {
+            if (!activeUsers.getOrDefault(chatRoomId, ConcurrentHashMap.newKeySet()).contains(chatRoom.getReceiverId())) {
                 chatRoom.setNewMessagesCountForReceiver(chatRoom.getNewMessagesCountForReceiver() + 1);
-            } else {
+            } else if (!activeUsers.getOrDefault(chatRoomId, ConcurrentHashMap.newKeySet()).contains(chatRoom.getSenderId())) {
                 chatRoom.setNewMessagesCountForSender(chatRoom.getNewMessagesCountForSender() + 1);
             }
             chatRoomRepository.save(chatRoom);
@@ -123,15 +148,15 @@ public class ChatService {
 
     private void updateNewMessagesCount(Long chatRoomId, String senderId) {
         chatRoomRepository.findById(chatRoomId).ifPresent(chatRoom -> {
-            if (senderId.equals(chatRoom.getSenderId())) {
+            if (!activeUsers.getOrDefault(chatRoomId, ConcurrentHashMap.newKeySet()).contains(chatRoom.getReceiverId())) {
                 chatRoom.setNewMessagesCountForReceiver(chatRoom.getNewMessagesCountForReceiver() + 1);
-            } else {
+            } else if (!activeUsers.getOrDefault(chatRoomId, ConcurrentHashMap.newKeySet()).contains(chatRoom.getSenderId())) {
                 chatRoom.setNewMessagesCountForSender(chatRoom.getNewMessagesCountForSender() + 1);
             }
             chatRoomRepository.save(chatRoom);
         });
     }
-    
+
     public int getTotalNewMessagesCount(String userId) {
         List<ChatRoom> chatRooms = chatRoomRepository.findBySenderIdOrReceiverId(userId, userId);
         return chatRooms.stream()
@@ -139,4 +164,31 @@ public class ChatService {
                         .sum();
     }
 
+    public void sendNewMessagesCount(String userId) {
+        int totalNewMessagesCount = getTotalNewMessagesCount(userId);
+        messagingTemplate.convertAndSendToUser(userId, "/queue/newMessagesCount", totalNewMessagesCount);
+    }
+
+    @Transactional
+    public void markMessageAsRead(Long messageId, String readerId) {
+        chatRepository.findById(messageId).ifPresent(chat -> {
+            if (chat.getUnreadCount() > 0 && !chat.getSenderId().equals(readerId)) {
+                chat.setUnreadCount(chat.getUnreadCount() - 1);
+                chatRepository.save(chat);
+            }
+        });
+    }
+
+    @Transactional
+    public void markMessagesAsRead(Long chatRoomId, String userId) {
+        List<Chat> chats = chatRepository.findByChatRoomId(chatRoomId);
+        for (Chat chat : chats) {
+            if (!chat.getSenderId().equals(userId) && chat.getUnreadCount() > 0) {
+                chat.setUnreadCount(chat.getUnreadCount() - 1);
+                chatRepository.save(chat);
+            }
+        }
+        // 실시간으로 모든 클라이언트에게 업데이트된 채팅 메시지를 전송
+        messagingTemplate.convertAndSend("/topic/chatRoomsUpdate", chatRoomId);
+    }
 }

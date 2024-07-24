@@ -21,7 +21,7 @@ import lombok.ToString;
 
 //두목님꺼 합치고 테이블 새로 만들어지는 오류 해결.
 //테이블 명 지정함으로써 새로 안만들어진다.
-@Table (name = "prod_books")
+@Table(name="prod_books")
 @ToString
 @Builder
 @Getter
@@ -64,6 +64,6 @@ public class Prod_Books {
 	@Column(length = 100)
 	private String book_genre;
 	
-	@ManyToMany
-    Set<SiteUser> voter;
+//	@ManyToMany
+//    Set<SiteUser> voter;
 }

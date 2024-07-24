@@ -15,11 +15,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
 
-@Table (name = "prod_d_review")
+@Table(name="prod_d_review")
 @Getter
 @Setter
 @Entity
@@ -43,7 +42,7 @@ public class Prod_d_Review {
 	private String review;
 	
 	// 여기서 선언한 timeIs란 변수가 html에서 쓰인다. sql에는 time_is라 저장됐는데. 다른거인가?
-	//	private LocalDateTime timeIs;
+//	private LocalDateTime timeIs;
 	private LocalDate time;
 	
 	// 답글이랑 연결. 댓글이 부모, 답변이 자식. 원이 댓글, 매니가 답변. 

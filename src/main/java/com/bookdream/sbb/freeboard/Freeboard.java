@@ -16,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Freeboard {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,13 +25,17 @@ public class Freeboard {
     private String title;
     private String content;
     private String author;
+    
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private LocalDateTime createdAt;
+    
     private LocalDateTime updatedAt;
     private int views;
     private String image;
 
     @OneToMany(mappedBy = "freeboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
+    
+    
 
-    // getters and setters
 }

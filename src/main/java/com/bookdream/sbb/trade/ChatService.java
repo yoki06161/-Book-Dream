@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bookdream.sbb.trade.TradeService;
+import com.bookdream.sbb.trade.chat.Chat;
+import com.bookdream.sbb.trade.chat.ChatRepository;
+import com.bookdream.sbb.trade.chat.ChatRoom;
+import com.bookdream.sbb.trade.chat.ChatRoomRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
