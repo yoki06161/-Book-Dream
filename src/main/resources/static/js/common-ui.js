@@ -101,7 +101,9 @@ for (var i = 0; i < buyButtons.length; i++) {
 		let book_price = document.querySelector('.price').textContent;
 		let count = parseInt(document.querySelector('.bcount').value);
 		let count_price = document.querySelector('.result').textContent + '원';
-
+		// count_price를 totalSum(숫자 값)으로 저장
+		let totalSum = parseFloat(count_price.replace(/[^\d.-]/g, ''));
+		
 		let selectedItem = {
 			book_id: book_id,
 		    book_img: book_img,
@@ -116,6 +118,7 @@ for (var i = 0; i < buyButtons.length; i++) {
 
 		selectedItems.push(selectedItem);
 		sessionStorage.setItem("selectedItems", JSON.stringify(selectedItems));
+		sessionStorage.setItem('totalSum', totalSum); 
 		location.href='/order';
     });
 }
