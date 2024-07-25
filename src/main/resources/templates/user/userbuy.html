@@ -1,12 +1,65 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3" style="display:flex">
-    <div style="width:230px;padding:0 10px">
+<div layout:fragment="content" class="container my-3" style="display: flex">
+    <div style="width: 230px; padding: 0 10px">
         <nav th:replace="~{user/mynav :: headerfragment}"></nav>
     </div>
-	<nav th:fragment="headerfragment">
-		<h2>주문 내역</h2>
-	</nav>
+    <div class="main-content" style="width:700px;padding-left: 50px">
+        <h3>주문 내역</h3>
+        <hr>
+        <div class="mb-3">
+            <span th:text="${name} + '님 주문하신 상품 내역입니다.'" style="display: block; margin-bottom: 5px;"></span>
+        </div>
+        <div class="mb-3" th:if="${payList}">
+            <table class="table">
+
+                <tbody>
+                    <tr th:each="pay : ${payList}">
+                        <td colspan="5">
+                        <div>
+	                    	<span>결제 ID : </span><span th:text="${pay.pay_id}"></span>
+                        </div>
+                        <div style="display:flex;margin-top:10px;text-align:center">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>사진</th>
+                                        <th style="width:130px">제목</th>
+                                        <th style="width:130px">저자</th>
+                                        <th style="width:120px">가격</th>
+                                        <th style="width:80px">수량</th>
+                                        <th style="width:160px">총 가격</th>
+                                        <th style="width:160px">결제 일자</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="order : ${ordersByPayId[pay.pay_id]}" th:if="${pay.pay_id == order.pay_id}" style="margin-bottom: 10px;">
+                                        <td th:each="book : ${allBooks}" th:if="${order.book_id == book.book_id}">
+                                        	<a th:href="@{|/prod/detail/${book.book_id}|}">	
+	                                        	<img th:src="${book.book_img}" style="width:120px;height:170px" />
+                                        	</a>
+                                        </td>
+                                        <td th:each="book : ${allBooks}" th:if="${order.book_id == book.book_id}" th:text="${book.book_title}"></td>
+                                        <td th:each="book : ${allBooks}" th:if="${order.book_id == book.book_id}" th:text="${book.book_writer}"></td>
+                                        <td th:each="book : ${allBooks}" th:if="${order.book_id == book.book_id}" th:text="${book.book_price}"></td>
+                                        <td th:text="${order.count}"></td>
+                                        <td th:text="${order.count_price}"></td>
+                                        
+                                        <td th:text="${pay.order_date.toString().substring(0, 10) + ' ' + pay.order_date.toString().substring(11, 19)}"></td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mb-3" th:if="${None}">
+            <span th:text="${None}"></span>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </div>
 </html>

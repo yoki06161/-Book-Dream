@@ -2,7 +2,6 @@ package com.bookdream.sbb.prod;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +19,7 @@ import com.bookdream.sbb.prod_repo.Prod_Books;
 import com.bookdream.sbb.prod_repo.Prod_d_Review;
 
 import lombok.RequiredArgsConstructor;
- 
+
 
 // 스프링 실행시 로그인창 안뜨게한다
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
@@ -52,6 +51,8 @@ public class Prod_Controller {
 		model.addAttribute("C_Books", prodService.getSearchBooks(kw));
 		model.addAttribute("kw", kw);
 		model.addAttribute("b_genre", genre);
+		model.addAttribute("l_avg", prodService.getAvg_list());
+		
 		
 		// 크롤링된 데이터 그대로 출력 
 //		model.addAttribute("C_Books", book_list);
@@ -66,19 +67,16 @@ public class Prod_Controller {
 	public String prod_book(Model model, @PathVariable("book_id") Integer book_id) {
 		// 책아이디 건네주기
 		Prod_Books book = prodService.getProdBooks(book_id);
-		System.out.println("book 값 ########## " + book);
 		model.addAttribute("book", book);
-		
 		// 평균 별점 보여주기
 	    model.addAttribute("score_avg", prodService.getAvgScoreByBookId(book_id));
-	    
 		// 리뷰 보여주기
-//		List<Prod_d_Review> r_list = prodService.getReview_List(book_id);
-//		model.addAttribute("r_list", r_list);
 		model.addAttribute("r_list", prodService.getReview_List(book_id));
-		
 		// 답글 보여주기
 		model.addAttribute("a_list", prodService.getAnswer_List());
+		// 투표자 수 보여주기
+		model.addAttribute("v_list", prodService.getVoters(book_id));
+		
 		
 		return "prod/prod_detail";
 	}
@@ -89,6 +87,18 @@ public class Prod_Controller {
 	public String setScore(@PathVariable("b_id") Integer id, Principal pc, 
 			@RequestParam("i_score") Integer score) {
 		String user = prodService.getUser(pc.getName());
+		System.out.println("스코어 값 " + score);
+		
+		// 이전에 별점을 줬는지 여부 확인
+		boolean b_score = prodService.g_score(id, user);
+		// 트루일때(이미 줬을시)
+	    if (b_score) {
+	    	System.out.println("###########이미 별점 줌");
+	    	prodService.update_score(id, user, score);
+	        return String.format("redirect:/prod/detail/%s", id);
+	    }
+	    
+	    // 별점 넣기
 		prodService.set_score(id, user, score);
 		return String.format("redirect:/prod/detail/%s", id);
 	}
