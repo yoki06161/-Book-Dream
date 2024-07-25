@@ -23,6 +23,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @Controller
@@ -37,7 +41,7 @@ public class FreeboardController {
 
     private final String uploadDir = "C:/Users/TJ/git/Book-Dream/src/main/resources/static/image/freeboard/";
 
-    @GetMapping("/list")
+    @GetMapping("")
     public String list(@RequestParam(value = "keyword", required = false) String keyword,
                        Model model,
                        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -94,15 +98,19 @@ public class FreeboardController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detailFreeboard(@PathVariable("id") Long id, Model model, Principal principal) {
+    public String detailFreeboard(@PathVariable("id") Long id, Model model, Principal principal,
+            HttpServletRequest request, HttpServletResponse response) {
         Freeboard freeboard = freeboardService.findById(id);
         if (freeboard == null) {
             return "redirect:/freeboard/list"; // 글이 없을 경우 목록 페이지로 리다이렉트
         }
+        String uniqueUserId;
         if (principal != null) {
-            String username = principal.getName();
-            freeboardService.incrementViews(freeboard, username);
+            uniqueUserId = principal.getName();
+        } else {
+            uniqueUserId = getOrSetUniqueUserId(request, response);
         }
+        freeboardService.incrementViews(freeboard, uniqueUserId);
         List<Comment> comments = commentService.findByFreeboardId(id);
         model.addAttribute("freeboard", freeboard);
         model.addAttribute("comments", comments);
@@ -161,5 +169,18 @@ public class FreeboardController {
 
         freeboardService.save(freeboard);
         return "redirect:/freeboard/detail/" + id; // 수정 후 해당 게시글의 상세 페이지로 리다이렉트
+    }
+    private String getOrSetUniqueUserId(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if ("uniqueUserId".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        String uniqueUserId = UUID.randomUUID().toString();
+        Cookie newCookie = new Cookie("uniqueUserId", uniqueUserId);
+        newCookie.setMaxAge(24 * 60 * 60); // 1 day
+        response.addCookie(newCookie);
+        return uniqueUserId;
     }
 }

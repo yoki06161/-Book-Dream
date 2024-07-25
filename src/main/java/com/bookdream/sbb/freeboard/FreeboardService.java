@@ -16,7 +16,7 @@ import java.util.Map;
 public class FreeboardService {
 
     private final FreeboardRepository freeboardRepository;
-    private Map<Long, Map<String, Boolean>> viewTracker = new HashMap<>();
+    private Map<Long, Map<String, LocalDateTime>> viewTracker = new HashMap<>();
 
     @Autowired
     public FreeboardService(FreeboardRepository freeboardRepository) {
@@ -69,10 +69,12 @@ public class FreeboardService {
         }
     }
     @Transactional
-    public void incrementViews(Freeboard freeboard, String username) {
-        Map<String, Boolean> userViews = viewTracker.computeIfAbsent(freeboard.getId(), k -> new HashMap<>());
-        if (!userViews.getOrDefault(username, false)) {
-            userViews.put(username, true);
+    public void incrementViews(Freeboard freeboard, String uniqueUserId) {
+        Map<String, LocalDateTime> userViews = viewTracker.computeIfAbsent(freeboard.getId(), k -> new HashMap<>());
+        LocalDateTime lastViewed = userViews.getOrDefault(uniqueUserId, LocalDateTime.MIN);
+
+        if (lastViewed.isBefore(LocalDateTime.now().minusDays(1))) {
+            userViews.put(uniqueUserId, LocalDateTime.now());
             freeboard.setViews(freeboard.getViews() + 1);
             freeboardRepository.save(freeboard);
         }

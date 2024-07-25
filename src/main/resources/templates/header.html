@@ -22,7 +22,9 @@
 }
 </style>
 	<div class="container-fluid inner">
-		<a class="navbar-brand" href="@{|/main|}">Book Dream(로고자리)</a>
+		<a class="navbar-brand" th:href="@{|/main|}">
+			<img src = "/image/logo.png">
+		</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 			data-bs-target="#navbarSupportedContent"
 			aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -37,7 +39,7 @@
 				</li>
 				<li class="nav-item"><a class="nav-link"
 					th:href="@{|/trade/list|}">중고거래</a></li>
-				<li class="nav-item"><a class="nav-link" th:href="@{|/free|}">커뮤니티</a>
+				<li class="nav-item"><a class="nav-link" th:href="@{|/freeboard|}">커뮤니티</a>
 				</li>
 				<li class="nav-item"><a class="nav-link"
 					th:href="@{|/trade/chat/rooms|}"> <i class="fas fa-comments">

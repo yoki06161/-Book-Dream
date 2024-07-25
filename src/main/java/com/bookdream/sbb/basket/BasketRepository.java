@@ -7,14 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
-public interface BasketRepository extends JpaRepository<Basket, Long> {
-	
-=======
-
 import java.util.List;
 import java.util.Map;
-
 import java.util.Optional;
 
 public interface BasketRepository extends JpaRepository<Basket, Long> {
@@ -25,5 +19,5 @@ public interface BasketRepository extends JpaRepository<Basket, Long> {
 	@Transactional
 	@Query("DELETE FROM Basket b WHERE b.book_id = :book_id AND b.email = :email")
 	void deleteByBookIdAndEmail(@Param("book_id") Integer book_id, @Param("email") String email);
->>>>>>> branch 'main' of https://github.com/yoki06161/Book-Dream.git
+
 }
