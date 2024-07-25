@@ -62,11 +62,6 @@ function init() {
 // DOMContentLoaded 이벤트 리스너를 사용하여 문서가 완전히 로드된 후 실행하는 함수 호출
 document.addEventListener('DOMContentLoaded', init);
 
-function getAuthenticationStatus() {
-    // 세션 스토리지에서 로그인 상태를 가져온다
-    return sessionStorage.getItem('isAuthenticated') === 'true';
-}
-
 // 장바구니 추가 함수
 function aa() {
 	let book_id = parseInt(document.querySelector('.book_id').value);
@@ -104,10 +99,7 @@ function aa() {
 	    document.getElementById('badge').textContent = newBadgeCount;
 	    sessionStorage.setItem('badgeCount', newBadgeCount);
 
-		// 로그인 상태 확인
-		if (getAuthenticationStatus()) {
-		    sendDataToServer(dataArray);
-		}
+		sendDataToServer(dataArray);
 	} else {
 	    alert('이미 장바구니에 있습니다.');
 	    console.log(dataArray);
