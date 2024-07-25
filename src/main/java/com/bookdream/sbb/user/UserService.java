@@ -74,11 +74,12 @@ public class UserService {
         this.userRepository.save(user);
     }
     
-    public void modifyName(SiteUser user, String name) {
+    public void modifySiteName(SiteUser user, String name) {
         user.setUsername(name);
         user.setLastNameChangeDate(LocalDateTime.now()); // 이름 변경 일시 설정
         this.userRepository.save(user);
     }
+
 
 
     public boolean isSamePassword(SiteUser user, String password){
@@ -88,6 +89,10 @@ public class UserService {
     // 사용자 삭제 메서드
     public void deleteUser(SiteUser user) {
         this.userRepository.delete(user);
+    }
+    
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
     }
     
 }

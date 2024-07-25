@@ -15,4 +15,15 @@ public interface Prod_ScoreRepository extends JpaRepository<Prod_Score, Integer>
 	// AvgScore은 형태명. integer같은.
     @Query(value = "SELECT AVG(score) FROM prod_score WHERE book = :b_id", nativeQuery = true)
     Double findAvgScoreBybook(@Param("b_id") Integer id);
+    
+    // 평균 리스트 전부 내보내기
+    @Query(value = "SELECT book, AVG(score) FROM prod_score group by book", nativeQuery = true)
+    List<Object[]> findAvgScore();
+    
+    // 책 아이디에 따른 별점 리스트 출력. 총 투표자들 수 보기용
+    List<Prod_Score> findBybook(Integer book_id);
+
+    // 별점 줬었는지 확인
+	Prod_Score findByBookAndUser(Integer bookId, String user);
+    
 }

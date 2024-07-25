@@ -4,12 +4,13 @@
 	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	<body>
 		<div class="flex_wrap">
+			<input type="hidden" class="book_id" th:value="${book.book_id}">
 			<img th:src="${book.book_img}" />
 			<div class="d_txt_wrap">
 				<span th:text="${book.book_title}" class="title"></span>
 				<span th:text="${book.book_writer}" class="writer"></span>
 				<div class="s_wrap">
-					<span>판매가</span><span th:text="${book.book_price}" class="count"></span>
+					<span>판매가</span> <span th:text="${book.book_price}" class="price"></span>
 				</div>
 				<div class="c_wrap">
 					<!--class로하면 js설정하기 귀찮아서 아이디로함-->
@@ -94,9 +95,10 @@
 		<br>
 		
 	</body>
-	
+
 	<script th:inline="javascript" type="text/javascript"  th:src="@{/js/common-ui.js}"></script>
 	<script th:inline="javascript">
+
 	   // book.book_price를 js 변수로 변환. /*는 주석이 아니라 /*.[[로 th템플릿 속성이랜다.
 	    let price = /*[[${book.book_price}]]*/ '0'; // 초기값 '0' 설정
 	    

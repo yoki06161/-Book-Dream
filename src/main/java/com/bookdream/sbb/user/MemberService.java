@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -35,19 +36,6 @@ public class MemberService {
         memberRepository.save(joinRequest.toEntity());
     }
 
-    public Member login(LoginRequest loginRequest) {
-        Member findMember = memberRepository.findByLoginId(loginRequest.getLoginId());
-
-        if (findMember == null) {
-            return null;
-        }
-
-        if (!passwordEncoder.matches(loginRequest.getPassword(), findMember.getPassword())) {
-            return null;
-        }
-
-        return findMember;
-    }
 
     public Member getLoginMemberById(Long memberId) {
         if (memberId == null) return null;
@@ -60,5 +48,16 @@ public class MemberService {
         if (loginId == null) return null;
 
         return memberRepository.findByLoginId(loginId);
+    }
+    
+    public void modifySocialName(Member member, String name) {
+    	member.setName(name);
+    	member.setLastNameChangeDate(LocalDateTime.now()); // 이름 변경 일시 설정
+    	this.memberRepository.save(member);
+    }
+    
+    // 사용자 삭제 메서드
+    public void deleteUser(Member member) {
+        this.memberRepository.delete(member);
     }
 }

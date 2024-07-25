@@ -7,15 +7,28 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-@Table(name = "site_user")
+
 @Entity
 @Getter
 @Setter
-public class SiteUser {
+@Builder
+public class KakaoUser {
+
+	public KakaoUser() {
+	}
+	
+	public KakaoUser(Long id, String username, String password, String email, String role, LocalDateTime createDate) {
+	    this.id = id;
+	    this.username = username;
+	    this.password = password;
+	    this.email = email;
+	    this.role =  "User";
+	    this.createDate = LocalDateTime.now();;
+	}
+
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +37,7 @@ public class SiteUser {
     private String username;
 
     private String password;
-
+    
     @Column(unique = true)
     private String email;
 
@@ -34,17 +47,5 @@ public class SiteUser {
         this.role = "User";
     }
     
-    private LocalDateTime create_date;
-    
-    @PrePersist
-    public void prePersist() {
-        this.create_date = LocalDateTime.now();
-    }
-    
-    @Column(name = "last_name_change_date")
-    private LocalDateTime lastNameChangeDate;
-    
-    private String provider;
-    {this.provider="site";}
-
+    private LocalDateTime createDate;
 }

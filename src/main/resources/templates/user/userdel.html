@@ -4,16 +4,19 @@
     <div style="width:230px;padding:0 10px">
         <nav th:replace="~{user/mynav :: headerfragment}"></nav>
     </div>
-	<div class="main-content" style="width:700px;padding-left:50px">
-		<h2>회원 탈퇴</h2>
-		<hr>
-        <form th:action="@{|/user/userdel|}" method="post" th:object="${userDelForm}">
+    <div class="main-content" style="width:700px;padding-left:50px">
+        <h2>회원 탈퇴</h2>
+        <hr>
+        <form th:action="@{|/user/userdel|}" method="post" th:object="${userDelForm}" th:if="${!isSocialLogin}">
             <div class="mb-3">
                 <label for="currentPassword" class="form-label">현재 비밀번호</label>
                 <input type="password" th:field="*{currentPassword}" class="form-control">
                 <!-- 이전 비밀번호 에러 메시지 -->
                 <small class="text-danger" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></small>
             </div>
+            <button type="submit" class="btn btn-primary">계정 탈퇴</button>
+        </form>
+        <form th:action="@{|/user/userdel|}" method="post" th:if="${isSocialLogin}">
             <button type="submit" class="btn btn-primary">계정 탈퇴</button>
         </form>
     </div>

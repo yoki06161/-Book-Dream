@@ -1,5 +1,7 @@
 package com.bookdream.sbb.pay;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,34 +14,36 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Pay {
+	public Pay() {
+		this.order_date = LocalDateTime.now();
+	}
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)    // auto_increment
-	private Long order_id;
+	private String pay_id;
 	
 	@Column(length = 20)
+	private String email;
+	
+	@Column(length = 20, nullable = false)
 	private String name;
 	
-	@Column(length = 11)
-	private int phone;
+	@Column(length = 11, nullable = false)
+	private String phone;
 	
 	@Column(length = 8)
 	private String pw;
 	
-	@Column(length = 5)
-	private int postcode;
+	@Column(length = 5, nullable = false)
+	private String post_code;
 	
-	@Column(length = 20)
+	@Column(length = 40, nullable = false)
 	private String address;
 	
-	@Column(length = 20)
-	private String detailAddress;
-	
-	@Column(length = 20)
+	@Column(length = 40)
 	private String request;
 	
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private String orderdate;
+	private LocalDateTime order_date;
 	
-	@Column
-	private int book_id;
-}
+	@Column(length = 50, nullable = false)
+	private String total_price;
+} 

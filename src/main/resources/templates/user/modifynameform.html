@@ -8,7 +8,6 @@
 	    <h2>사용자 이름 변경</h2>
 	    <hr>
         <form th:action="@{|/user/modifynameform|}" method="post" th:object="${userModifyNameForm}">
-		    <!-- 새로운 이름 입력 -->
 		    <div class="mb-3">
 		        <label for="newName" class="form-label">변경할 이름</label>
 		        <input type="text" th:field="*{newName}" class="form-control">

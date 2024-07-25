@@ -31,12 +31,6 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         } else if (provider.equals("kakao")) {
             log.info("카카오 로그인");
             oAuth2UserInfo = new KakaoUserDetails(oAuth2User.getAttributes());
-        } else if (provider.equals("naver")) {
-            log.info("네이버 로그인");
-            oAuth2UserInfo = new NaverUserDetails(oAuth2User.getAttributes());
-        }  else if (provider.equals("facebook")) {
-            log.info("페이스북 로그인");
-            oAuth2UserInfo = new FacebookUserDetails(oAuth2User.getAttributes());
         }
 
         String providerId = oAuth2UserInfo.getProviderId();
@@ -53,6 +47,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
                     .name(name)
                     .provider(provider)
                     .providerId(providerId)
+                    .email(email)
                     .role(MemberRole.USER)
                     .build();
             memberRepository.save(member);

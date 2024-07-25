@@ -1,181 +1,50 @@
 <html layout:decorate="~{layout}">
 <!-- 스크립트 블록을 정의 -->
 <th:block layout:fragment="script">
-	<script type="text/javascript" th:src="@{/js/basket-order-ui.js}"></script>
+	<script type="text/javascript" th:src="@{/js/basket-ui.js}"></script>
 </th:block>
 <main layout:fragment="content" class="container" id="container">
-	<h2 style="text-align: center;">장바구니 목록</h2>
-	<br> <br> <input class="form-check-input" type="checkbox"
-		value="selectall" id="select_all" /> <label
-		id="select_all">&nbsp;전체 선택</label>
-	<table class="table align-middle">
-		<tr>
-		</tr>
-		<!-- 상품 정보: 실제로는 tr한줄만 남겨두고 반복문+부트스트랩 처리하면 됨 -->
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span> <span
-				class="fs-6 mx-2">저자</span> <br> <br>
-				<p>그냥가격</p>
-				<p>책소개</p></td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span> <span
-				class="fs-6 mx-2">저자</span> <br> <br>
-				<p>그냥가격</p>
-				<p>책소개</p></td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span> <span
-				class="fs-6 mx-2">저자</span> <br> <br>
-				<p>그냥가격</p>
-				<p>책소개책소개책소개책소개책소개책소개책소개...</p></td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span> <span
-				class="fs-6 mx-2">저자</span> <br> <br>
-				<p>그냥가격</p>
-				<p>책소개책소개책소개책소개책소개책소개책소개...</p></td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span> <span
-				class="fs-6 mx-2">저자</span> <br> <br>
-				<p>그냥가격</p>
-				<p>책소개책소개책소개책소개책소개책소개책소개...</p></td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-		<tr>
-			<td><input class="form-check-input" type="checkbox"
-				value="{담은상품인덱스}"></td>
-			<td><img src="image/test_img.jpg" alt="상품사진"
-				style="width: 82px; height: 118.34px;"></td>
-			<td><span class="fs-5 fw-bold">도서명</span> <span
-				class="fs-6 mx-2">저자</span> <br> <br>
-				<p>그냥가격</p>
-				<p>책소개책소개책소개책소개책소개책소개책소개...</p></td>
-			<td><select>
-					<option value="1" selected>1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-			</select> 권</td>
-			<td>수량포함가격</td>
-			<td>
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</td>
-		</tr>
-	</table>
-	<div class="card fixed-bottom">
-		<div class="card-body mx-auto" style="width: 1200px !important;">
-			<div class="contents d-flex justify-content-between">
-				<h4 class="align-left">총 가격: 0</h4>
-				<button type="button" class="btn btn-primary" id="order" disabled>주문하기</button>
+	<form action="order">
+		<h2 class="fw-bold text-center">장바구니 목록</h2>
+		<br> <br> <input class="form-check-input" type="checkbox"
+			value="selectall" id="select_all" /> <label id="select_all">&nbsp;전체
+			선택</label>
+		<table class="table align-middle text-center "
+			style="margin-bottom: 80px;">
+			<thead>
+				<tr>
+					<th colspan="7"></th>
+				</tr>
+			</thead>
+			<tbody id="dataArrayList">
+			</tbody>
+			<!--  
+			<tbody th:each = "basket : ${baskets}" sec:authorize="isAuthenticated()">
+				<tr th:each="book : ${books}" th:if="${book.book_id == basket.book_id}">
+					<input type="hidden" th:value=${basket.book_id} name="book_id">
+	                <td><input class="form-check-input" type="checkbox"></td>
+	                <td><img th:src=${book.book_img} alt="상품사진" style="width: 82px; height: 118.34px;"></td>
+	                <td class="text-start"><p class="fs-5 fw-bold" th:text="${book.book_title}"></p>
+	                <p class="fs-6" style="color:gray;" th:text="${book.book_writer}"></p>
+	                <p class="fs-5 price" th:text="${basket.book_price}"></p></td>
+	                <td>
+	                <select></select>
+	                </td>
+	                <td class="result" name="count_price" th:text="${basket.count_price}"></td>
+	                <td><div class="btnClose" aria-label="Close" data-bs-toggle="modal" data-bs-target></div></td>
+				</tr>
+			</tbody>
+			-->
+		</table>
+		<div id="dataNotFound" style="margin-bottom: 80px;"></div>
+		<div class="card fixed-bottom">
+			<div class="card-body mx-auto" style="width: 1280px !important;">
+				<div class="contents d-flex justify-content-between">
+					<h4>총 가격: <span id="totalSum">0</span></h4>
+					<button type="submit" class="btn btn-primary" id="order" disabled>주문하기</button>
+				</div>
 			</div>
 		</div>
-	</div>
+	</form>
 </main>
 </html>
