@@ -38,3 +38,4 @@ public class UserSecurityService implements UserDetailsService {
         return new User(siteUser.getEmail(), siteUser.getPassword(), authorities);
     }
 }
+

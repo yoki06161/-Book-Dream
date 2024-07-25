@@ -1,39 +1,132 @@
-<nav th:fragment="headerfragment" class="navbar navbar-expand-lg navbar-light border-bottom">
-    <div class="container-fluid mx-auto">
-        <a class="navbar-brand" href="@{|/main|}">Book Dream(로고자리)</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/event|}">이벤트</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/prod|}">상품(서적)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/trade|}">중고거래</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/free|}">커뮤니티</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/trade/chat|}">채팅(아이콘)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/basket|}">장바구니(아이콘)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/login|}">로그인</a>
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/mypage|}">마이페이지</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/signup|}">회원가입</a>
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/logout|}">로그아웃</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+<nav th:fragment="headerfragment"
+	class="navbar navbar-expand-lg navbar-light border-bottom">
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+		integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<style>
+.nav-item .fa-comments {
+	font-size: 1.5rem; /* 아이콘 크기 조정 */
+	position: relative;
+}
+
+.badge {
+	position: absolute;
+	top: -10px; /* 아이콘과 배지의 겹치는 위치 조정 */
+	right: -10px; /* 아이콘과 배지의 겹치는 위치 조정 */
+	background-color: red;
+	color: white;
+	border-radius: 50%;
+	padding: 2px 5px; /* 배지 내부 여백 줄이기 */
+	font-size: 0.6em; /* 배지 텍스트 크기 줄이기 */
+}
+</style>
+	<div class="container-fluid inner">
+		<a class="navbar-brand" href="@{|/main|}">Book Dream(로고자리)</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+			data-bs-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item"><a class="nav-link" th:href="@{|/event|}">이벤트</a>
+				</li>
+				<li class="nav-item"><a class="nav-link" th:href="@{|/prod|}">상품(서적)</a>
+				</li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{|/trade/list|}">중고거래</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{|/free|}">커뮤니티</a>
+				</li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{|/trade/chat/rooms|}"> <i class="fas fa-comments">
+							<span id="messageBadge" class="badge"
+							th:if="${totalNewMessagesCount > 0}"
+							th:text="${totalNewMessagesCount}"></span>
+					</i>
+				</a></li>
+				<li class="nav-item"><a
+					class="nav-link position-relative me-auto"
+					style="background: url(/image/shopping-cart-2-line.png) no-repeat center center; width: 40px; height: 40px;"
+					th:href="@{|/basket|}"> <!-- 로그인 시 세션에 저장된 상품 수가 해당 회원의 장바구니 상품 수에 추가 -->
+						<span
+						class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
+						id="badge" sec:authorize="isAnonymous()"> 0 <span
+							class="visually-hidden">장바구니에 담은 상품 수</span>
+					</span> <span
+						class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
+						id="badge" sec:authorize="isAuthenticated()"
+						th:text="${basketNumber}"> 0 <span class="visually-hidden">장바구니에
+								담은 상품 수</span>
+					</span>
+				</a></li> &nbsp;&nbsp;
+				<!--                 <li class="nav-item">
+                    <p th:if="${name == null}">로그인 해주세요!</p>
+                </li> -->
+				<li class="nav-item"><a class="nav-link"
+					sec:authorize="isAnonymous()" th:href="@{|/user/login|}" id="login">로그인</a>
+				</li>
+				<li class="nav-item"><a class="nav-link"
+					sec:authorize="isAuthenticated()" th:href="@{|/user/userinfo|}">마이페이지</a>
+				</li>
+				<li class="nav-item"><a class="nav-link"
+					sec:authorize="isAnonymous()" th:href="@{|/user/signup|}">회원가입</a>
+					<a class="nav-link" sec:authorize="isAuthenticated()"
+					th:href="@{|/user/logout|}">로그아웃</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script>
+        var stompClientHeader = null;
+        var userId = '[[${userId}]]';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            connectHeader();
+        });
+
+        function connectHeader() {
+            var socket = new SockJS('/ws');
+            stompClientHeader = Stomp.over(socket);
+            stompClientHeader.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClientHeader.subscribe('/user/queue/newMessagesCount', function (messageOutput) {
+                    var newMessagesCount = JSON.parse(messageOutput.body);
+                    updateMessageBadge(newMessagesCount);
+                });
+                stompClientHeader.subscribe('/topic/chatRoomsUpdate', function (messageOutput) {
+                    fetchNewMessagesCount();
+                });
+                fetchNewMessagesCount();
+            });
+        }
+
+        function fetchNewMessagesCount() {
+            fetch('/trade/chat/newMessagesCount', {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(count => {
+                updateMessageBadge(count);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateMessageBadge(count) {
+            var badge = document.getElementById('messageBadge');
+            if (badge) { // messageBadge 요소가 존재하는지 확인
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.style.display = 'inline';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        }
+    </script>
 </nav>
