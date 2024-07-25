@@ -22,7 +22,9 @@
 }
 </style>
 	<div class="container-fluid inner">
-		<a class="navbar-brand" href="@{|/main|}">Book Dream(로고자리)</a>
+		<a class="logo navbar-brand" th:href="@{|/main|}">
+        	<img src = "/image/logo.png">
+        </a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 			data-bs-target="#navbarSupportedContent"
 			aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -39,8 +41,12 @@
 					th:href="@{|/trade/list|}">중고거래</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{|/free|}">커뮤니티</a>
 				</li>
+			</ul>
+			
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item"><a class="nav-link"
-					th:href="@{|/trade/chat/rooms|}"> <i class="fas fa-comments">
+					th:href="@{|/trade/chat/rooms|}"> 
+					<i class="fas fa-comments">
 							<span id="messageBadge" class="badge1"
 							th:if="${totalNewMessagesCount > 0}"
 							th:text="${totalNewMessagesCount}"></span>
@@ -52,15 +58,13 @@
 					th:href="@{|/basket|}"> <!-- 로그인 시 세션에 저장된 상품 수가 해당 회원의 장바구니 상품 수에 추가 -->
 						<span
 						class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
-						id="badge" sec:authorize="isAnonymous()"> 0 <span
+						id="badge"> 0 <span
 							class="visually-hidden">장바구니에 담은 상품 수</span>
-					</span> <span
-						class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
-						id="badge" sec:authorize="isAuthenticated()"
-						th:text="${basketNumber}"> 0 <span class="visually-hidden">장바구니에
-								담은 상품 수</span>
-					</span>
+					</span> 
 				</a></li> &nbsp;&nbsp;
+			</ul>
+			
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<!--                 <li class="nav-item">
                     <p th:if="${name == null}">로그인 해주세요!</p>
                 </li> -->
