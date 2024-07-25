@@ -163,4 +163,3 @@ public class FreeboardController {
         return "redirect:/freeboard/detail/" + id; // 수정 후 해당 게시글의 상세 페이지로 리다이렉트
     }
 }
-

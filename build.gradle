@@ -57,4 +57,3 @@ implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // Sprin
 tasks.named('test') {
 	useJUnitPlatform()
 }
-

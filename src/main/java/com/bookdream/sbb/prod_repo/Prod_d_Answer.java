@@ -44,3 +44,4 @@ public class Prod_d_Answer {
 	@ManyToOne
 	private Prod_d_Review review;
 }
+

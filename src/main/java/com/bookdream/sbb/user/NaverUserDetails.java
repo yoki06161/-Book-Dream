@@ -29,3 +29,4 @@ public class NaverUserDetails implements OAuth2UserInfo {
         return (String) ((Map) attributes.get("response")).get("name");
     }
 }
+

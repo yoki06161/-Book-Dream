@@ -50,16 +50,18 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/")
                 .failureUrl("/user/login")
                 .permitAll());
+        
         return http.build();
     }
 
+
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-        
+
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }

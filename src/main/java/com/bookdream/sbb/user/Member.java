@@ -39,6 +39,6 @@ public class Member {
     
     @Column(name = "last_name_change_date")
     private LocalDateTime lastNameChangeDate;
-    
+
     private String email;
 }

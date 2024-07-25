@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,4 @@ public interface BasketRepository extends JpaRepository<Basket, Long> {
 	@Transactional
 	@Query("DELETE FROM Basket b WHERE b.book_id = :book_id AND b.email = :email")
 	void deleteByBookIdAndEmail(@Param("book_id") Integer book_id, @Param("email") String email);
-
-//	@Query("SELECT b FROM Basket b WHERE b.email = :email")
-//	List<Basket> getItemsByEmail(@Param("email") String email);
 }

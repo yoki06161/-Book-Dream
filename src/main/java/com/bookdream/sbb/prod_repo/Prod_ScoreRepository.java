@@ -25,5 +25,4 @@ public interface Prod_ScoreRepository extends JpaRepository<Prod_Score, Integer>
 
     // 별점 줬었는지 확인
 	Prod_Score findByBookAndUser(Integer bookId, String user);
-    
 }

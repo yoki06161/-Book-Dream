@@ -29,5 +29,5 @@ public class Prod_Score {
 	// 책 평가 점수
 	@Column
 	private Integer score;
-
 }
+

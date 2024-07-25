@@ -14,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table (name = "basket")
 public class Basket {
 	public Basket() {
 		this.created_at = LocalDateTime.now();

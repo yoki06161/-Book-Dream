@@ -14,5 +14,4 @@ public interface TradeRepository extends JpaRepository<Trade, Integer> {
     Page<Trade> findAllByOrderByPostdateDesc(Pageable pageable);
     
     Trade findByTitle(String title);
-	
 }
