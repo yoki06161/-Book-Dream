@@ -60,7 +60,7 @@ public class BasketController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<String> basketAdd(@RequestBody List<Map<String, Object>> dataArray) {
+	public ResponseEntity<String> basketAdd(@RequestBody List<Map<String, Object>> dataArray, Model model) {
 		// 현재 인증된 사용자의 이메일 가져오기
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		System.out.println(email);
@@ -68,26 +68,22 @@ public class BasketController {
 		// 유저가 로그인했을때만(로그아웃했다가 로그인해도 됨!!)
 		if (email != "anonymousUser") {			
 			// 저장할 필드들 새로 DB에 저장
-			List<Map<String, Object>> sessionData = new ArrayList<>();
-			for (Map<String, Object> data : dataArray) {
-				Map<String, Object> sessionEntry = new HashMap<>();
-				sessionEntry.put("email", email);
-				sessionEntry.put("book_id", data.get("book_id"));
-				sessionEntry.put("count", data.get("count"));
-				sessionEntry.put("count_price", data.get("count_price"));
-				sessionData.add(sessionEntry);
-			}
-			try {
-				basketService.saveBasketItems(sessionData, email);
-				System.out.println(sessionData);
-			} catch (Exception e) {
-				// 중복 데이터가 있는 경우 예외 처리
-				return ResponseEntity.badRequest().body("Duplicate entry detected");
-			}
+	        List<Map<String, Object>> sessionData = new ArrayList<>();
+	        for (Map<String, Object> data : dataArray) {
+	            Map<String, Object> sessionEntry = new HashMap<>();
+	            sessionEntry.put("email", email);
+	            sessionEntry.put("book_id", data.get("book_id"));
+	            sessionEntry.put("count", data.get("count"));
+	            sessionEntry.put("count_price", data.get("count_price"));
+	            sessionData.add(sessionEntry);
+	        }
+	     // 서비스 계층의 메서드 호출하여 DB에 데이터 저장
+            basketService.saveBasketItems(sessionData);
+            System.out.println(sessionData);
 		}
 
-		// 응답
-		return ResponseEntity.ok("Session data saved successfully");
+        // 응답
+        return ResponseEntity.ok("Session data saved successfully");
 	}
 
 

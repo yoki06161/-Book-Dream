@@ -1,30 +1,44 @@
-// 전역 범위에서 isAuthenticated 변수를 정의
-const isAuthenticated = false; 
-
-function sendDataToServer(dataArray, csrfHeader, csrfToken) {
+function sendDataToServer(dataArray) {
 	// 배열을 JSON 문자열로 변환
 	let jsonData = JSON.stringify(dataArray);
 
 	fetch('/basket/add', {
 		method: 'POST',
 	    headers: {
-	        'Content-Type': 'application/json',
-	        [csrfHeader]: csrfToken
+	        'Content-Type': 'application/json'
 	    },
 	    body: jsonData  // jsonData를 전송
 	})
 	.then(response => {
-		if (response.ok) {
-			return response.json();
-	    } else {
-	        throw new Error('Network response was not ok.');
-	    }
-	})
+	      if (!response.ok) {
+	          return response.text().then(text => {
+	              throw new Error(`Network response was not ok: ${text}`);
+	          });
+	      }
+	      // 응답이 JSON이 아닌 경우를 대비
+	      return response.text().then(text => {
+	          try {
+	              return JSON.parse(text);
+	          } catch (error) {
+	              console.error('Error parsing JSON:', error);
+	              throw new Error('Invalid JSON response');
+	          }
+	      });
+	  })
 	.then(data => {
 	    console.log('Success:', data);
 	})
 	.catch(error => {
-	    console.error('Error:', error);
+		if (error.response) {
+		    // 서버 응답이 있을 경우
+		    console.error('서버 응답 오류:', error.response.data);
+		} else if (error.request) {
+		    // 요청이 전송되지 않았을 경우
+		    console.error('요청이 전송되지 않음:', error.request);
+		} else {
+		    // 요청 설정 중 오류가 발생했을 경우
+		    console.error('요청 설정 중 오류 발생:', error.message);
+		}
 	});
 }
 
@@ -47,6 +61,11 @@ function init() {
 
 // DOMContentLoaded 이벤트 리스너를 사용하여 문서가 완전히 로드된 후 실행하는 함수 호출
 document.addEventListener('DOMContentLoaded', init);
+
+function getAuthenticationStatus() {
+    // 세션 스토리지에서 로그인 상태를 가져온다
+    return sessionStorage.getItem('isAuthenticated') === 'true';
+}
 
 // 장바구니 추가 함수
 function aa() {
@@ -85,9 +104,9 @@ function aa() {
 	    document.getElementById('badge').textContent = newBadgeCount;
 	    sessionStorage.setItem('badgeCount', newBadgeCount);
 
-		// 로그인했다면 장바구니 DB에 추가
-		if (isAuthenticated) {
-		    sendDataToServer(dataArray, csrfHeader, csrfToken);
+		// 로그인 상태 확인
+		if (getAuthenticationStatus()) {
+		    sendDataToServer(dataArray);
 		}
 	} else {
 	    alert('이미 장바구니에 있습니다.');
