@@ -511,7 +511,7 @@ public class UserController {
 	    // 모든 pay_id에 대해 Orders를 조회합니다.
 	    List<Orders> allOrders = new ArrayList<>();
 	    for (Pay pay : payList) {
-	        List<Orders> ordersList = ordersService.getOrdersByPayId(pay.getPay_id());
+	        List<Orders> ordersList = ordersService.getOrdersById(pay.getPay_id());
 	        // pay_id별로 Orders를 그룹화하여 allOrders에 추가합니다.
 	        allOrders.addAll(ordersList);
 	    }
@@ -544,7 +544,7 @@ public class UserController {
 	            // pay_id에 따른 orders 필터링
 	            Map<String, List<Orders>> ordersByPayId = new HashMap<>();
 	            for (Pay pay : payList) {
-	                List<Orders> ordersList = ordersService.getOrdersByPayId(pay.getPay_id());
+	                List<Orders> ordersList = ordersService.getOrdersById(pay.getPay_id());
 	                ordersByPayId.put(pay.getPay_id(), ordersList);
 	            }
 	            model.addAttribute("payList", payList);
@@ -559,7 +559,7 @@ public class UserController {
 	            // pay_id에 따른 orders 필터링
 	            Map<String, List<Orders>> ordersByPayId = new HashMap<>();
 	            for (Pay pay : payList) {
-	                List<Orders> ordersList = ordersService.getOrdersByPayId(pay.getPay_id());
+	                List<Orders> ordersList = ordersService.getOrdersById(pay.getPay_id());
 	                ordersByPayId.put(pay.getPay_id(), ordersList);
 	            }
 	            model.addAttribute("payList", payList);

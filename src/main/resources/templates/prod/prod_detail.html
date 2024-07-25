@@ -4,13 +4,14 @@
 	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	<body>
 		<div class="flex_wrap">
-			<input type="hidden" class="book_id" th:value="${book.book_id}">
-			<img th:src="${book.book_img}" />
+			<div>
+				<img th:src="${book.book_img}" />
+			</div>
 			<div class="d_txt_wrap">
 				<span th:text="${book.book_title}" class="title"></span>
 				<span th:text="${book.book_writer}" class="writer"></span>
 				<div class="s_wrap">
-					<span>판매가</span> <span th:text="${book.book_price}" class="price"></span>
+					<span>판매가</span><span th:text="${book.book_price}" class="count"></span>
 				</div>
 				<div class="c_wrap">
 					<!--class로하면 js설정하기 귀찮아서 아이디로함-->
@@ -27,30 +28,50 @@
 					<a href="#" onclick="aa()" class="basket">장바구니</a>
 					<a href="#" class="buy">바로구매</a>
 				</div>
+				<div class="s_wrap">
+					<div class="scores">
+				        <span class="score on"></span>
+				        <span class="score"></span>
+				        <span class="score"></span>
+				        <span class="score"></span>
+				        <span class="score"></span>
+				    </div>
+				    <span th:text="${score_avg}" id="score_result"></span>
+					<p th:text="|(${#lists.size(v_list)}명이 평가했습니다)|"></p>
+				</div>
 			</div>
 		</div>
 		<hr>
 		<h3>책소개</h3>
 		<p th:text="${book.book_intro}"></p>
 		<hr>
-		<!--별점 테스트-->
-	    <h3>평균 별점</h3>
-	    <p th:text="${score_avg}" id="score_result"></p>
-		
+	    <h3>평균 별점
+		<div class="scores">
+	        <span class="score on"></span>
+	        <span class="score"></span>
+	        <span class="score"></span>
+	        <span class="score"></span>
+	        <span class="score"></span>
+	    </div>
+	    <span th:text="${score_avg}" id="score_result"></span>
+		</h3>
+		<p th:text="|(${#lists.size(v_list)}명이 평가했습니다)|"></p>
+		<br>
+		============
+		<h3>별점 남기기</h3>
 		<form th:action="@{|/prod/detail/score/${book.book_id}|}" method="post">
-			<input name="i_score" id="i_score" />
-			
+			<input name="i_score" id="i_score" value="1" type="hidden"/>
 			<div class="star_rating" name="t_score">
-		        <span class="star" data-value="1">★</span>
-		        <span class="star" data-value="2">★</span>
-		        <span class="star" data-value="3">★</span>
-		        <span class="star" data-value="4">★</span>
-		        <span class="star" data-value="5">★</span>
+		        <span class="star on" data-value=1></span>
+		        <span class="star" data-value=2></span>
+		        <span class="star" data-value=3></span>
+		        <span class="star" data-value=4></span>
+		        <span class="star" data-value=5></span>
 		    </div>
-			
+			<br>
 			<input type="submit" value="별점남기기"/>
 		</form>
-		
+		<br>
 		<hr>
 		<h3>리뷰</h3>
 		<form th:action="@{|write_review/${book.book_id}|}" method="post">
@@ -95,10 +116,9 @@
 		<br>
 		
 	</body>
-
+	
 	<script th:inline="javascript" type="text/javascript"  th:src="@{/js/common-ui.js}"></script>
 	<script th:inline="javascript">
-
 	   // book.book_price를 js 변수로 변환. /*는 주석이 아니라 /*.[[로 th템플릿 속성이랜다.
 	    let price = /*[[${book.book_price}]]*/ '0'; // 초기값 '0' 설정
 	    
@@ -159,21 +179,40 @@
 		    }
 		}
 
-		// 테스트 별점 넣기
+		// 별점 넣기
+		// .star_rating 클래스 하위에 있는 모든 .star 요소들 선택
 		document.querySelectorAll('.star_rating .star').forEach(star => {
 	        star.addEventListener('click', function() {
-	            // 모든 별표시를 초기화합니다
+	            // 모든 별표시 초기화
 	            document.querySelectorAll('.star_rating .star').forEach(star => {
 	                star.classList.remove('on');
 	            });
 
-	            // 클릭된 별표시에 'on' 클래스를 추가합니다
-	            this.classList.add('on');
+				
+				let clickedValue = parseInt(this.getAttribute('data-value'));
+				// 클릭된 별에 온클래스 걸어서 색깔 변하게.
+				for (let i = 1; i <= clickedValue; i++) {
+	                document.querySelector(`.star_rating .star[data-value="${i}"]`).classList.add('on');
+	            }
 
-	            // 숨겨진 필드에 별점 값을 설정합니다
+	            // i_score 인풋에 별점 값 넣기
 	            let value = this.getAttribute('data-value');
 	            document.getElementById('i_score').value = value;
 	        });
+	    });
+		
+		// 이미 평가된 별점 색깔
+		document.addEventListener('DOMContentLoaded', function() {
+	        // score_avg 값 가져오기
+	        var scoreAvg = parseInt(document.getElementById('score_result').textContent.trim());
+
+	        // scores 요소의 자식 요소들(span.score)을 가져와서 배열로 변환
+	        var scoreElements = Array.from(document.querySelectorAll('.scores .score'));
+
+	        // score_avg 값에 따라 on 클래스를 적용
+	        for (var i = 0; i < scoreAvg; i++) {
+	            scoreElements[i].classList.add('on');
+	        }
 	    });
 		
 	    // 페이지 로드 시 초기 결과값 설정

@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3" style="display:flex">
-    <div style="width:230px;padding:0 10px">
+<div layout:fragment="content" class="container my-3" style="display:flex;">
+    <div style="width:230px;padding:0 10px;">
         <nav th:replace="~{user/mynav :: headerfragment}"></nav>
     </div>
-    <div class="main-content" style="width:700px;padding-left:50px">
-        <h2>회원 탈퇴</h2>
+    <div class="main-content" style="width:700px;padding-left:50px;">
+        <h3>회원 탈퇴</h3>
         <hr>
         <form th:action="@{|/user/userdel|}" method="post" th:object="${userDelForm}" th:if="${!isSocialLogin}">
+	        <span style="display:block;font-size:14px;margin-bottom:5px;">현재 비밀번호를 입력 후 <strong style="color:red;">계정 탈퇴 버튼을 누르면 바로 계정이 삭제됩니다.</strong></span>
             <div class="mb-3">
-                <label for="currentPassword" class="form-label">현재 비밀번호</label>
-                <input type="password" th:field="*{currentPassword}" class="form-control">
+                <input type="password" th:field="*{currentPassword}" class="form-control" placeholder="현재 비밀번호를 입력해주세요." style="width:300px">
                 <!-- 이전 비밀번호 에러 메시지 -->
                 <small class="text-danger" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></small>
             </div>
             <button type="submit" class="btn btn-primary">계정 탈퇴</button>
         </form>
         <form th:action="@{|/user/userdel|}" method="post" th:if="${isSocialLogin}">
+        	<span style="display:block;font-size:14px;margin-bottom:5px;"><strong style="color:red;">계정 탈퇴 버튼을 누르면 바로 계정이 삭제됩니다.</strong></span>
             <button type="submit" class="btn btn-primary">계정 탈퇴</button>
         </form>
     </div>
