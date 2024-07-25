@@ -8,28 +8,34 @@ import org.springframework.stereotype.Service;
 
 import com.bookdream.sbb.user.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class PayService {
 	private final PayRepository payRepository;
+	
+	@Transactional
+	 public void savePays(String pay_id, String name, String phone, String address, String post_code,
+	            String total_price) {
+	        try {
+	            Pay pay = new Pay();
+	            pay.setPay_id(pay_id);
+	            pay.setName(name);
+	            pay.setPhone(phone);
+	            pay.setAddress(address);
+	            pay.setPost_code(post_code);
+	            pay.setTotal_price(total_price);
 
-	public void savePays(String pay_id, String name, String phone, String address, String post_code,
-			String total_price) {
-		// Pay 객체 생성 및 필드 설정
-		Pay pay = new Pay();
-		pay.setPay_id(pay_id);
-		pay.setName(name);
-		pay.setPhone(phone);
-		pay.setAddress(address);
-		pay.setPost_code(post_code);	
-		pay.setTotal_price(total_price);
+	            payRepository.save(pay);
+	        } catch (Exception e) {
+	            // 예외 발생 시 로그에 기록
+	            e.printStackTrace();
+	        }
+	    }
 
-		// 데이터베이스에 저장
-		payRepository.save(pay);
-	}
-
+	@Transactional
 	public void updatePaysById(String pay_id, String pw, String request) {
 		Optional<Pay> optionalPay = payRepository.findById(pay_id);
 		if (optionalPay.isPresent()) {
@@ -55,4 +61,7 @@ public class PayService {
 	    return pays;
 	}
 
+	public void deletePayByPayId(String pay_id) {
+		payRepository.deleteById(pay_id);
+	}
 }

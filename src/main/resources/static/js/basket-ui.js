@@ -191,7 +191,7 @@ function displayFormData() {
     } else {
         // 상품이 없을 때 메시지 표시
         let div = document.createElement('div');
-        div.innerHTML = `<h3 class="text-center">장바구니에 담은 상품이 없습니다</h3>`;
+        div.innerHTML = `<h4 class="text-center">장바구니에 담은 상품이 없습니다</h4>`;
         dataNotFound.appendChild(div); // 메시지를 표시할 요소에 추가
         // 장바구니가 비어 있을 경우 전체 선택 체크박스 해제
         document.getElementById('select_all').checked = false;
@@ -246,8 +246,48 @@ function deleteItem(index, data) {
         sessionStorage.setItem('badgeCount', badgeCount); // 세션 스토리지에 업데이트된 아이템 개수 저장
         document.getElementById('badge').textContent = badgeCount; // UI에 아이템 개수 업데이트
 
+		// 로그인했다면 장바구니 DB에서 삭제 
+		if (isAuthenticated) {
+			sendDataToServerDelete(bookIdToDelete, csrfHeader, csrfToken);
+		}
+		
         displayFormData(); // 데이터를 삭제한 후 UI 다시 렌더링
     }
+}
+
+function sendDataToServerDelete(bookIdToDelete, csrfHeader, csrfToken) {
+    fetch('/basket/delete', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
+        body: JSON.stringify({ book_id: bookIdToDelete })  
+		// bookIdToDelete를 JSON으로 변환하여 전송  // jsonData를 전송
+    })
+	.then(response => {
+	     if (!response.ok) {
+	         return response.json().then(errData => {
+	             throw new Error('서버 응답 오류: ' + JSON.stringify(errData));
+	         });
+	     }
+	     return response.json();
+	 })
+	 .then(data => {
+	     console.log('Success:', data);
+	 })
+	.catch(error => {
+		if (error.response) {
+			// 서버 응답이 있을 경우
+			console.error('서버 응답 오류:', error.response.data);
+		} else if (error.request) {
+			// 요청이 전송되지 않았을 경우
+			console.error('요청이 전송되지 않음:', error.request);
+		} else {
+			// 요청 설정 중 오류가 발생했을 경우
+			console.error('요청 설정 중 오류 발생:', error.message);
+		}
+	});	
 }
 
 // 체크박스 초기화 함수
@@ -278,8 +318,6 @@ document.getElementById('order').addEventListener('click', function() {
     sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
     sessionStorage.setItem('totalSum', totalSum); // totalSum을 숫자 값으로 저장
 });
-
-
 
 // 초기화 함수
 document.addEventListener('DOMContentLoaded', init);

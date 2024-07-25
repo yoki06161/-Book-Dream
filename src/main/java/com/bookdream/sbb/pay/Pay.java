@@ -7,9 +7,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+@Table (name = "pay")
 @Getter
 @Setter
 @Entity
@@ -35,10 +37,10 @@ public class Pay {
 	@Column(length = 5, nullable = false)
 	private String post_code;
 	
-	@Column(length = 40, nullable = false)
+	@Column(length = 200, nullable = false)
 	private String address;
 	
-	@Column(length = 40)
+	@Column(length = 200)
 	private String request;
 	
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

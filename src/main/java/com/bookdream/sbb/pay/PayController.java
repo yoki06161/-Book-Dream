@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -18,6 +19,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -27,7 +31,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import com.bookdream.sbb.user.UserService;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
@@ -36,14 +41,20 @@ import com.siot.IamportRestClient.*;
 
 // 아임포트는 REST API - 이걸 사용하면 html페이지를 반환할 수 없으므로, order 페이지는 분리
 @RestController
-@RequiredArgsConstructor
 public class PayController {
 	// 결제 검증 서비스
 	private IamportClient iamportClient;
 	// 결제 후 DB에 결제/주문정보 저장
+	private final RestTemplate restTemplate;
+	private final PayService payService;
+	private final OrdersService ordersService;
+	
 	@Autowired
-	private PayService payService;
-	private OrdersService ordersService;
+    public PayController(RestTemplate restTemplate, PayService payService, OrdersService ordersService) {
+        this.restTemplate = restTemplate;
+        this.payService = payService;
+        this.ordersService = ordersService;
+    }
 	
     @Value("${imp.api.key}")
     private String apiKey;
@@ -90,6 +101,66 @@ public class PayController {
         } catch (Exception e) {
             // 예외 처리
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
+    }
+    
+
+    @PostMapping("/payment/getToken")
+    public ResponseEntity<String> getToken(@RequestBody String body) {
+        String apiUrl = "https://api.iamport.kr/users/getToken";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+
+        return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
+    }
+
+    @PostMapping("/payment/cancel/{imp_uid}")
+    public ResponseEntity<String> refundRequest(@RequestBody String body, @PathVariable("imp_uid") String pay_id) {
+        try {
+            // 토큰 요청
+            String tokenBody = "{\"imp_key\":\"" + apiKey + "\", \"imp_secret\":\"" + secretKey + "\"}";
+            ResponseEntity<String> tokenResponse = getToken(tokenBody);
+
+            // 토큰 추출
+            String token = extractToken(tokenResponse.getBody());
+
+            // 결제 취소 요청
+            String apiUrl = "https://api.iamport.kr/payments/cancel";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/json");
+            headers.add("Authorization", "Bearer " + token);
+
+            HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+            
+            //결제 테이블에서 데이터 삭제(여기까진 됨)
+            payService.deletePayByPayId(pay_id);
+            
+            //주문 테이블에서 데이터 삭제
+            ordersService.deleteOrdersByPayId(pay_id);
+            
+            return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
+
+    private String extractToken(String responseBody) {
+        // responseBody에서 토큰 값 추출 로직 추가
+        // JSON 파싱하여 access_token 값 반환
+        // 예: {"response":{"access_token":"YOUR_ACCESS_TOKEN",...}}
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(responseBody);
+            return rootNode.path("response").path("access_token").asText();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse token from response", e);
         }
     }
 }

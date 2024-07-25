@@ -1,6 +1,6 @@
 <nav th:fragment="headerfragment" class="navbar navbar-expand-lg navbar-light border-bottom">
-    <div class="container-fluid mx-auto">
-        <a class="navbar-brand" th:href="@{|/main|}">Book Dream(로고자리)</a>
+    <div class="container-fluid inner">
+        <a class="navbar-brand" href="@{|/main|}">Book Dream(로고자리)</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -17,14 +17,12 @@
                     <a class="nav-link" th:href="@{|/trade|}">중고거래</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{|/freeboard/list|}">커뮤니티</a>
+                    <a class="nav-link" th:href="@{|/free|}">커뮤니티</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{|/trade/chat|}">채팅(아이콘)</a>
                 </li>
-<!--                 <li class="nav-item">
-                    <p th:if="${name == null}">로그인 해주세요!</p>
-                </li> -->
+                <li class="nav-item">
                 <a
                   class="nav-link position-relative me-auto"
                   style="
@@ -51,8 +49,11 @@
                 </a>
               </li>
               &nbsp;&nbsp;
+<!--                 <li class="nav-item">
+                    <p th:if="${name == null}">로그인 해주세요!</p>
+                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/login|}">로그인</a>
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{|/user/login|}" id="login">로그인</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/userinfo|}">마이페이지</a>

@@ -11,7 +11,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table (name = "basket")
 @Getter
 @Setter
 @Entity

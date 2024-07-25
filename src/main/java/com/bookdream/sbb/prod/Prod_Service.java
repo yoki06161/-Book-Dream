@@ -260,6 +260,4 @@ public class Prod_Service {
 		Collections.shuffle(allBooks);
 		return allBooks.stream().limit(4).collect(Collectors.toList());
 	}
-
-
 }

@@ -199,7 +199,7 @@ document.getElementById('pay').addEventListener('click', function() {
 				headers: {
 					'Content-Type': 'application/json',
 					[csrfHeader]: csrfToken
-				},
+				}
             })
             .then(response => {
 				// 결제성공시 imp_uid, 주문조회pw, 배송요청사항을 post요청해서 pay테이블 update

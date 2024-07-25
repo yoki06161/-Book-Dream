@@ -41,15 +41,15 @@ public class SecurityConfig {
                 .failureUrl("/user/login?error=true")
                 .defaultSuccessUrl("/main"))
             .logout((logout) -> logout
-            	    .logoutUrl("/user/logout")
-            	    .logoutSuccessUrl("/") // 예시로 /home 으로 설정
+            		.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+            		.logoutSuccessUrl("/")
+            		.invalidateHttpSession(true)
             	    .addLogoutHandler(customLogoutHandler))
             .oauth2Login((oauth2Login) -> oauth2Login
                 .loginPage("/oauth-login/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/user/login")
-                .permitAll())
-            .csrf((csrf) -> csrf.disable());
+                .permitAll());
 
         return http.build();
     }

@@ -47,7 +47,15 @@
                   name="name"
                   id="name"
                   placeholder="이름을 입력해주세요."
-				  value="홍길동"
+                  sec:authorize="isAnonymous()"
+                />
+                <input
+                  type="text"
+                  class="form-control mb-2"
+                  name="name"
+                  id="name"
+                  th:value="${name}"
+                  sec:authorize="isAuthenticated()"
                 />
                 
                 <input
@@ -56,7 +64,6 @@
                   name="phone"
                   id="phone"
                   placeholder="휴대폰 번호를 '-'없이 입력해주세요."
-                  value="01011111111"
                 />
                 <input
                   type="password"
@@ -90,7 +97,6 @@
                   id="sample6_postcode"
                   name="post_code"
                   placeholder="우편번호"
-				  value="48060"
                   disabled
                 />
                 <input
@@ -105,7 +111,6 @@
                   name="address"
                   class="form-control mb-2"
                   placeholder="배송지 주소"
-				  value="부산 해운대구 APEC로 17 (우동)"
                   disabled
                 />
                 <input
@@ -114,7 +119,6 @@
                   name="detailAddress"
                   class="form-control mb-2"
                   placeholder="상세주소"
-				  value="123123"
                 />
                 <select id="options" name="options" class="form-select mb-2">
                   <option value="" selected>
