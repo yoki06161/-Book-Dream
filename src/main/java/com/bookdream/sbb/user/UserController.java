@@ -572,7 +572,4 @@ public class UserController {
 
 	    return "user/userbuy";
 	}
-
-
-
 }
