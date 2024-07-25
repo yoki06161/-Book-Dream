@@ -1,3 +1,13 @@
+/* 상품 리스트 */
+	img {
+		width: 100%;
+	}
+
+	.flex_wrap .img_wrap {
+		width: 150px;
+	}
+	
+
 /* 상세보기 페이지*/
 	a {
 		text-decoration: none;
@@ -109,31 +119,47 @@
 		display: none;
 	}
 	
-	/* 테스트 별점 용*/
-	.star_rating {
-	  width: 100%; 
-	  box-sizing: border-box; 
-	  display: inline-flex; 
-	  float: left;
-	  flex-direction: row; 
-	  justify-content: flex-start;
-	}
+	/* 별점 */
 	.star_rating .star {
-	  width: 25px; 
-	  height: 25px; 
-	  margin-right: 10px;
-	  display: inline-block; 
-	  background: #ddd; 
-	  background-size: 100%; 
-	  box-sizing: border-box; 
+		width: 25px; 
+		height: 25px; 
+		margin-right: 10px;
+		display: inline-block; 
+		background: #ddd; 
+		background-size: 100%; 
+		box-sizing: border-box; 
 	}
 	.star_rating .star.on {
-	  width: 25px; 
-	  height: 25px;
-	  margin-right: 10px;
-	  display: inline-block; 
-	  background: yellow;
-	  background-size: 100%; 
-	  box-sizing: border-box; 
+		width: 25px; 
+		height: 25px;
+		margin-right: 10px;
+		display: inline-block; 
+		background: yellowgreen;
+		background-size: 100%; 
+		box-sizing: border-box; 
 	}
-
+	
+	/* 평가된 별점*/
+	.scores {
+		display: inline;
+	}
+	
+	.scores .score {
+		width: 25px; 
+		height: 25px; 
+		margin-right: 10px;
+		display: inline-block; 
+		background: #ddd; 
+		background-size: 100%; 
+		box-sizing: border-box; 
+	}
+	.scores .score.on {
+		width: 25px; 
+		height: 25px;
+		margin-right: 10px;
+		display: inline-block; 
+		background: yellowgreen;
+		background-size: 100%; 
+		box-sizing: border-box; 
+	}
+	

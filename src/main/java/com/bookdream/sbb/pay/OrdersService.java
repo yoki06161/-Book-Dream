@@ -35,11 +35,6 @@ public class OrdersService {
 		return ordersRepository.findByPayId(pay_id);
 	}
 
-	public List<Orders> getOrdersByPayId(String pay_id) {
-		List<Orders> orders = ordersRepository.findAll();
-		return orders;
-	}
-	
 	public void deleteOrdersByPayId(String pay_id) {
 		ordersRepository.deleteAllByPayId(pay_id);
 	}
