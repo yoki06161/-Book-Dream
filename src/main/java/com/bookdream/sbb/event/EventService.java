@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bookdream.sbb.DataNotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,5 +72,12 @@ public class EventService {
         eventRepository.findById(idx)
             .orElseThrow(() -> new IllegalArgumentException("Invalid event Id: " + idx));
         eventRepository.deleteById(idx);
+    }
+    
+    //랜덤 이벤트 불러오기
+    public List<Event> getRandomEvents() {
+        List<Event> events = eventRepository.findAll();
+        Collections.shuffle(events);
+        return events.subList(0, Math.min(events.size(), 2));
     }
 }

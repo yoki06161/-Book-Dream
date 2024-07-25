@@ -11,29 +11,23 @@
 <body>
 	<div layout:fragment="content" class="container mt-4">
 		<h1>이벤트 목록</h1>
+		<p th:text="'안녕하세요, ' + ${username} + '님!'"></p>
 		<div class="row">
 			<div th:each="event : ${events}" class="col-md-6 mb-4">
-				<div class="card">
-					<th>
-						<a th:href="@{|/event/detail/${event.idx}|}">
-
-							<img th:src="@{'/image/eventimage/' + ${event.image}}" alt="Event Image"
-								class="card-img-top">
-							<div class="card-body">
-								<h5 class="card-title" th:text="${event.title}">이벤트 제목</h5>
-								<p class="card-text" th:text="${event.description}">이벤트 설명</p>
-								<!--						<p class="card-text">
-							<small class="text-muted">시작: <span
-									th:text="${#dates.format(event.startDate, 'yyyy-MM-dd')}">시작 날짜</span></small><br>
-							<small class="text-muted">종료: <span
-									th:text="${#dates.format(event.endDate, 'yyyy-MM-dd')}">종료 날짜</span></small>
-						</p>-->
-							</div>
-						</a>
-					</th>
+				<div class="card h-100">
+					<a th:href="@{|/event/detail/${event.idx}|}">
+						<img th:src="@{'/image/eventimage/' + ${event.image}}" alt="Event Image" class="card-img-top">
+					</a>
+					<div class="card-body">
+						<h5 class="card-title" th:text="${event.title}">이벤트 제목</h5>
+						<p class="card-text" th:text="${event.description}">이벤트 설명</p>
+					</div>
+					<div class="card-footer">
+						<small class="text-muted">시작: <span th:text="${#temporals.format(event.startDate, 'yyyy-MM-dd')}">시작 날짜</span></small><br>
+						<small class="text-muted">종료: <span th:text="${#temporals.format(event.endDate, 'yyyy-MM-dd')}">종료 날짜</span></small>
+					</div>
 				</div>
 			</div>
-		</div>
 
 		<footer class="py-3 bg-dark text-white">
 			<div class="container">

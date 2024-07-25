@@ -1,6 +1,7 @@
 package com.bookdream.sbb.event;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,10 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     
     // 이벤트 제목을 기반으로 단일 이벤트 검색
     Event findByTitle(String title);
+    
+    //가장 최근에 작성한 이벤트
+    @Query("SELECT e FROM Event e ORDER BY e.postDate DESC")
+    List<Event> findTop2ByOrderByPostDateDesc();
 
     // 특정 날짜 범위 내의 이벤트를 찾는 메서드
     @Query("SELECT e FROM Event e WHERE e.startDate >= :start AND e.endDate <= :end")

@@ -1,8 +1,11 @@
 package com.bookdream.sbb.prod;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -191,5 +194,18 @@ public class Prod_Service {
 
         return score;
     }
+    
+    
+    //main 화면 작업 -이준희
+    //랜덤 책 추천
+    public List<Prod_Books> getRecommendedBooks() {
+        List<Prod_Books> allBooks = StreamSupport
+                .stream(prodRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+
+        Collections.shuffle(allBooks);
+        return allBooks.stream().limit(4).collect(Collectors.toList());
+    }
+    
     
 }
