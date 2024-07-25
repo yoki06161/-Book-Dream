@@ -1,11 +1,12 @@
-function sendDataToServer(dataArray) {
+function sendDataToServer(dataArray, csrfHeader, csrfToken) {
 	// 배열을 JSON 문자열로 변환
 	let jsonData = JSON.stringify(dataArray);
 
 	fetch('/basket/add', {
 		method: 'POST',
 	    headers: {
-	        'Content-Type': 'application/json'
+	        'Content-Type': 'application/json',
+	        [csrfHeader]: csrfToken
 	    },
 	    body: jsonData  // jsonData를 전송
 	})
@@ -99,7 +100,10 @@ function aa() {
 	    document.getElementById('badge').textContent = newBadgeCount;
 	    sessionStorage.setItem('badgeCount', newBadgeCount);
 
-		sendDataToServer(dataArray);
+		// 로그인했다면 장바구니 DB에 추가
+		if (isAuthenticated) {
+			sendDataToServer(dataArray, csrfHeader, csrfToken);
+		}
 	} else {
 	    alert('이미 장바구니에 있습니다.');
 	    console.log(dataArray);
