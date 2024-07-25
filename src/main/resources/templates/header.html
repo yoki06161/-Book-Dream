@@ -10,7 +10,7 @@
 	position: relative;
 }
 
-.badge {
+.badge1 {
 	position: absolute;
 	top: -10px; /* 아이콘과 배지의 겹치는 위치 조정 */
 	right: -10px; /* 아이콘과 배지의 겹치는 위치 조정 */
@@ -41,13 +41,13 @@
 				</li>
 				<li class="nav-item"><a class="nav-link"
 					th:href="@{|/trade/chat/rooms|}"> <i class="fas fa-comments">
-							<span id="messageBadge" class="badge"
+							<span id="messageBadge" class="badge1"
 							th:if="${totalNewMessagesCount > 0}"
 							th:text="${totalNewMessagesCount}"></span>
 					</i>
 				</a></li>
-				<li class="nav-item"><a
-					class="nav-link position-relative me-auto"
+				<li class="nav-item">
+				<a class="nav-link position-relative me-auto"
 					style="background: url(/image/shopping-cart-2-line.png) no-repeat center center; width: 40px; height: 40px;"
 					th:href="@{|/basket|}"> <!-- 로그인 시 세션에 저장된 상품 수가 해당 회원의 장바구니 상품 수에 추가 -->
 						<span
