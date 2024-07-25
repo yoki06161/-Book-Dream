@@ -69,7 +69,6 @@ public class Prod_Service {
 		// Optional임시 데이터 타입인듯. 무슨 데이터 타입이든 받아들이는
 		// select * from prodRepository where id = book_id라 생각하자.
 		Optional<Prod_Books> opb = prodRepository.findById(book_id);
-		System.out.println("##############opb는 ? " + opb);
 		return opb.get();
 	}
 
@@ -246,9 +245,7 @@ public class Prod_Service {
     	p_score.setScore(score);
     	
     	sco_repo.save(p_score);
-        
     }
-
 
 	//main 화면 작업 -이준희
 	//랜덤 책 추천

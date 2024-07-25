@@ -14,4 +14,6 @@ import org.springframework.stereotype.Repository;
 public interface Prod_BooksRepository extends JpaRepository<Prod_Books, Integer> {
 	// 키워드 토대로 검색. 모든 책 찾는거랑은 별개
 	List<Prod_Books> findAll(Specification<Prod_Books> spec);
+	List<Prod_Books> findAllById(Iterable<Integer> ids);
+	
 }
