@@ -50,7 +50,6 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/")
                 .failureUrl("/user/login")
                 .permitAll());
-        
         return http.build();
     }
 

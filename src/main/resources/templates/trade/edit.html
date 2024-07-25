@@ -45,7 +45,7 @@
         <form id="tradeForm" th:action="@{/trade/edit/{idx}(idx=${trade.idx})}" th:object="${trade}" method="post" enctype="multipart/form-data">
             <input type="hidden" id="id" th:field="*{id}" th:value="${trade.id}" />
             <input type="hidden" id="hiddenImage" th:field="*{image}" /> <!-- 숨겨진 이미지 필드 -->
-            <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+            <div th:replace="~{trade/form_errors :: formErrorsFragment}"></div>
             
             <!-- 책 검색 전용 입력 필드 -->
             <div class="mb-3">
