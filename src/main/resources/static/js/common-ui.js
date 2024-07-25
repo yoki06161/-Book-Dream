@@ -1,3 +1,6 @@
+// 전역 범위에서 isAuthenticated 변수를 정의
+const isAuthenticated = false; 
+
 function sendDataToServer(dataArray, csrfHeader, csrfToken) {
 	// 배열을 JSON 문자열로 변환
 	let jsonData = JSON.stringify(dataArray);
@@ -48,7 +51,12 @@ document.addEventListener('DOMContentLoaded', init);
 // 장바구니 추가 함수
 function aa() {
 	let book_id = parseInt(document.querySelector('.book_id').value);
-	let book_img = document.querySelector('img').src;
+	// 모든 이미지를 선택하여 배열로 변환
+	let images = document.querySelectorAll('img');
+
+	// 두 번째 이미지의 src를 가져오기
+	let book_img = images[1].src;
+
 	let book_title = document.querySelector('.title').textContent;
 	let book_writer = document.querySelector('.writer').textContent;
 	let book_price = document.querySelector('.count').textContent; 
@@ -78,9 +86,9 @@ function aa() {
 	    sessionStorage.setItem('badgeCount', newBadgeCount);
 
 		// 로그인했다면 장바구니 DB에 추가
-	    if (isAuthenticated) {
-	    	sendDataToServer(dataArray, csrfHeader, csrfToken);
-	    }
+		if (isAuthenticated) {
+		    sendDataToServer(dataArray, csrfHeader, csrfToken);
+		}
 	} else {
 	    alert('이미 장바구니에 있습니다.');
 	    console.log(dataArray);
@@ -94,10 +102,14 @@ var buyButtons = document.getElementsByClassName('buy');
 for (var i = 0; i < buyButtons.length; i++) {
     buyButtons[i].addEventListener('click', function() {
 		let book_id = parseInt(document.querySelector('.book_id').value);
-		let book_img = document.querySelector('img').src;
+		// 모든 이미지를 선택하여 배열로 변환
+		let images = document.querySelectorAll('img');
+
+		// 두 번째 이미지의 src를 가져오기
+		let book_img = images[1].src;
 		let book_title = document.querySelector('.title').textContent;
 		let book_writer = document.querySelector('.writer').textContent;
-		let book_price = document.querySelector('.price').textContent;
+		let book_price = document.querySelector('.count').textContent;
 		let count = parseInt(document.querySelector('.bcount').value);
 		let count_price = document.querySelector('.result').textContent + '원';
 		// count_price를 totalSum(숫자 값)으로 저장
