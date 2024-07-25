@@ -51,7 +51,7 @@ function aa() {
 	let book_img = document.querySelector('img').src;
 	let book_title = document.querySelector('.title').textContent;
 	let book_writer = document.querySelector('.writer').textContent;
-	let book_price = document.querySelector('.price').textContent;
+	let book_price = document.querySelector('.count').textContent;
 	let count = parseInt(document.querySelector('.bcount').value);
 	let count_price = document.querySelector('.result').textContent + '원';
 

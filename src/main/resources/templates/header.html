@@ -20,10 +20,13 @@
 	padding: 2px 5px; /* 배지 내부 여백 줄이기 */
 	font-size: 0.6em; /* 배지 텍스트 크기 줄이기 */
 }
+.logo {
+
+}
 </style>
 	<div class="container-fluid inner">
-		<a class="logo navbar-brand" th:href="@{|/main|}">
-        	<img src = "/image/logo.png">
+		<a class="navbar-brand" th:href="@{|/main|}">
+        	<img src = "/image/logo.png" class="logo">
         </a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 			data-bs-target="#navbarSupportedContent"

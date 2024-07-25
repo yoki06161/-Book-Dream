@@ -4,6 +4,7 @@
 	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	<body>
 		<div class="flex_wrap">
+			<input type="hidden" class="book_id" th:value="${book.book_id}">
 			<div>
 				<img th:src="${book.book_img}" />
 			</div>
