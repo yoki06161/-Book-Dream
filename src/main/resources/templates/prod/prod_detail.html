@@ -46,14 +46,14 @@
 		<p th:text="${book.book_intro}"></p>
 		<hr>
 	    <h3>평균 별점
-		<div class="scores">
-	        <span class="score on"></span>
-	        <span class="score"></span>
-	        <span class="score"></span>
-	        <span class="score"></span>
-	        <span class="score"></span>
-	    </div>
-	    <span th:text="${score_avg}" id="score_result"></span>
+			<div class="score_list">
+		        <span class="score on"></span>
+		        <span class="score"></span>
+		        <span class="score"></span>
+		        <span class="score"></span>
+		        <span class="score"></span>
+		    </div>
+		    <span th:text="${score_avg}" id="score_result"></span>
 		</h3>
 		<p th:text="|(${#lists.size(v_list)}명이 평가했습니다)|"></p>
 		<br>
@@ -207,11 +207,13 @@
 	        var scoreAvg = parseInt(document.getElementById('score_result').textContent.trim());
 
 	        // scores 요소의 자식 요소들(span.score)을 가져와서 배열로 변환
-	        var scoreElements = Array.from(document.querySelectorAll('.scores .score'));
-
+	        var scoreElements = Array.from(document.querySelectorAll('.s_wrap .scores .score'));
+			var scoreElements2 = Array.from(document.querySelectorAll('.score_list .score'));
+			
 	        // score_avg 값에 따라 on 클래스를 적용
 	        for (var i = 0; i < scoreAvg; i++) {
 	            scoreElements[i].classList.add('on');
+	            scoreElements2[i].classList.add('on');
 	        }
 	    });
 		
