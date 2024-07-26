@@ -19,7 +19,7 @@
 </head>
 
 <body>
-	<div layout:fragment="content" class="container mt-4">
+	<div layout:fragment="content" >
 		<h1 class="mb-4 text-center">자유게시판 목록</h1>
 		<form class="d-flex mb-4 search-form" th:action="@{/freeboard/list}" method="get">
 			<input class="form-control me-2 text-center" type="search" placeholder="제목 검색" aria-label="Search" name="keyword">

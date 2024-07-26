@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div layout:fragment="content" class="container mt-4">
+    <div layout:fragment="content" >
         <h1 th:text="${#strings.equals(freeboard.id, null) ? '글쓰기' : 'Edit Freeboard'}"></h1>
         <form th:action="@{/freeboard/form}" th:object="${freeboard}" method="post" enctype="multipart/form-data">
             <div class="mb-3">
