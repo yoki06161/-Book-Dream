@@ -61,9 +61,6 @@
 								담은 상품 수</span>
 					</span>
 				</a></li> &nbsp;&nbsp;
-				<!--                 <li class="nav-item">
-                    <p th:if="${name == null}">로그인 해주세요!</p>
-                </li> -->
 				<li class="nav-item"><a class="nav-link"
 					sec:authorize="isAnonymous()" th:href="@{|/user/login|}" id="login">로그인</a>
 				</li>

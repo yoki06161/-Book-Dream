@@ -1,12 +1,14 @@
 package com.bookdream.sbb.user;
 
 import java.security.Principal;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -15,17 +17,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.bookdream.sbb.DataNotFoundException;
 import com.bookdream.sbb.pay.Orders;
 import com.bookdream.sbb.pay.OrdersService;
@@ -154,21 +154,21 @@ public class UserController {
 			model.addAttribute("name", member.getName());
 			model.addAttribute("email", member.getEmail());
 			if (member.getProvider().equals("kakao")) {
-				model.addAttribute("provider", "카카오");
+				model.addAttribute("provider", "카카오록 로그인");
 			} else if (member.getProvider().equals("google")) {
-				model.addAttribute("provider", "구글");
+				model.addAttribute("provider", "구글 로그인");
 			} else if (member.getProvider().equals("naver")) {
-				model.addAttribute("provider", "네이버");
+				model.addAttribute("provider", "네이버 로그인");
 			}
 		} else if (user != null && member == null) {
 			model.addAttribute("name", user.getUsername());
 			model.addAttribute("email", user.getEmail());
-			model.addAttribute("provider", "사이트");
+			model.addAttribute("provider", "BookDream 웹사이트");
 		} else if (member != null && user != null) {
 			// 사용자 정보가 둘 다 있는 경우, 우선순위에 따라 하나를 선택
 			model.addAttribute("name", user.getUsername());
 			model.addAttribute("email", user.getEmail());
-			model.addAttribute("provider", "사이트");
+			model.addAttribute("provider", "BookDream 웹사이트");
 		}
 
 		model.addAttribute("loginType", "user");
@@ -296,7 +296,7 @@ public class UserController {
 			return "user/modifynameform";
 		}
 
-		return "user/userinfo";
+		return "redirect:/user/userinfo";
 	}
 
 	@PreAuthorize("isAuthenticated()")
@@ -501,75 +501,100 @@ public class UserController {
 
 	@GetMapping("/userbuy")
 	public String userbuy(Model model, Principal principal) {
-	    String email = principal.getName();
-	    SiteUser user = null;
-	    Member member = null;
+		String email = principal.getName();
+		SiteUser user = null;
+		Member member = null;
 
-	    // 이메일에 따라 Pay 리스트를 가져옵니다.
-	    List<Pay> payList = payService.getPayByEmail(email);
+		// 이메일에 따라 Pay 리스트를 가져옵니다.
+		List<Pay> payList = payService.getPayByEmail(email);
 
-	    // 모든 pay_id에 대해 Orders를 조회합니다.
-	    List<Orders> allOrders = new ArrayList<>();
-	    for (Pay pay : payList) {
-	        List<Orders> ordersList = ordersService.getOrdersById(pay.getPay_id());
-	        // pay_id별로 Orders를 그룹화하여 allOrders에 추가합니다.
-	        allOrders.addAll(ordersList);
-	    }
-	    
-	 // 모든 Orders에서 book_id를 수집합니다.
-	    List<Integer> bookIds = allOrders.stream()
-	                                     .map(Orders::getBook_id)
-	                                     .collect(Collectors.toList());
+		// 모든 pay_id에 대해 Orders를 조회합니다.
+		List<Orders> allOrders = new ArrayList<>();
+		Map<String, String> finalPrices = new HashMap<>(); // 변경된 부분: 총 가격을 포맷팅된 문자열로 저장
 
-	    // 수집한 book_id 리스트로 Prod_Books를 조회합니다.
-	    List<Prod_Books> allBooks = prodService.getAllProdBooks(bookIds);
+		for (Pay pay : payList) {
+			List<Orders> ordersList = ordersService.getOrdersById(pay.getPay_id());
+			allOrders.addAll(ordersList);
 
-	    // 사용자 정보 조회
-	    try {
-	        user = this.userService.getUserByEmail(principal.getName());
-	    } catch (DataNotFoundException e) {}
+			// 결제 별 최종 가격 계산
+			int totalPrice = ordersList.stream().mapToInt(order -> {
+				// count_price가 문자열 형식인 경우 처리
+				String countPriceStr = order.getCount_price(); // countPrice를 가져온다고 가정
+				return convertPriceStringToInt(countPriceStr);
+			}).sum();
 
-	    try {
-	        member = this.memberService.getLoginMemberByLoginId(principal.getName());
-	    } catch (DataNotFoundException e) {}
+			// 총 가격을 문자열로 포맷하여 저장
+			String formattedPrice = formatPrice(totalPrice);
+			finalPrices.put(pay.getPay_id(), formattedPrice);
+		}
 
-	    if (user == null && member == null) {
-	        throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
-	    }
+		// 모든 Orders에서 book_id를 수집합니다.
+		List<Integer> bookIds = allOrders.stream().map(Orders::getBook_id).collect(Collectors.toList());
 
-	    // 모델에 데이터 추가
-	    if (member != null) {
-	        model.addAttribute("name", member.getName());
-	        if (!payList.isEmpty()) {
-	            // pay_id에 따른 orders 필터링
-	            Map<String, List<Orders>> ordersByPayId = new HashMap<>();
-	            for (Pay pay : payList) {
-	                List<Orders> ordersList = ordersService.getOrdersById(pay.getPay_id());
-	                ordersByPayId.put(pay.getPay_id(), ordersList);
-	            }
-	            model.addAttribute("payList", payList);
-	            model.addAttribute("ordersByPayId", ordersByPayId);
-	            model.addAttribute("allBooks", allBooks);
-	        } else {
-	            model.addAttribute("None", "구매하신 상품이 없습니다.");
-	        }
-	    } else if (user != null) {
-	        model.addAttribute("name", user.getUsername());
-	        if (!payList.isEmpty()) {
-	            // pay_id에 따른 orders 필터링
-	            Map<String, List<Orders>> ordersByPayId = new HashMap<>();
-	            for (Pay pay : payList) {
-	                List<Orders> ordersList = ordersService.getOrdersById(pay.getPay_id());
-	                ordersByPayId.put(pay.getPay_id(), ordersList);
-	            }
-	            model.addAttribute("payList", payList);
-	            model.addAttribute("ordersByPayId", ordersByPayId);
-	            model.addAttribute("allBooks", allBooks);
-	        } else {
-	            model.addAttribute("None", "구매하신 상품이 없습니다.");
-	        }
-	    }
+		// 수집한 book_id 리스트로 Prod_Books를 조회합니다.
+		List<Prod_Books> allBooks = prodService.getAllProdBooks(bookIds);
 
-	    return "user/userbuy";
+		// 사용자 정보 조회
+		try {
+			user = this.userService.getUserByEmail(principal.getName());
+		} catch (DataNotFoundException e) {
+		}
+
+		try {
+			member = this.memberService.getLoginMemberByLoginId(principal.getName());
+		} catch (DataNotFoundException e) {
+		}
+
+		if (user == null && member == null) {
+			throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+		}
+
+		// 모델에 데이터 추가
+		if (member != null) {
+			model.addAttribute("name", member.getName());
+		} else if (user != null) {
+			model.addAttribute("name", user.getUsername());
+		}
+
+		if (!payList.isEmpty()) {
+			// pay_id에 따른 orders 필터링
+			Map<String, List<Orders>> ordersByPayId = new HashMap<>();
+			for (Pay pay : payList) {
+				List<Orders> ordersList = ordersService.getOrdersById(pay.getPay_id());
+				ordersByPayId.put(pay.getPay_id(), ordersList);
+			}
+			model.addAttribute("payList", payList);
+			model.addAttribute("ordersByPayId", ordersByPayId);
+			model.addAttribute("allBooks", allBooks);
+			model.addAttribute("finalPrices", finalPrices);
+		} else {
+			model.addAttribute("None", "구매하신 상품이 없습니다.");
+			List<Prod_Books> recommendedBooks = prodService.getRecommendedBooks();
+			model.addAttribute("recommendedBooks", recommendedBooks);
+		}
+
+		return "user/userbuy";
 	}
+
+	private int convertPriceStringToInt(String priceStr) {
+		// "XX,XXX원" 형식의 문자열에서 숫자 부분만 추출하여 정수로 변환
+		if (priceStr == null || priceStr.isEmpty()) {
+			return 0;
+		}
+		// "원"과 "," 제거 후 숫자로 변환
+		String cleanedPrice = priceStr.replace("원", "").replace(",", "").trim();
+		try {
+			return Integer.parseInt(cleanedPrice);
+		} catch (NumberFormatException e) {
+			// 숫자 변환 오류 발생 시 기본값 0 반환
+			return 0;
+		}
+	}
+
+	private String formatPrice(int price) {
+		// 숫자를 "XX,XXX원" 형식으로 포맷팅
+		NumberFormat formatter = NumberFormat.getInstance(Locale.KOREA);
+		return formatter.format(price) + "원";
+	}
+
 }
