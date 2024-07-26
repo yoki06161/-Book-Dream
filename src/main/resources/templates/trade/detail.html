@@ -97,6 +97,12 @@
             margin-bottom: 10px;
             color: #000000; /* 검정색으로 설정 */
         }
+        .status-info {
+       		font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        	color: red;
+        }
     </style>
     <script layout:fragment="script" type='text/javascript'>
         document.addEventListener('DOMContentLoaded', function () {
@@ -126,7 +132,7 @@
                         <p class="grade-info">등급: <span th:text="${trade.grade}"></span></p>
                         <p class="price-info">정가: <span th:text="${trade.originalPrice}"></span>원</p>
                         <p class="sale-price-info">판매가: <span th:text="${trade.price}"></span>원</p>
-                        <p class="card-text"><span th:text="${trade.status}"></span></p>
+                        <p class="card-text status-info"><span th:text="${trade.status}"></span></p>
 
                         <div th:if="${username == trade.id}" class="form-group status-form">
                             <form th:action="@{/trade/updateStatus/{idx}(idx=${trade.idx})}" method="post" style="display: flex; align-items: center;">

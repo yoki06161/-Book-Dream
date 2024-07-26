@@ -41,6 +41,12 @@
             margin-bottom: 10px;
             color: #000000; /* 검정색으로 설정 */
         }
+        .status-info {
+       		font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        	color: red;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +89,7 @@
                             <p class="grade-info">등급: <span th:text="${trade.grade}"></span></p> <!-- 등급 추가 -->
                             <p class="price-info">정가: <span th:text="${trade.originalPrice}"></span>원</p> <!-- 정가 추가 -->
                             <p class="sale-price-info">판매가: <span th:text="${trade.price}"></span>원</p> <!-- 판매가 추가 -->
+                            <p class="card-text status-info"><span th:text="${trade.status}"></span>
                         </div>
                     </div>
                 </div>
