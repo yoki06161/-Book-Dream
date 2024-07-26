@@ -247,7 +247,7 @@ function deleteItem(index, data) {
         document.getElementById('badge').textContent = badgeCount; // UI에 아이템 개수 업데이트
 
 		// 로그인했다면 장바구니 DB에서 삭제 
-		if (isAuthenticated) {
+		if (typeof isAuthenticated !== 'undefined' && isAuthenticated) {
 			sendDataToServerDelete(bookIdToDelete, csrfHeader, csrfToken);
 		}
 		
