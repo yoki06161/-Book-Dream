@@ -168,6 +168,9 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
 <script type="text/javascript">
 var stompClientChat = null;
 var senderId = '[[${senderId}]]';
@@ -276,7 +279,7 @@ function showMessage(message) {
         weekday: 'long'
     });
 
-    if (lastMessageDate !== messageDate) {
+    if (message.type !== 'LEAVE' && lastMessageDate !== messageDate) {
         var dateSeparator = document.createElement('div');
         dateSeparator.classList.add('date-separator');
         dateSeparator.innerHTML = `
@@ -298,7 +301,7 @@ function showMessage(message) {
         ` : `
             <div class="sent_msg">
                 <p>${message.message}</p>
-                <span class="time_date">${createdAt.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</span>
+                ${message.type !== 'LEAVE' ? `<span class="time_date">${createdAt.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</span>` : ''}
                 ${message.unreadCount > 0 ? `<span class="unread-badge">${message.unreadCount}</span>` : ''}
             </div>
         `;
@@ -313,7 +316,7 @@ function showMessage(message) {
         ` : `
             <div class="received_withd_msg" onclick="markAsRead(${message.id}, '${message.senderId}')">
                 <p>${message.message}</p>
-                <span class="time_date">${createdAt.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</span>
+                ${message.type !== 'LEAVE' ? `<span class="time_date">${createdAt.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</span>` : ''}
                 ${message.unreadCount > 0 ? `<span class="unread-badge">${message.unreadCount}</span>` : ''}
             </div>
         `;
