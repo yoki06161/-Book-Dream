@@ -22,7 +22,7 @@
                     // 필드 비활성화
                     document.getElementById('title').disabled = true;
                     document.getElementById('info').disabled = true;
-                    document.getElementById('originalPrice').disabled = true; // 정가 필드 비활성화
+                    document.getElementById('originalPrice').disabled = true;
                 } else {
                     alert('책 정보를 찾을 수 없습니다.');
                 }
@@ -34,7 +34,7 @@
         function enableFieldsAndSubmit() {
             document.getElementById('title').disabled = false;
             document.getElementById('info').disabled = false;
-            document.getElementById('originalPrice').disabled = false; // 정가 필드 활성화
+            document.getElementById('originalPrice').disabled = false;
             document.getElementById('tradeForm').submit();
         }
     </script>
@@ -46,7 +46,6 @@
             <input type="hidden" id="id" th:field="*{id}" /> <!-- 숨겨진 username 필드 -->
             <input type="hidden" id="hiddenImage" th:field="*{image}" /> <!-- 숨겨진 이미지 필드 -->
             <div th:replace="~{trade/form_errors :: formErrorsFragment}"></div>
-            
             
             <!-- 책 검색 전용 입력 필드 -->
             <div class="mb-3">
@@ -69,6 +68,14 @@
             <div class="mb-3">
                 <label for="originalPrice" class="form-label">정가:</label>
                 <input type="text" id="originalPrice" class="form-control" th:field="*{originalPrice}" required disabled />
+            </div>
+            <div class="mb-3">
+                <label for="grade" class="form-label">등급:</label>
+                <select id="grade" class="form-control" th:field="*{grade}" required>
+                    <option value="최상">최상</option>
+                    <option value="상">상</option>
+                    <option value="중">중</option>
+                </select>
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">판매가:</label>

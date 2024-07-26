@@ -2,6 +2,8 @@
 <html layout:decorate="~{layout}">
 <head>
     <script type="text/javascript">
+        var useNewImage = false;
+
         function fillFields() {
             var searchKeyword = document.getElementById('searchKeyword').value;
             var xhr = new XMLHttpRequest();
@@ -19,6 +21,8 @@
                     var imageContainer = document.getElementById('imageContainer');
                     imageContainer.innerHTML = '<img src="' + data.image + '" alt="Book Image" style="max-width: 200px;" />';
                     
+                    useNewImage = true; // 새로운 이미지를 사용하도록 설정
+
                     // 필드 비활성화
                     document.getElementById('title').disabled = true;
                     document.getElementById('info').disabled = true;
@@ -35,7 +39,15 @@
             document.getElementById('title').disabled = false;
             document.getElementById('info').disabled = false;
             document.getElementById('originalPrice').disabled = false;
-            document.getElementById('tradeForm').submit();
+
+            var form = document.getElementById('tradeForm');
+            var useNewImageInput = document.createElement('input');
+            useNewImageInput.type = 'hidden';
+            useNewImageInput.name = 'useNewImage';
+            useNewImageInput.value = useNewImage;
+            form.appendChild(useNewImageInput);
+
+            form.submit();
         }
     </script>
 </head>
@@ -70,6 +82,14 @@
             <div class="mb-3">
                 <label for="price" class="form-label">판매가:</label>
                 <input type="text" id="price" class="form-control" th:field="*{price}" required />
+            </div>
+            <div class="mb-3">
+                <label for="grade" class="form-label">등급:</label>
+                <select id="grade" class="form-control" th:field="*{grade}" required>
+                    <option value="최상" th:selected="${trade.grade == '최상'}">최상</option>
+                    <option value="상" th:selected="${trade.grade == '상'}">상</option>
+                    <option value="중" th:selected="${trade.grade == '중'}">중</option>
+                </select>
             </div>
             <div class="mb-3">
                 <label for="intro" class="form-label">내용:</label>
