@@ -4,15 +4,14 @@
 	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	<body>
 		<div class="flex_wrap">
+			<input type="hidden" class="book_id" th:value="${book.book_id}">
 			<div>
 				<img th:src="${book.book_img}" />
 			</div>
 			<div class="d_txt_wrap">
 				<span th:text="${book.book_title}" class="title"></span>
 				<span th:text="${book.book_writer}" class="writer"></span>
-				<div class="s_wrap">
-					<span>판매가</span><span th:text="${book.book_price}" class="count"></span>
-				</div>
+				<input th:value="${book.book_price}" class="count" type="hidden">
 				<div class="c_wrap">
 					<!--class로하면 js설정하기 귀찮아서 아이디로함-->
 					<!--oninput는 수정 이벤트 인식하는거. 키보드 위아래 입력이 인식되도 updateResult함수가 실행됨-->
@@ -46,14 +45,14 @@
 		<p th:text="${book.book_intro}"></p>
 		<hr>
 	    <h3>평균 별점
-		<div class="scores">
-	        <span class="score on"></span>
-	        <span class="score"></span>
-	        <span class="score"></span>
-	        <span class="score"></span>
-	        <span class="score"></span>
-	    </div>
-	    <span th:text="${score_avg}" id="score_result"></span>
+			<div class="score_list">
+		        <span class="score on"></span>
+		        <span class="score"></span>
+		        <span class="score"></span>
+		        <span class="score"></span>
+		        <span class="score"></span>
+		    </div>
+		    <span th:text="${score_avg}" id="score_result"></span>
 		</h3>
 		<p th:text="|(${#lists.size(v_list)}명이 평가했습니다)|"></p>
 		<br>
@@ -207,11 +206,13 @@
 	        var scoreAvg = parseInt(document.getElementById('score_result').textContent.trim());
 
 	        // scores 요소의 자식 요소들(span.score)을 가져와서 배열로 변환
-	        var scoreElements = Array.from(document.querySelectorAll('.scores .score'));
-
+	        var scoreElements = Array.from(document.querySelectorAll('.s_wrap .scores .score'));
+			var scoreElements2 = Array.from(document.querySelectorAll('.score_list .score'));
+			
 	        // score_avg 값에 따라 on 클래스를 적용
 	        for (var i = 0; i < scoreAvg; i++) {
 	            scoreElements[i].classList.add('on');
+	            scoreElements2[i].classList.add('on');
 	        }
 	    });
 		
