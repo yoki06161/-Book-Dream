@@ -165,7 +165,9 @@
 	}
 	
 	strong {
+		display: block;
 		font-size: 30px;
+		padding: 20px 0;
 	}
 
 	/*카운트 옆 화살표 지우기*/	
@@ -298,25 +300,6 @@
 		box-sizing: border-box; 
 	}
 	
-	.score_list .score {
-		width: 25px; 
-		height: 25px; 
-		margin-right: 10px;
-		display: inline-block; 
-		background: url(../image/prod/star_off.png); 
-		background-size: 100%; 
-		box-sizing: border-box; 
-	}
-	.score_list .score.on {
-		width: 25px; 
-		height: 25px;
-		margin-right: 10px;
-		display: inline-block; 
-		background: url(../image/prod/star_on.png);
-		background-size: 100%; 
-		box-sizing: border-box; 
-	}
-	
 
 	/* 넣는 별점 */
 	.star_rating .star {
@@ -337,3 +320,28 @@
 		background-size: 100%; 
 		box-sizing: border-box; 
 	}
+	
+	.score_f {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	
+	.score_btn {
+		border: none;
+		background: var(--point-color1);
+		color: #fff;
+		padding: 10px 20px;
+		border-radius: 10px;
+		font-size: 20px;
+	}
+	
+	.sbtn {
+		border: none;
+		background: var(--point-color1);
+		color: #fff;
+		padding: 10px 20px;
+		border-radius: 10px;
+		font-size: 14px;
+	}
+	

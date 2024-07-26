@@ -47,21 +47,8 @@
 		<strong>책소개</strong>
 		<p th:text="${book.book_intro}"></p>
 		<hr>
-	    <strong>평균 별점
-			<div class="score_list">
-		        <span class="score on"></span>
-		        <span class="score"></span>
-		        <span class="score"></span>
-		        <span class="score"></span>
-		        <span class="score"></span>
-		    </div>
-		    <span th:text="${score_avg}" id="score_result"></span>
-		</strong>
-		<p th:text="|(${#lists.size(v_list)}명의 평가)|"></p>
-		<br>
-		============
-		<h3>별점 남기기</h3>
-		<form th:action="@{|/prod/detail/score/${book.book_id}|}" method="post">
+	    <strong>별점 남기기</strong>
+		<form th:action="@{|/prod/detail/score/${book.book_id}|}" method="post" class="score_f">
 			<input name="i_score" id="i_score" value="1" type="hidden"/>
 			<div class="star_rating" name="t_score">
 		        <span class="star on" data-value=1></span>
@@ -71,14 +58,14 @@
 		        <span class="star" data-value=5></span>
 		    </div>
 			<br>
-			<input type="submit" value="별점남기기"/>
+			<input type="submit" value="제출" class="score_btn"/>
 		</form>
 		<br>
 		<hr>
 		<strong>리뷰</strong>
 		<form th:action="@{|write_review/${book.book_id}|}" method="post">
 			<textarea name="w_content" placeholder="지나친 욕설은 자제해주세요." class="w_review"></textarea>
-			<input type="submit" value="리뷰달기" />
+			<input type="submit" value="리뷰달기" class="sbtn" />
 		</form>
 		<br>
 		<hr>
@@ -92,12 +79,12 @@
 			<span th:text="${rl.time}"></span><br>
 			<pre th:text="${rl.review}" class="review_cont"></pre><br>
 			<!--this는 현재 실행중인 함수가 속한 객체?-->
-			<button onclick="show_answer(this)">답글보기</button>
+			<button onclick="show_answer(this)" class="sbtn">답글보기</button>
 			<br>
 			<div class="answer_wrap">
 				<form th:action="@{|write_answer/${book.book_id}/${rl.id}|}" method="post">
 					<textarea name="a_content"></textarea>
-					<input type="submit" value="답글달기">
+					<input type="submit" value="답글달기" class="sbtn">
 				</form>
 				<br>
 				<!--리스트는 전부 불러오는건데 if로 답변 리뷰 id값과 리뷰 id값이 같은 것만을 출력하게함.-->
@@ -210,12 +197,10 @@
 
 	        // scores 요소의 자식 요소들(span.score)을 가져와서 배열로 변환
 	        var scoreElements = Array.from(document.querySelectorAll('.s_wrap .scores .score'));
-			var scoreElements2 = Array.from(document.querySelectorAll('.score_list .score'));
 			
 	        // score_avg 값에 따라 on 클래스를 적용
 	        for (var i = 0; i < scoreAvg; i++) {
 	            scoreElements[i].classList.add('on');
-	            scoreElements2[i].classList.add('on');
 	        }
 	    });
 		
