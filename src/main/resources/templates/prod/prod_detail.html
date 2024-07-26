@@ -3,8 +3,8 @@
 	<title>레이아웃</title>
 	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	<body>
-		<div class="flex_wrap">
-			<div>
+		<div class="dflex_wrap">
+			<div class="img_wrap">
 				<img th:src="${book.book_img}" />
 			</div>
 			<div class="d_txt_wrap">
@@ -14,14 +14,18 @@
 					<span>판매가</span><span th:text="${book.book_price}" class="count"></span>
 				</div>
 				<div class="c_wrap">
-					<!--class로하면 js설정하기 귀찮아서 아이디로함-->
-					<!--oninput는 수정 이벤트 인식하는거. 키보드 위아래 입력이 인식되도 updateResult함수가 실행됨-->
-					<input type="number" min="1" max="10" class="bcount" value="1" oninput="updateResult()" />
-					<div class="cb_wrap">
-						<button onclick="add()">증가</button>
-						<button onclick="min()">감소</button>
+					<div class="pb_wrap">
+						<!--class로하면 js설정하기 귀찮아서 아이디로함-->
+						<!--oninput는 수정 이벤트 인식하는거. 키보드 위아래 입력이 인식되도 updateResult함수가 실행됨-->
+						<input type="number" min="1" max="10" class="bcount" value="1" oninput="updateResult()" />
+						<div class="cb_wrap">
+							<button onclick="add()" class="abtn"></button>
+							<button onclick="min()" class="mbtn"></button>
+						</div>
 					</div>
-					<span>총가격 </span> <span class="result"></span><span>원</span>
+					<div>
+						<span>총가격 </span><span class="result"></span><span>원</span>
+					</div>
 				</div>
 				<div class="b_wrap">
 					<!--session으로 장바구니 여부봐야겠지-->
