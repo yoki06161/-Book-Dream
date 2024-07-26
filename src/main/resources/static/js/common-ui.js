@@ -11,17 +11,35 @@ function sendDataToServer(dataArray, csrfHeader, csrfToken) {
 	    body: jsonData  // jsonData를 전송
 	})
 	.then(response => {
-		if (response.ok) {
-			return response.json();
-	    } else {
-	        throw new Error('Network response was not ok.');
-	    }
-	})
+	      if (!response.ok) {
+	          return response.text().then(text => {
+	              throw new Error(`Network response was not ok: ${text}`);
+	          });
+	      }
+	      // 응답이 JSON이 아닌 경우를 대비
+	      return response.text().then(text => {
+	          try {
+	              return JSON.parse(text);
+	          } catch (error) {
+	              console.error('Error parsing JSON:', error);
+	              throw new Error('Invalid JSON response');
+	          }
+	      });
+	  })
 	.then(data => {
 	    console.log('Success:', data);
 	})
 	.catch(error => {
-	    console.error('Error:', error);
+		if (error.response) {
+		    // 서버 응답이 있을 경우
+		    console.error('서버 응답 오류:', error.response.data);
+		} else if (error.request) {
+		    // 요청이 전송되지 않았을 경우
+		    console.error('요청이 전송되지 않음:', error.request);
+		} else {
+		    // 요청 설정 중 오류가 발생했을 경우
+		    console.error('요청 설정 중 오류 발생:', error.message);
+		}
 	});
 }
 
@@ -48,10 +66,15 @@ document.addEventListener('DOMContentLoaded', init);
 // 장바구니 추가 함수
 function aa() {
 	let book_id = parseInt(document.querySelector('.book_id').value);
-	let book_img = document.querySelector('img').src;
+	// 모든 이미지를 선택하여 배열로 변환
+	let images = document.querySelectorAll('img');
+
+	// 두 번째 이미지의 src를 가져오기
+	let book_img = images[1].src;
+
 	let book_title = document.querySelector('.title').textContent;
 	let book_writer = document.querySelector('.writer').textContent;
-	let book_price = document.querySelector('.price').textContent;
+	let book_price = document.querySelector('.count').textContent; 
 	let count = parseInt(document.querySelector('.bcount').value);
 	let count_price = document.querySelector('.result').textContent + '원';
 
@@ -78,9 +101,9 @@ function aa() {
 	    sessionStorage.setItem('badgeCount', newBadgeCount);
 
 		// 로그인했다면 장바구니 DB에 추가
-	    if (isAuthenticated) {
-	    	sendDataToServer(dataArray, csrfHeader, csrfToken);
-	    }
+		if (isAuthenticated) {
+			sendDataToServer(dataArray, csrfHeader, csrfToken);
+		}
 	} else {
 	    alert('이미 장바구니에 있습니다.');
 	    console.log(dataArray);
@@ -94,10 +117,14 @@ var buyButtons = document.getElementsByClassName('buy');
 for (var i = 0; i < buyButtons.length; i++) {
     buyButtons[i].addEventListener('click', function() {
 		let book_id = parseInt(document.querySelector('.book_id').value);
-		let book_img = document.querySelector('img').src;
+		// 모든 이미지를 선택하여 배열로 변환
+		let images = document.querySelectorAll('img');
+
+		// 두 번째 이미지의 src를 가져오기
+		let book_img = images[1].src;
 		let book_title = document.querySelector('.title').textContent;
 		let book_writer = document.querySelector('.writer').textContent;
-		let book_price = document.querySelector('.price').textContent;
+		let book_price = document.querySelector('.count').textContent;
 		let count = parseInt(document.querySelector('.bcount').value);
 		let count_price = document.querySelector('.result').textContent + '원';
 		// count_price를 totalSum(숫자 값)으로 저장
