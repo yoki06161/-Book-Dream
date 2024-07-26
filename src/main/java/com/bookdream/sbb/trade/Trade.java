@@ -36,5 +36,8 @@ public class Trade {
     private int originalPrice;
     
     @NotNull
-    private String status = ""; 
+    private String status = "";
+
+    @NotNull
+    private String grade;
 }

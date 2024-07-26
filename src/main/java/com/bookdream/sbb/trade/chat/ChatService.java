@@ -6,7 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bookdream.sbb.trade.TradeService;
+import com.bookdream.sbb.user.MemberService;
 import com.bookdream.sbb.user.UserService;
+import com.bookdream.sbb.user.SiteUser;
+import com.bookdream.sbb.user.Member;
+import com.bookdream.sbb.DataNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
+
     @Autowired
     private ChatRepository chatRepository;
 
@@ -28,6 +33,9 @@ public class ChatService {
     
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MemberService memberService;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -77,18 +85,44 @@ public class ChatService {
 
     public List<ChatRoom> getChatRooms(String userId) {
         List<ChatRoom> chatRooms = chatRoomRepository.findBySenderIdOrReceiverId(userId, userId);
-        
-        // 상대방의 username을 추가
+
         return chatRooms.stream().map(chatRoom -> {
-            String opponentId = chatRoom.getOpponentId(userId);
-            String opponentUsername = userService.getUser(opponentId).getUsername();
-            chatRoom.setOpponentUsername(opponentUsername);
+            String opponentId = null;
+            if (chatRoom.getSenderId() != null && chatRoom.getSenderId().equals(userId)) {
+                opponentId = chatRoom.getReceiverId();
+            } else if (chatRoom.getReceiverId() != null && chatRoom.getReceiverId().equals(userId)) {
+                opponentId = chatRoom.getSenderId();
+            }
+
+            if (opponentId != null) {
+                String opponentUsername = getUserNameByUserId(opponentId);
+                chatRoom.setOpponentUsername(opponentUsername);
+            } else {
+                chatRoom.setOpponentUsername("상대방이 나갔습니다.");
+            }
             return chatRoom;
         }).collect(Collectors.toList());
     }
 
-    
-    
+    private String getUserNameByUserId(String userId) {
+        String username = "Unknown User";
+
+        // 우선 SiteUser에서 찾기
+        try {
+            SiteUser siteUser = userService.getUser(userId);
+            if (siteUser != null && "site".equals(siteUser.getProvider())) {
+                username = siteUser.getUsername();
+            }
+        } catch (DataNotFoundException e) {
+            // SiteUser에서 찾지 못한 경우 Member에서 찾기
+            Member member = memberService.getLoginMemberByLoginId(userId);
+            if (member != null) {
+                username = member.getName();
+            }
+        }
+        return username;
+    }
+
     public ChatRoom createChatRoom(String senderId, String receiverId, int tradeIdx) {
         String bookTitle = tradeService.getTradeById(tradeIdx).getTitle();
 

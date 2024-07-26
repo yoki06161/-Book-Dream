@@ -95,7 +95,7 @@ public class TradeController {
                     Files.copy(in, Paths.get(filePath));
                 }
 
-                trade.setImage(fileName); // 로컬 파일 이름으로 설정
+                trade.setImage(fileName);
             }
 
             tradeService.createTrade(trade);
@@ -117,30 +117,32 @@ public class TradeController {
     }
 
     @PostMapping("/edit/{idx}")
-    public String updateTrade(@PathVariable("idx") int idx, @ModelAttribute Trade updatedTrade, RedirectAttributes redirectAttributes) {
+    public String updateTrade(@PathVariable("idx") int idx, @ModelAttribute Trade updatedTrade, @RequestParam("useNewImage") boolean useNewImage, RedirectAttributes redirectAttributes) {
         try {
             Trade existingTrade = tradeService.getTradeById(idx);
 
-            // 크롤링된 이미지 URL을 로컬에 저장
-            if (updatedTrade.getImage() != null && !updatedTrade.getImage().isEmpty()) {
-                String imageUrl = updatedTrade.getImage();
-                String fileName = UUID.randomUUID().toString() + ".jpg";
-                String filePath = uploadDir + fileName;
+            if (useNewImage) {
+                // 크롤링된 이미지 URL을 로컬에 저장
+                if (updatedTrade.getImage() != null && !updatedTrade.getImage().isEmpty()) {
+                    String imageUrl = updatedTrade.getImage();
+                    String fileName = UUID.randomUUID().toString() + ".jpg";
+                    String filePath = uploadDir + fileName;
 
-                // 기존 이미지 삭제
-                if (existingTrade.getImage() != null && !existingTrade.getImage().isEmpty()) {
-                    File existingFile = new File(uploadDir + existingTrade.getImage());
-                    if (existingFile.exists()) {
-                        existingFile.delete();
+                    // 기존 이미지 삭제
+                    if (existingTrade.getImage() != null && !existingTrade.getImage().isEmpty()) {
+                        File existingFile = new File(uploadDir + existingTrade.getImage());
+                        if (existingFile.exists()) {
+                            existingFile.delete();
+                        }
                     }
-                }
 
-                // 이미지 다운로드 및 저장
-                try (InputStream in = new URL(imageUrl).openStream()) {
-                    Files.copy(in, Paths.get(filePath));
-                }
+                    // 이미지 다운로드 및 저장
+                    try (InputStream in = new URL(imageUrl).openStream()) {
+                        Files.copy(in, Paths.get(filePath));
+                    }
 
-                updatedTrade.setImage(fileName); // 로컬 파일 이름으로 설정
+                    updatedTrade.setImage(fileName); // 로컬 파일 이름으로 설정
+                }
             } else {
                 updatedTrade.setImage(existingTrade.getImage());
             }

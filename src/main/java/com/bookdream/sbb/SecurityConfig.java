@@ -31,7 +31,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+            	.requestMatchers(new AntPathRequestMatcher("/trade/chat/leave")).authenticated())
             .headers((headers) -> headers
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
                     XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
@@ -49,8 +50,9 @@ public class SecurityConfig {
                 .loginPage("/oauth-login/login")
                 .defaultSuccessUrl("/")
                 .failureUrl("/user/login")
-                .permitAll());
-        
+                .permitAll())
+        .csrf((csrf) -> csrf
+                .ignoringRequestMatchers(new AntPathRequestMatcher("/trade/chat/leave")));
         return http.build();
     }
 

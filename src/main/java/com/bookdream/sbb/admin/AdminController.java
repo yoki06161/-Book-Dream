@@ -25,7 +25,4 @@ public class AdminController {
    public String signup() {
       return "/login";
    }
-
 }
-
-

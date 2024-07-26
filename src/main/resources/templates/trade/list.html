@@ -33,6 +33,14 @@
             font-size: 1rem;
             margin-bottom: 10px;
         }
+        .price-info,
+        .grade-info,
+        .sale-price-info {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000000; /* 검정색으로 설정 */
+        }
     </style>
 </head>
 <body>
@@ -72,8 +80,9 @@
                             </a>
                             <p class="card-text"><span th:text="${trade.info}"></span></p>
                             <p class="card-text"><span th:text="${#temporals.format(trade.postdate, 'yyyy-MM-dd HH:mm')}"></span></p>
-                            <p class="card-text">정가: <span th:text="${trade.originalPrice}"></span>원</p> <!-- 정가 추가 -->
-                            <p class="card-text">판매가: <span th:text="${trade.price}"></span>원</p> <!-- 판매가 추가 -->
+                            <p class="grade-info">등급: <span th:text="${trade.grade}"></span></p> <!-- 등급 추가 -->
+                            <p class="price-info">정가: <span th:text="${trade.originalPrice}"></span>원</p> <!-- 정가 추가 -->
+                            <p class="sale-price-info">판매가: <span th:text="${trade.price}"></span>원</p> <!-- 판매가 추가 -->
                         </div>
                     </div>
                 </div>
