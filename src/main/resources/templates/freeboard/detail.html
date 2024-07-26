@@ -60,7 +60,7 @@
 			<div th:utext="${freeboard.content}" class="border p-3 rounded bg-light"></div>
 		</div>
 		<div class="content-footer text-end">
-			<a href="/freeboard/list" class="btn btn-secondary">목록으로</a>
+			<a href="/freeboard" class="btn btn-secondary">목록으로</a>
 			<!-- 수정하기 버튼 -->
 			<a th:if="${#authentication.name == freeboard.author}" th:href="@{/freeboard/edit/{id}(id=${freeboard.id})}"
 				class="btn btn-primary">수정하기</a>
