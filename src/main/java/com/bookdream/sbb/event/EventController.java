@@ -54,9 +54,7 @@ public class EventController {
     public String createEvent(@Valid @ModelAttribute Event event, BindingResult result,
                               @RequestParam("image") MultipartFile file, Model model,
                               RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            return "event/create"; // 폼 유효성 검사 실패 시
-        }
+
 
         if (!file.isEmpty()) {
             String fileName = UUID.randomUUID().toString() + ".png";

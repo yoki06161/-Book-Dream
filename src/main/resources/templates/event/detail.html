@@ -18,6 +18,7 @@
 				<div class="mt-3 text-center">
 					<h2>이벤트 내용</h2>
 					<p th:text="${event.description}"></p>
+					<span th:text="${event.content}"></span>
 					<ul class="list-unstyled">
 						<li>시작날짜: <span th:text="${#temporals.format(event.startDate, 'yyyy-MM-dd')}">Start Date</span>
 						</li>

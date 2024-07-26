@@ -13,10 +13,9 @@
 		<h1>이벤트 등록</h1>
 		<form id="eventForm" th:action="@{/event/create}" method="post" th:object="${event}"
 			enctype="multipart/form-data">
-<<<<<<< HEAD
-=======
+
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
->>>>>>> refs/heads/Admin2
+
 			<div class="mb-3">
 				<label for="title" class="form-label">제목:</label>
 				<input type="text" id="title" class="form-control" th:field="*{title}">
@@ -24,6 +23,10 @@
 			<div class="mb-3">
 				<label for="description" class="form-label">설명:</label>
 				<textarea id="description" class="form-control" th:field="*{description}"></textarea>
+			</div>
+			<div class="mb-3">
+				<label for="content" class="form-label">혜택:</label>
+				<textarea id="content" class="form-control" th:field="*{content}"></textarea>
 			</div>
 			<div class="mb-3">
 				<label for="startDate" class="form-label">시작 날짜:</label>
