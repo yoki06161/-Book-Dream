@@ -4,9 +4,88 @@
 	}
 
 	.flex_wrap .img_wrap {
-		width: 150px;
+		width: 200px;
 	}
 	
+	.l_genre_wrap a {
+	    text-decoration: none;
+	    color: black; /* 기본 색상 */
+	}
+
+	/* 동적으로 추가될 클래스를 위한 스타일 */
+	.l_genre_wrap a.active {
+	    color: red; /* 활성화된 링크의 색상 */
+	}
+	
+	.search_wrap {
+		width: 500px;
+		height: 50px;
+		border-radius: 50px;
+		border: 1px solid #6f6f6f;
+		outline: 1px solid #6f6f6f;
+		overflow: hidden;
+		position: relative;
+	}
+	
+	.search_bar {
+		padding: 0 20px;
+		width: 400px;
+		height: 100%;
+		border: none;
+	}
+	
+	.search_bar:focus {
+		outline: none;
+	}
+	
+	.s_btn {
+		height: 100%;
+		width: 100px;
+		color: #fff;
+		border: none;
+		border-radius: 50px;
+		background: #6f6f6f;
+		/*
+		background: url(../image/prod/search_icon.png) no-repeat;
+		*/
+		position: absolute;
+		right: 0;
+	}
+	
+	.blist_wrap {
+		padding-top: 100px;
+	}
+	
+	.txt_wrap > a {
+		color: black;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	
+	.title_txt {
+		font-size: 20px;
+		font-weight: 550;
+	}
+	
+
+	.l_genre_wrap {
+		position: fixed;
+		left: 100px;
+		padding: 10px;
+		background: #fff;
+		border: 1px solid #ddd;
+		border-radius: 10px;
+	}
+	
+	.l_intro_wrap {
+		width: 50%;
+		display: -webkit-box;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    -webkit-box-orient: vertical;
+	    -webkit-line-clamp: 2;
+	}
 
 /* 상세보기 페이지*/
 	a {
@@ -18,22 +97,6 @@
 		gap: 50px;
 	}
 	
-	.l_genre_wrap {
-		position: fixed;
-		left: 100px;
-		padding: 10px;
-		background: #fff;
-		border: 1px solid #ddd;
-		border-radius: 10px;
-	}
-	
-	.l_intro_wrap {
-		display: -webkit-box;
-	    overflow: hidden;
-	    text-overflow: ellipsis;
-	    -webkit-box-orient: vertical;
-	    -webkit-line-clamp: 2;
-	}
 	
 	.d_txt_wrap {
 		display: flex;
@@ -125,7 +188,7 @@
 		height: 25px; 
 		margin-right: 10px;
 		display: inline-block; 
-		background: #ddd; 
+		background: url(../image/prod/star_off.png); 
 		background-size: 100%; 
 		box-sizing: border-box; 
 	}
@@ -134,7 +197,7 @@
 		height: 25px;
 		margin-right: 10px;
 		display: inline-block; 
-		background: yellowgreen;
+		background: url(../image/prod/star_on.png);
 		background-size: 100%; 
 		box-sizing: border-box; 
 	}
@@ -149,7 +212,7 @@
 		height: 25px; 
 		margin-right: 10px;
 		display: inline-block; 
-		background: #ddd; 
+		background: url(../image/prod/star_off.png); 
 		background-size: 100%; 
 		box-sizing: border-box; 
 	}
@@ -158,7 +221,26 @@
 		height: 25px;
 		margin-right: 10px;
 		display: inline-block; 
-		background: yellowgreen;
+		background: url(../image/prod/star_on.png);
+		background-size: 100%; 
+		box-sizing: border-box; 
+	}
+	
+	.score_list .score {
+		width: 25px; 
+		height: 25px; 
+		margin-right: 10px;
+		display: inline-block; 
+		background: url(../image/prod/star_off.png); 
+		background-size: 100%; 
+		box-sizing: border-box; 
+	}
+	.score_list .score.on {
+		width: 25px; 
+		height: 25px;
+		margin-right: 10px;
+		display: inline-block; 
+		background: url(../image/prod/star_on.png);
 		background-size: 100%; 
 		box-sizing: border-box; 
 	}
