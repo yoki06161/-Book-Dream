@@ -2,28 +2,29 @@
 <div layout:fragment="content" class="container my-3">
 	<title>상품페이지</title>
 	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
-	
 	<body>
 		<div class="l_genre_wrap">
-			<a th:href="@{|/prod|}">모두 보기</a><br>
-			<a th:href="@{|/prod?genre=베스트셀러|}">베스트 셀러</a><br>
-			<a th:href="@{|/prod?genre=소설|}">소설</a><br>
-			<a th:href="@{|/prod?genre=시/에세이|}">시/에세이</a><br>
-			<a th:href="@{|/prod?genre=인문학|}">인문학</a> <br>
-			<a th:href="@{|/prod?genre=역사/문화|}">역사/문화</a><br>
+			<a th:href="@{|/prod|}" class="all">모두 보기</a><br>
+			<a th:href="@{|/prod?genre=베스트셀러|}" class="bestseller">베스트 셀러</a><br>
+			<a th:href="@{|/prod?genre=소설|}" class="novel">소설</a><br>
+			<a th:href="@{|/prod?genre=시/에세이|}" class="poety">시/에세이</a><br>
+			<a th:href="@{|/prod?genre=인문학|}" class="humanities">인문학</a> <br>
+			<a th:href="@{|/prod?genre=역사/문화|}" class="history">역사/문화</a><br>
 		</div>
 		<!--
 		<div th:if="${C_Books != null}" th:text="|${#lists.size(C_Books.book_title)}개의 책|"></div>
 		<div th:if="${C_Books == null}" th:text="|0개의 책|"></div>
 		-->
 		<!--검색-->
-	    <input type="text" id="search_kw" th:value="${kw}" placeholder="제목 또는 작가명으로 검색">
-	    <button id="search_btn">검색</button>
+		<div class="search_wrap">
+		    <input type="text" id="search_kw" th:value="${kw}" placeholder="제목 또는 작가명으로 검색" class="search_bar">
+		    <button id="search_btn" class="s_btn">검색</button>
+		</div>
 		<form th:action="@{|/prod|}" method="get" id="searchForm">
 	        <input type="hidden" id="send_genre" name="genre" th:value="${b_genre}">
 	        <input type="hidden" id="send_kw" name="kw" th:value="${kw}">
 	    </form>
-		<br>
+		<div class="blist_wrap">
 		<!--b_list는 여기서 새로 만든 리스트. C_books의 리스트를 참조하겠단뜻-->
 		<!--each는 반복. for문이랑 같음. 그안에 있는것들을 반복하겠다.-->
 		<div th:each = "b_list : ${C_Books}" th:if="${b_genre == b_list.book_genre}">
@@ -35,15 +36,14 @@
 						<img th:src = "${b_list.book_img}"/>
 					</div>
 				</a>
-			<div>
+			<div class="txt_wrap">
 				<a th:href="@{|prod/detail/${b_list.book_id}|}">
 					<!-- <div th:text = "${b_list.book_id}"></div> -->
-					<div th:text = "${b_list.book_title}"></div>
-					<div th:text = "${b_list.book_price}"></div>
-					<div th:text = "'장르 ' + ${b_list.book_genre}"></div>
+					<div th:text = "${b_list.book_title}" class="title_txt"></div>
 					<div th:text = "${b_list.book_writer}"></div>
+					<div th:text = "${b_list.book_genre}"></div>
 					<div th:text = "${b_list.book_intro}" class="l_intro_wrap"></div>
-					<br>
+					<div th:text = "${b_list.book_price}"></div>
 					<div th:each="a_list : ${l_avg}" th:if="${b_list.book_id == a_list[0]}">
 						<h4 th:text="'별점 ' + ${a_list[1]}"></h4>
 					</div>
@@ -70,12 +70,11 @@
 				</a>
 			<div class="txt_wrap">
 				<a th:href="@{|prod/detail/${b_list.book_id}|}">
-					<div th:text = "${b_list.book_title}"></div>
-					<div th:text = "${b_list.book_price}"></div>
-					<div th:text = "'장르 ' + ${b_list.book_genre}"></div>
+					<div th:text = "${b_list.book_title}" class="title_txt"></div>
 					<div th:text = "${b_list.book_writer}"></div>
+					<div th:text = "${b_list.book_genre}"></div>
 					<div th:text = "${b_list.book_intro}" class="l_intro_wrap"></div>
-					<br>	
+					<div th:text = "${b_list.book_price}"></div>
 					<div th:each="a_list : ${l_avg}" th:if="${b_list.book_id == a_list[0]}">
 						<h4 th:text="'별점 ' + ${a_list[1]}"></h4>
 					</div>
@@ -84,6 +83,7 @@
 			</div>
 		<hr>
 		</div>
+	</div>
 	</body>
 	
 	<script th:inline="javascript">
@@ -95,6 +95,24 @@
 	    document.getElementById('send_kw').value = document.getElementById('search_kw').value;
 	    document.getElementById('searchForm').submit();
 	});
+	
+	// 책 장르 글자색. !!!!!!!!!!!!!나중에 수정
+	document.addEventListener('DOMContentLoaded', function() {
+        // 현재 URL의 쿼리 파라미터를 가져옵니다.
+		// window.location.search 현재 페이지 url의 ?이후 부분 갖고오기. URLSearchParams 파라미터로 변환
+        const params = new URLSearchParams(window.location.search);
+        const genre = params.get('genre');
+        
+        // l_genre_wrap의 a갖고오기.
+        const links = document.querySelectorAll('.l_genre_wrap a');
+        
+        // 각 링크를 순회하면서 genre에 맞는 링크에 클래스를 추가합니다.
+        links.forEach(link => {
+            if (link.href.includes(`genre=${encodeURIComponent(genre)}`)) {
+                link.classList.add('active');
+            }
+        });
+    });
 	
 	</script>
 </div>
