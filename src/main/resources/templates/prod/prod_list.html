@@ -18,7 +18,7 @@
 		<!--검색-->
 		<div class="search_wrap">
 		    <input type="text" id="search_kw" th:value="${kw}" placeholder="제목 또는 작가명으로 검색" class="search_bar">
-		    <button id="search_btn" class="s_btn">검색</button>
+		    <button id="search_btn" class="s_btn"></button>
 		</div>
 		<form th:action="@{|/prod|}" method="get" id="searchForm">
 	        <input type="hidden" id="send_genre" name="genre" th:value="${b_genre}">
@@ -87,14 +87,28 @@
 	</body>
 	
 	<script th:inline="javascript">
+	// 검색버튼 클릭시.
 	const btn = document.getElementById("search_btn");
-	
-	// 클릭 이벤트가 일어났을때 사용될 함수.
-	btn.addEventListener('click', function() {
-		// 검색창(search_kw)에서 입력된 값을 send_kw라는 인풋값에 할당함. 그리고 searchForm을 서버에 전송함.
-	    document.getElementById('send_kw').value = document.getElementById('search_kw').value;
-	    document.getElementById('searchForm').submit();
-	});
+    const searchInput = document.getElementById("search_kw");
+    const searchForm = document.getElementById("searchForm");
+
+    // 검색 버튼 클릭 시 실행
+    btn.addEventListener('click', function() {
+        // 검색창(search_kw)에서 입력된 값을 send_kw라는 인풋값에 할당함. 그리고 searchForm을 서버에 전송함.
+        document.getElementById('send_kw').value = searchInput.value;
+        searchForm.submit();
+    });
+
+    // 입력 필드에서 Enter 키를 눌렀을 때 실행
+    searchInput.addEventListener('keydown', function(event) {
+        // Enter 키의 코드 값은 13입니다.
+        if (event.key === 'Enter') {
+            // 기본 동작을 막아줍니다 (폼 제출 등의 기본 동작을 방지)
+            event.preventDefault();
+            // 검색 버튼 클릭 이벤트를 강제로 호출
+            btn.click();
+        }
+    });
 	
 	// 책 장르 글자색. !!!!!!!!!!!!!나중에 수정
 	document.addEventListener('DOMContentLoaded', function() {
