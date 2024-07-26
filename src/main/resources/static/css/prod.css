@@ -2,6 +2,10 @@
 	img {
 		width: 100%;
 	}
+	
+	.b_inner {
+		padding-top: 20px;
+	}
 
 	.flex_wrap .img_wrap {
 		width: 200px;
@@ -12,13 +16,14 @@
 	    color: black; /* 기본 색상 */
 	}
 
-	/* 동적으로 추가될 클래스를 위한 스타일 */
+	/* 동적으로 추가될 클래스를 위한 스타일
 	.l_genre_wrap a.active {
-	    color: red; /* 활성화된 링크의 색상 */
+	    color: red; /* 활성화된 링크의 색상
 	}
+	*/
 	
 	.search_wrap {
-		width: 500px;
+		width: 700px;
 		height: 50px;
 		border-radius: 50px;
 		border: 5px solid #6f6f6f;
@@ -30,7 +35,7 @@
 	
 	.search_bar {
 		padding: 0 20px;
-		width: 450px;
+		width: 650px;
 		height: 100%;
 		border: none;
 	}
@@ -49,8 +54,9 @@
 		right: 20px;
 	}
 	
-	.blist_wrap {
-		padding-top: 100px;
+	.wrap_gen {
+		padding: 50px 0;
+		border-bottom: 1px solid #ddd;
 	}
 	
 	.txt_wrap > a {
@@ -60,9 +66,14 @@
 		gap: 10px;
 	}
 	
-	.title_txt {
+	.txt_wrap > a > .title_txt {
 		font-size: 20px;
 		font-weight: 550;
+	}
+	
+	.txt_wrap > a > .price_txt {
+		font-size: 20px;
+		font-weight: 500;
 	}
 	
 
@@ -71,8 +82,14 @@
 		left: 100px;
 		padding: 10px;
 		background: #fff;
-		border: 1px solid #ddd;
+		border: 1px solid #6f6f6f;
 		border-radius: 10px;
+	}
+	
+	.l_genre_wrap > a {
+		padding: 10px 0;
+		
+		
 	}
 	
 	.l_intro_wrap {
@@ -82,6 +99,21 @@
 	    text-overflow: ellipsis;
 	    -webkit-box-orient: vertical;
 	    -webkit-line-clamp: 2;
+	}
+	
+	.onestar_wrap {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	
+	.one_star {
+		width: 20px;
+	}
+	
+	.onestar_wrap > p {
+		font-size: 20px;
+		font-weight: 500;
 	}
 
 /* 상세보기 페이지*/
