@@ -4,16 +4,22 @@
     <div style="width:230px;padding:0 10px">
         <nav th:replace="~{user/mynav :: headerfragment}"></nav>
     </div>
-    <div class="main-content" style="width:700px;padding-left:50px">
-	    <h3>사용자 정보</h3>
+    <div class="main-content" style="width:1000px;padding-left:50px">
+	    <h3 style="font-weight: 700; color:#6f6f6f;">사용자 정보</h3>
 	    <hr>
 	    <div class="mb-3">
-	        <label for="name" class="form-label">이름</label>
-	        <span th:text="${name}" class="form-control"></span>
-	        <label for="email" class="form-label">이메일</label>
-	        <span th:text="${email}" class="form-control"></span>
-	        <label for="provider" class="form-label">로그인 방법</label>
-	        <span th:text="${provider}" class="form-control"></span>
+	    	<div style="display:flex;align-items: center;margin-bottom:10px;font-weight: 700;">
+		        <label for="name" style="width:130px;font-size:17px;">이름</label><span style="width:20px;">:</span>
+		        <span th:text="${name}" style="width:300px;display:flex;align-items: center;"></span>
+		    </div>
+		    <div style="display:flex;align-items: center;margin-bottom:10px;font-weight: 700;">
+		        <label for="email" style="width:130px;font-size:17px;">이메일</label><span style="width:20px;">:</span>
+		        <span th:text="${email}" style="width:300px;display:flex;align-items: center;"></span>
+		    </div>
+		    <div style="display:flex;align-items: center;margin-bottom:10px;font-weight: 700;">
+		        <label for="provider" style="width:130px;font-size:17px;">로그인 방법</label><span style="width:20px;">:</span>
+		        <span th:text="${provider}" style="width:300px;display:flex;align-items: center;"></span>
+	        </div>
 	    </div>
     </div>
 </div>
