@@ -4,12 +4,12 @@
 	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	<body>
 		<div class="l_genre_wrap">
-			<a th:href="@{|/prod|}">모두 보기</a><br>
-			<a th:href="@{|/prod?genre=베스트셀러|}">베스트 셀러</a><br>
-			<a th:href="@{|/prod?genre=소설|}">소설</a><br>
-			<a th:href="@{|/prod?genre=시/에세이|}">시/에세이</a><br>
-			<a th:href="@{|/prod?genre=인문학|}">인문학</a> <br>
-			<a th:href="@{|/prod?genre=역사/문화|}">역사/문화</a><br>
+			<a th:href="@{|/prod|}" class="all">모두 보기</a><br>
+			<a th:href="@{|/prod?genre=베스트셀러|}" class="bestseller">베스트 셀러</a><br>
+			<a th:href="@{|/prod?genre=소설|}" class="novel">소설</a><br>
+			<a th:href="@{|/prod?genre=시/에세이|}" class="poety">시/에세이</a><br>
+			<a th:href="@{|/prod?genre=인문학|}" class="humanities">인문학</a> <br>
+			<a th:href="@{|/prod?genre=역사/문화|}" class="history">역사/문화</a><br>
 		</div>
 		<!--
 		<div th:if="${C_Books != null}" th:text="|${#lists.size(C_Books.book_title)}개의 책|"></div>
@@ -95,6 +95,24 @@
 	    document.getElementById('send_kw').value = document.getElementById('search_kw').value;
 	    document.getElementById('searchForm').submit();
 	});
+	
+	// 책 장르 글자색. !!!!!!!!!!!!!나중에 수정
+	document.addEventListener('DOMContentLoaded', function() {
+        // 현재 URL의 쿼리 파라미터를 가져옵니다.
+		// window.location.search 현재 페이지 url의 ?이후 부분 갖고오기. URLSearchParams 파라미터로 변환
+        const params = new URLSearchParams(window.location.search);
+        const genre = params.get('genre');
+        
+        // l_genre_wrap의 a갖고오기.
+        const links = document.querySelectorAll('.l_genre_wrap a');
+        
+        // 각 링크를 순회하면서 genre에 맞는 링크에 클래스를 추가합니다.
+        links.forEach(link => {
+            if (link.href.includes(`genre=${encodeURIComponent(genre)}`)) {
+                link.classList.add('active');
+            }
+        });
+    });
 	
 	</script>
 </div>

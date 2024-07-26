@@ -7,11 +7,22 @@
 		width: 200px;
 	}
 	
+	.l_genre_wrap a {
+	    text-decoration: none;
+	    color: black; /* 기본 색상 */
+	}
+
+	/* 동적으로 추가될 클래스를 위한 스타일 */
+	.l_genre_wrap a.active {
+	    color: red; /* 활성화된 링크의 색상 */
+	}
+	
 	.search_wrap {
 		width: 500px;
 		height: 50px;
 		border-radius: 50px;
 		border: 1px solid #6f6f6f;
+		outline: 1px solid #6f6f6f;
 		overflow: hidden;
 		position: relative;
 	}
