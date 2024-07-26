@@ -9,7 +9,7 @@
 </head>
 
 <body>
-	<div class="container mt-4" layout:fragment="content">
+	<div layout:fragment="content">
 		<h1>이벤트 등록</h1>
 		<form id="eventForm" th:action="@{/event/create}" method="post" th:object="${event}"
 			enctype="multipart/form-data">

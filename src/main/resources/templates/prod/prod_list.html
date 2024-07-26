@@ -3,6 +3,7 @@
 	<title>상품페이지</title>
 	<link rel="stylesheet" th:href="@{/css/prod.css}" type="text/css">
 	<body>
+	<div class="b_inner">
 		<div class="l_genre_wrap">
 			<a th:href="@{|/prod|}" class="all">모두 보기</a><br>
 			<a th:href="@{|/prod?genre=베스트셀러|}" class="bestseller">베스트 셀러</a><br>
@@ -24,10 +25,9 @@
 	        <input type="hidden" id="send_genre" name="genre" th:value="${b_genre}">
 	        <input type="hidden" id="send_kw" name="kw" th:value="${kw}">
 	    </form>
-		<div class="blist_wrap">
 		<!--b_list는 여기서 새로 만든 리스트. C_books의 리스트를 참조하겠단뜻-->
 		<!--each는 반복. for문이랑 같음. 그안에 있는것들을 반복하겠다.-->
-		<div th:each = "b_list : ${C_Books}" th:if="${b_genre == b_list.book_genre}">
+		<div th:each = "b_list : ${C_Books}" th:if="${b_genre == b_list.book_genre}" class="wrap_gen">
 			<div class="flex_wrap">
 				<!--|prod/다음부턴 controller에서 map으로 잡아줘야한다.-->
 				<a th:href="@{|prod/detail/${b_list.book_id}|}">
@@ -41,27 +41,19 @@
 					<!-- <div th:text = "${b_list.book_id}"></div> -->
 					<div th:text = "${b_list.book_title}" class="title_txt"></div>
 					<div th:text = "${b_list.book_writer}"></div>
+					<div th:text = "${b_list.book_price}" class="price_txt"></div>
 					<div th:text = "${b_list.book_genre}"></div>
 					<div th:text = "${b_list.book_intro}" class="l_intro_wrap"></div>
-					<div th:text = "${b_list.book_price}"></div>
-					<div th:each="a_list : ${l_avg}" th:if="${b_list.book_id == a_list[0]}">
-						<h4 th:text="'별점 ' + ${a_list[1]}"></h4>
+					<div th:each="a_list : ${l_avg}" th:if="${b_list.book_id == a_list[0]}" class="onestar_wrap">
+						<img src="../../static/image/prod/star_on.png" class="one_star"/>
+						<p th:text="${a_list[1]}"></p>
 					</div>
-					<!--책 테이블과 별점 테이블의 책 아이디값이 같은 별점만 출력
-					<div th:each="a_list : ${l_avg}" th:if="${b_list.book_id == a_list[0]}">
-						<h4 th:text="'별점 ' + ${a_list[1]}"></h4>
-					</div>
-					<div th:each="a_list : ${l_avg}" th:if="${b_list.book_id != a_list[0]}">
-						dddddddddddddd
-					</div>
-					-->
 				</a>
 			</div>
 			</div>
-		<hr>
 		</div>
 		<!--책 전체 출력. 그냥 /prod인건 b_genre값이 없어서 위의 코드가 실행안되서 만듦-->
-		<div th:each = "b_list : ${C_Books}" th:if="${b_genre == ''}">
+		<div th:each = "b_list : ${C_Books}" th:if="${b_genre == ''}" class="wrap_gen">
 			<div class="flex_wrap">
 				<a th:href="@{|prod/detail/${b_list.book_id}|}">
 					<div class="img_wrap">
@@ -72,16 +64,16 @@
 				<a th:href="@{|prod/detail/${b_list.book_id}|}">
 					<div th:text = "${b_list.book_title}" class="title_txt"></div>
 					<div th:text = "${b_list.book_writer}"></div>
+					<div th:text = "${b_list.book_price}" class="price_txt"></div>
 					<div th:text = "${b_list.book_genre}"></div>
 					<div th:text = "${b_list.book_intro}" class="l_intro_wrap"></div>
-					<div th:text = "${b_list.book_price}"></div>
-					<div th:each="a_list : ${l_avg}" th:if="${b_list.book_id == a_list[0]}">
-						<h4 th:text="'별점 ' + ${a_list[1]}"></h4>
+					<div th:each="a_list : ${l_avg}" th:if="${b_list.book_id == a_list[0]}" class="onestar_wrap">
+						<img src="../../static/image/prod/star_on.png" class="one_star"/>
+						<p th:text="${a_list[1]}"></p>
 					</div>
 				</a>
 			</div>
 			</div>
-		<hr>
 		</div>
 	</div>
 	</body>
@@ -111,6 +103,7 @@
     });
 	
 	// 책 장르 글자색. !!!!!!!!!!!!!나중에 수정
+	/*
 	document.addEventListener('DOMContentLoaded', function() {
         // 현재 URL의 쿼리 파라미터를 가져옵니다.
 		// window.location.search 현재 페이지 url의 ?이후 부분 갖고오기. URLSearchParams 파라미터로 변환
@@ -127,7 +120,7 @@
             }
         });
     });
-	
+	*/
 	</script>
 </div>
 </html>

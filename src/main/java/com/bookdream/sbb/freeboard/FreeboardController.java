@@ -115,6 +115,7 @@ public class FreeboardController {
         model.addAttribute("freeboard", freeboard);
         model.addAttribute("comments", comments);
         model.addAttribute("newComment", new Comment());
+        
         return "freeboard/detail"; // 템플릿 경로
     }
 
