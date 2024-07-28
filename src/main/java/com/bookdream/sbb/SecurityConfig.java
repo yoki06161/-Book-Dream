@@ -29,7 +29,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        // 일반 사용자
+    	http
             .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                 .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
             	.requestMatchers(new AntPathRequestMatcher("/trade/chat/leave")).authenticated())
@@ -41,11 +42,23 @@ public class SecurityConfig {
                 .loginProcessingUrl("/user/login") 
                 .failureUrl("/user/login?error=true")
                 .defaultSuccessUrl("/main"))
+            // 관리자페이지 로그인 처리
+            .formLogin((formLogin) -> formLogin
+                    .loginPage("/admin/login")
+                    .loginProcessingUrl("/admin/login")
+                    .failureUrl("/admin/login?error=true")
+                    .defaultSuccessUrl("/admin/user"))
             .logout((logout) -> logout
             		.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
             		.logoutSuccessUrl("/")
             		.invalidateHttpSession(true)
             	    .addLogoutHandler(customLogoutHandler))
+            // 관리자페이지 로그아웃 처리
+            .logout((logout) -> logout
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/admin/logout"))
+                    .logoutSuccessUrl("/admin/user")
+                    .invalidateHttpSession(true)
+                    .addLogoutHandler(customLogoutHandler))
             .oauth2Login((oauth2Login) -> oauth2Login
                 .loginPage("/oauth-login/login")
                 .defaultSuccessUrl("/")
@@ -53,7 +66,11 @@ public class SecurityConfig {
                 .permitAll())
         .csrf((csrf) -> csrf
                 .ignoringRequestMatchers(new AntPathRequestMatcher("/trade/chat/leave")));
-        return http.build();
+
+    	// 커스텀 필터 추가(시간되면)
+        //http.addFilterBefore(new CustomAdminAuthenticationFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
+    	
+    	return http.build();
     }
 
 

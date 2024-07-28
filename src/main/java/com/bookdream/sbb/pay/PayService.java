@@ -64,4 +64,9 @@ public class PayService {
 	public void deletePayByPayId(String pay_id) {
 		payRepository.deleteById(pay_id);
 	}
+
+	public List<Pay> getAllPays() {
+		// TODO Auto-generated method stub
+		return payRepository.findAll();
+	}
 }

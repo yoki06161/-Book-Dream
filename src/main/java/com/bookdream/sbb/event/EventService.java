@@ -80,4 +80,11 @@ public class EventService {
         Collections.shuffle(events);
         return events.subList(0, Math.min(events.size(), 2));
     }
+
+	public void modifyEmailOrRole(Event event, String title, String description, String content) {
+		event.setTitle(title);
+		event.setDescription(description);
+		event.setContent(content);
+		this.eventRepository.save(event);
+	}
 }
