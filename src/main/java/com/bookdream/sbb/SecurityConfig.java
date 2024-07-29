@@ -50,7 +50,7 @@ public class SecurityConfig {
                     .defaultSuccessUrl("/admin/user"))
             .logout((logout) -> logout
             		.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-            		.logoutSuccessUrl("/")
+            		.logoutSuccessUrl("/main")
             		.invalidateHttpSession(true)
             	    .addLogoutHandler(customLogoutHandler))
             // 관리자페이지 로그아웃 처리
@@ -61,7 +61,7 @@ public class SecurityConfig {
                     .addLogoutHandler(customLogoutHandler))
             .oauth2Login((oauth2Login) -> oauth2Login
                 .loginPage("/oauth-login/login")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/main")
                 .failureUrl("/user/login")
                 .permitAll())
         .csrf((csrf) -> csrf

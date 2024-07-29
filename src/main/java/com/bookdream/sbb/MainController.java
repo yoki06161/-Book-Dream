@@ -40,13 +40,5 @@ public class MainController {
         return "main";
     }
     
-    @GetMapping("")
-    public String prod_list(Model model, @RequestParam(value = "kw", defaultValue = "") String kw, 
-            @RequestParam(value = "genre", defaultValue = "") String genre) throws IOException {
-        
-        model.addAttribute("C_Books", prodService.getSearchBooks(kw));
-        model.addAttribute("kw", kw);
-        model.addAttribute("b_genre", genre);
-        return "prod/prod_list";
-    }
+
 }
