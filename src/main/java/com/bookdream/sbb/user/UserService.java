@@ -1,6 +1,7 @@
 package com.bookdream.sbb.user;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -94,4 +95,26 @@ public class UserService {
     public boolean emailExists(String email) {
         return userRepository.existsByEmail(email);
     }
+
+
+	public List<SiteUser> getAllUsers() {
+		return userRepository.findAll();
+	}
+
+
+	public SiteUser getUserById(Long id) {
+		Optional<SiteUser> siteUser = this.userRepository.findById(id);
+    	if (siteUser.isPresent()) {
+            return siteUser.get();
+        }else {
+            throw new DataNotFoundException("siteuser not found!!");
+        }
+	}
+
+
+	public void modifyEmailOrRole(SiteUser user, String email, String role) {
+        user.setEmail(email);
+        user.setRole(role);
+        this.userRepository.save(user);
+	}
 }

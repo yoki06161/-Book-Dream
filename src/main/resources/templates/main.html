@@ -9,50 +9,69 @@
 		h2 {
 			padding-top: 50px;
 		}
-		
+
 		.book-card {
 			margin-bottom: 20px;
 			display: flex;
 			flex-direction: column;
 			height: 100%;
 		}
+
 		.book-img {
 			width: 100%;
 			height: auto;
 		}
+
 		.card-body {
 			flex-grow: 1;
 			display: flex;
 			flex-direction: column;
 		}
+
 		.card-body a {
 			margin-bottom: auto;
 		}
-		.card-title, .card-text {
+
+		.card-title,
+		.card-text {
 			margin-bottom: 10px;
 		}
+
 		.card-footer {
 			margin-top: auto;
 		}
+
 		.sidebar {
 			position: fixed;
 			right: 50px;
 			top: 200px;
-			width: 200px;
+			width: 250px; /* Width increased */
 			height: 100%;
 			padding: 1rem;
 			font-size: 0.8rem;
 			overflow-y: auto;
 		}
+
 		.sidebar h2 {
 			font-size: 1.5rem;
 			color: blue;
 		}
+
 		.content-wrapper {
-			margin-right: 320px; /* Adjust margin to fit the sidebar */
+			margin-right: 370px; /* Adjust margin to fit the wider sidebar */
 		}
+
 		.book-recommendations {
 			color: aliceblue;
+		}
+
+		.list-group-item h5 {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2; /* Limit to 2 lines */
+			-webkit-box-orient: vertical;
+			white-space: normal;
 		}
 	</style>
 </head>

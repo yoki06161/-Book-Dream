@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.bookdream.sbb.event.Event;
 import com.bookdream.sbb.prod_repo.Prod_Books;
 import com.bookdream.sbb.prod_repo.Prod_BooksRepository;
 import com.bookdream.sbb.prod_repo.Prod_RArepository;
@@ -257,5 +258,28 @@ public class Prod_Service {
 		Collections.shuffle(allBooks);
 		return allBooks.stream().limit(4).collect(Collectors.toList());
 	}
+
+	public List<Prod_d_Review> getAllReviews() {
+		return re_repo.findAll();
+	}
+
+	public void deleteReview(int id) {
+		this.re_repo.deleteById(id);
+	}
+
+	public Prod_d_Review getReview(int id) {
+		Optional<Prod_d_Review> review = this.re_repo.findById(id);
+		return review.get();
+	}
+	
+	public void deleteAnswer(int id) {
+		this.ra_repo.deleteById(id);
+	}
+
+	public Prod_d_Answer getAnswer(int id) {
+		Optional<Prod_d_Answer> answer = this.ra_repo.findById(id);
+		return answer.get();
+	}
+
 }
 

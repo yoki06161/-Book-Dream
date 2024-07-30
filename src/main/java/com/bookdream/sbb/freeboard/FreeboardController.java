@@ -43,8 +43,8 @@ public class FreeboardController {
 
     @GetMapping("")
     public String list(@RequestParam(value = "keyword", required = false) String keyword,
-                       Model model,
-                       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                       Model model) {
         Page<Freeboard> freeboards;
         if (keyword != null && !keyword.isEmpty()) {
             freeboards = freeboardService.searchByTitle(keyword, pageable);
@@ -75,10 +75,7 @@ public class FreeboardController {
         String username = principal.getName();
         freeboard.setAuthor(username); // 작성자 설정
 
-        if (result.hasErrors()) {
-            System.out.println("유효성 검사 실패");
-            return "freeboard/form"; // 템플릿 경로
-        }
+
 
         if (!file.isEmpty()) {
             String fileName = UUID.randomUUID().toString() + ".png";
@@ -94,7 +91,7 @@ public class FreeboardController {
         }
 
         freeboardService.save(freeboard);
-        return "redirect:/freeboard/list"; // 폼 제출 후 목록 페이지로 리다이렉트
+        return "redirect:/freeboard"; // 폼 제출 후 목록 페이지로 리다이렉트
     }
 
     @GetMapping("/detail/{id}")
@@ -102,7 +99,7 @@ public class FreeboardController {
             HttpServletRequest request, HttpServletResponse response) {
         Freeboard freeboard = freeboardService.findById(id);
         if (freeboard == null) {
-            return "redirect:/freeboard/list"; // 글이 없을 경우 목록 페이지로 리다이렉트
+            return "redirect:/freeboard"; // 글이 없을 경우 목록 페이지로 리다이렉트
         }
         String uniqueUserId;
         if (principal != null) {
