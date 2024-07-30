@@ -165,7 +165,7 @@ public class ChatController {
         Long messageId = Long.parseLong(payload.get("id"));
         String readerId = payload.get("senderId");
         chatService.markMessageAsRead(messageId, readerId);
-        return new Chat(); // 반환값으로 인해 예외 발생하지 않도록 수정
+        return new Chat();
     }
     
     @MessageMapping("/chat.userActive")
